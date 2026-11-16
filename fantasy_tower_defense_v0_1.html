@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fantasy Tower Defense v0.1</title>
+<style>
+:root{color-scheme:dark;--bg:#101522;--panel:#1b2435;--panel2:#26334a;--line:#3b4a63;--gold:#f4c96b;--text:#edf2fa;--muted:#aab7ca;--green:#72d6a0;--red:#ef7b83;--blue:#7ebcff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#202c43,#101522 60%);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif}
+header{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+h1{font-size:18px;margin:0}small,.muted{color:var(--muted)}.tag{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:3px 8px;color:var(--gold)}
+main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:12px}
+.panel{background:linear-gradient(180deg,#202b40,#192235);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:0 8px 24px #0003}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}.stat{background:#111a2a;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}.stat b{display:block;font-size:18px;color:var(--gold)}.stat span{font-size:11px;color:var(--muted)}
+#board{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;touch-action:manipulation}
+.cell{aspect-ratio:1;border:1px solid #41516a;border-radius:5px;background:#29374e;position:relative;display:flex;align-items:center;justify-content:center;font-size:clamp(10px,2.5vw,18px);padding:0;min-width:0}
+.cell.path{background:#39465a}.cell.start{background:#285b50}.cell.goal{background:#68414a}.cell.tower{background:#594d78;border-color:#a18bd3}.cell.preview{outline:2px dashed var(--gold);outline-offset:-3px}.cell.enemy{box-shadow:inset 0 0 0 2px var(--red)}
+.cell:disabled{opacity:1}.cell .hp{position:absolute;bottom:1px;left:2px;right:2px;height:3px;background:#101522;border-radius:3px}.cell .hp i{display:block;height:100%;background:var(--green);border-radius:3px}
+.controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.btn{background:#34445f;border:1px solid #536783;color:var(--text);border-radius:9px;padding:9px 11px;font-weight:650}.btn.primary{background:#725b31;border-color:#b58e45;color:#fff2cf}.btn:disabled{opacity:.4}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tab{flex:1;min-width:70px}.tab.active{background:#6c578f;border-color:#b7a1df}
+.section{display:none}.section.active{display:block}.tower-option{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px;margin:7px 0;border:1px solid var(--line);border-radius:10px;background:#172135}.tower-option strong{display:block}.tower-option small{display:block}
+.log{height:120px;overflow:auto;background:#111a2a;border-radius:9px;padding:8px;font-size:12px;color:var(--muted);line-height:1.6}
+.progress{height:7px;background:#0f1725;border-radius:9px;overflow:hidden;margin-top:5px}.progress i{display:block;height:100%;background:var(--green)}
+.overlay{position:fixed;inset:0;background:#080d17d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}.overlay.show{display:flex}.modal{width:min(440px,100%);background:#202b40;border:1px solid #687b98;border-radius:16px;padding:20px;text-align:center;box-shadow:0 20px 80px #0009}.modal h2{margin-top:0}.big{font-size:32px;color:var(--gold);font-weight:800}.achievement{border:1px solid var(--line);border-radius:9px;padding:9px;margin:7px 0;background:#172135}.achievement.done{border-color:#5d9b7b}.achievement.locked{opacity:.55}.achievement b{display:block}.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.pill{font-size:11px;color:var(--gold)}.notice{font-size:12px;color:var(--muted);line-height:1.5}
+@media(max-width:760px){main{grid-template-columns:1fr}.stats{grid-template-columns:repeat(4,1fr)}header{align-items:flex-start}.panel{padding:10px}}
+</style>
+</head>
+<body>
+<header><div><h1>Fantasy Tower Defense <span class="tag">v0.1 prototype</span></h1><small>迷宮防衛・無限ウェーブ</small></div><div class="muted" id="phase">準備中</div></header>
+<main>
+<section class="panel">
+ <div class="stats">
+  <div class="stat"><b id="wave">1</b><span>WAVE</span></div><div class="stat"><b id="gold">150</b><span>GOLD</span></div><div class="stat"><b id="lives">20</b><span>拠点耐久</span></div><div class="stat"><b id="kills">0</b><span>撃破数</span></div>
+ </div>
+ <div id="board" aria-label="タワー配置盤面"></div>
+ <div class="controls"><button class="btn primary" id="startWave">ウェーブ開始</button><button class="btn" id="pause">一時停止</button><button class="btn" id="clearSelect">選択解除</button></div>
+ <p class="notice">タワーを選んで盤面をタップすると設置。敵の通路を完全に塞ぐ配置はできないよ。設置予定マスを選ぶと新しい経路を点線で確認できるよ。</p>
+ <h3>戦況ログ</h3><div class="log" id="log"></div>
+</section>
+<aside class="panel">
+ <div class="tabs">
+  <button class="btn tab active" data-tab="build">建設</button><button class="btn tab" data-tab="manage">管理</button><button class="btn tab" data-tab="growth">成長</button><button class="btn tab" data-tab="achieve">実績</button>
+ </div>
+ <div class="section active" id="build">
+  <h3>タワーを選択</h3>
+  <div class="tower-option"><div><strong>弾丸塔</strong><small>単体・高速攻撃。命中した敵にダメージ</small></div><button class="btn" data-build="bullet">30G</button></div>
+  <div class="tower-option"><div><strong>爆発塔</strong><small>範囲攻撃。複数の敵を巻き込む</small></div><button class="btn" data-build="blast">45G</button></div>
+  <div class="tower-option"><div><strong>振動塔</strong><small>継続ダメージと移動速度低下</small></div><button class="btn" data-build="vibe">40G</button></div>
+  <p class="notice">攻撃属性はタワーの個性を決める要素。複数属性の組み合わせ・進化分岐は次段階で拡張予定だよ。</p>
+ </div>
+ <div class="section" id="manage">
+  <h3>選択中のタワー</h3><div id="towerInfo" class="notice">盤面のタワーをタップしてね。</div>
+  <div class="controls"><button class="btn" id="upgrade" disabled>強化</button><button class="btn" id="sell" disabled>売却</button></div>
+  <p class="notice">売却返金：投資額の70%。成長ノードで最大90%まで上昇予定。</p>
+ </div>
+ <div class="section" id="growth">
+  <h3>防衛者の成長</h3><div class="stat"><b id="sp">0</b><span>所持SP</span></div>
+  <div class="achievement"><div class="row"><b>経済：戦利品の知恵</b><span class="pill">5 SP</span></div><small>敵撃破ゴールド +10%</small><button class="btn" id="econNode">解放</button></div>
+  <div class="achievement"><div class="row"><b>戦闘：攻撃訓練</b><span class="pill">5 SP</span></div><small>全タワー攻撃力 +5%</small><button class="btn" id="combatNode">解放</button></div>
+  <div class="achievement"><div class="row"><b>戦略：熟練解体</b><span class="pill">8 SP</span></div><small>売却返金率 +5%（最大90%）</small><button class="btn" id="strategyNode">解放</button></div>
+  <p class="notice">スキルツリーは試作用の入口。ノードや分岐は今後追加できる構造にするよ。</p>
+ </div>
+ <div class="section" id="achieve"><h3>実績</h3><div id="achievements"></div><p class="notice">未解放実績も内部進捗を蓄積。前段階の達成で解放され、条件達成済みなら即時クリア！</p></div>
+</aside>
+</main>
+<div class="overlay" id="result"><div class="modal"><h2>防衛失敗…！</h2><p>今回の到達ウェーブ <b id="resWave">1</b></p><p>撃破数 <b id="resKills">0</b></p><p>スコア</p><div class="big" id="scoreCount">0</div><p>獲得SP <span class="big" id="earnedSP">0</span></p><p class="notice">スコア報酬と実績報酬を所持SPに加算したよ。</p><button class="btn primary" id="again">もう一度挑戦</button></div></div>
+<script>
+const W=12,H=8,START={x:0,y:3},GOAL={x:11,y:3};
+const costs={bullet:30,blast:45,vibe:40}, names={bullet:"弾丸塔",blast:"爆発塔",vibe:"振動塔"}, icons={bullet:"➤",blast:"✹",vibe:"〰"};
+let towers=[],enemies=[],wave=1,gold=150,lives=20,kills=0,score=0,sp=0,selectedBuild=null,selectedTower=null,route=[],preview=[],pendingCell=null,running=false,paused=false,spawnLeft=0,spawnTimer=0,last=0,raf=0,runScore=0,runKills=0,runWave=1,stats={totalKills:0,totalGold:0,totalWaves:0,runs:0,highestWave:0,totalScore:0},upgrades={econ:false,combat:false,strategy:false},refund=0.70;
+const board=document.getElementById('board'),logEl=document.getElementById('log');
+const $=id=>document.getElementById(id);
+function log(t){logEl.innerHTML=`<div>› ${t}</div>`+logEl.innerHTML}
+function key(x,y){return y*W+x}
+function occupied(x,y,extra=null){return towers.some(t=>t.x===x&&t.y===y&&t!==extra)}
+function bfs(extra=null){
+ const q=[[START.x,START.y]],prev=new Map([[key(START.x,START.y),null]]);
+ while(q.length){let [x,y]=q.shift();if(x===GOAL.x&&y===GOAL.y)break;
+  for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){let nx=x+dx,ny=y+dy,k=key(nx,ny);if(nx<0||ny<0||nx>=W||ny>=H||prev.has(k))continue;if((occupied(nx,ny,extra))||(extra&&extra.x===nx&&extra.y===ny))continue;prev.set(k,[x,y]);q.push([nx,ny])}
+ }
+ let end=key(GOAL.x,GOAL.y);if(!prev.has(end))return [];
+ let p=[],cur=[GOAL.x,GOAL.y];while(cur){p.unshift({x:cur[0],y:cur[1]});cur=prev.get(key(cur[0],cur[1]))}return p;
+}
+function cellAt(x,y){return board.children[key(x,y)]}
+function renderBoard(){
+ board.innerHTML='';
+ route=bfs();
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const c=document.createElement('button');c.className='cell';c.type='button';
+  if(route.some(p=>p.x===x&&p.y===y))c.classList.add('path');
+  if(x===START.x&&y===START.y){c.classList.add('start');c.textContent='S'}
+  if(x===GOAL.x&&y===GOAL.y){c.classList.add('goal');c.textContent='G'}
+  let t=towers.find(t=>t.x===x&&t.y===y);if(t){c.classList.add('tower');c.textContent=icons[t.type];if(selectedTower===t)c.style.outline='2px solid #fff'}
+  if(preview.some(p=>p.x===x&&p.y===y)&&!t)c.classList.add('preview');
+  const e=enemies.find(e=>Math.round(e.x)===x&&Math.round(e.y)===y);if(e)c.classList.add('enemy');
+  c.addEventListener('click',()=>tapCell(x,y));board.appendChild(c);
+ }
+}
+function tapCell(x,y){
+ let t=towers.find(t=>t.x===x&&t.y===y);
+ if(t){selectedTower=t;selectedBuild=null;preview=[];showTower();renderBoard();return}
+ if(selectedBuild){if(gold<costs[selectedBuild]){log('ゴールドが足りないよ');return}
+  if((x===START.x&&y===START.y)||(x===GOAL.x&&y===GOAL.y)){log('ここには設置できないよ');return}
+  const candidate={x,y};let p=bfs(candidate);if(!p.length){preview=[];pendingCell=null;log('その配置では通路が塞がれてしまうよ');renderBoard();return}
+  if(!pendingCell||pendingCell.x!==x||pendingCell.y!==y){pendingCell=candidate;preview=p;log('点線が新しい敵の経路だよ。同じマスをもう一度タップすると設置するよ');renderBoard();return}
+  gold-=costs[selectedBuild];towers.push({x,y,type:selectedBuild,level:1,invested:costs[selectedBuild],cool:0,damage: selectedBuild==='bullet'?12:selectedBuild==='blast'?18:7,range:selectedBuild==='bullet'?3:selectedBuild==='blast'?2:2});log(`${names[selectedBuild]}を設置！`);selectedBuild=null;selectedTower=null;preview=[];pendingCell=null;renderBoard();updateUI();return
+ }
+ selectedTower=null;showTower();renderBoard();
+}
+function showTower(){let t=selectedTower;$('towerInfo').innerHTML=t?`<b>${names[t.type]} Lv.${t.level}</b><br>攻撃力：${Math.round(t.damage*(upgrades.combat?1.05:1))}<br>投資額：${t.invested}G<br>射程：${t.range}<br><span class="muted">攻撃属性：${t.type==='bullet'?'弾丸':t.type==='blast'?'爆発':'振動'}</span>`:'盤面のタワーをタップしてね。';$('upgrade').disabled=!t;$('sell').disabled=!t}
+function updateUI(){$('wave').textContent=wave;$('gold').textContent=gold;$('lives').textContent=lives;$('kills').textContent=kills;$('sp').textContent=sp;
+ document.querySelectorAll('[data-build]').forEach(b=>b.disabled=gold<costs[b.dataset.build]);
+ $('econNode').disabled=upgrades.econ||sp<5;$('combatNode').disabled=upgrades.combat||sp<5;$('strategyNode').disabled=upgrades.strategy||sp<8;
+}
+function setTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===tab))}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+document.querySelectorAll('[data-build]').forEach(b=>b.onclick=()=>{selectedBuild=b.dataset.build;selectedTower=null;pendingCell=null;preview=[];showTower();log(`${names[selectedBuild]}を選択。設置マスを選んでね`);renderBoard()});
+$('clearSelect').onclick=()=>{selectedBuild=null;selectedTower=null;preview=[];pendingCell=null;showTower();renderBoard()};
+$('upgrade').onclick=()=>{let t=selectedTower;if(!t)return;let cost=25*t.level;if(gold<cost){log('強化にはゴールドが足りないよ');return}gold-=cost;t.level++;t.damage*=1.35;t.invested+=cost;log(`${names[t.type]}をLv.${t.level}に強化！`);showTower();updateUI()};
+$('sell').onclick=()=>{let t=selectedTower;if(!t)return;let refundGold=Math.floor(t.invested*refund);gold+=refundGold;towers=towers.filter(v=>v!==t);selectedTower=null;log(`タワーを売却。${refundGold}G返金！`);showTower();renderBoard();updateUI()};
+$('econNode').onclick=()=>buyNode('econ',5);$('combatNode').onclick=()=>buyNode('combat',5);$('strategyNode').onclick=()=>buyNode('strategy',8);
+function buyNode(n,c){if(upgrades[n]||sp<c)return;sp-=c;upgrades[n]=true;if(n==='strategy')refund=Math.min(.9,refund+.05);log('成長ノードを解放！');updateUI();showTower()}
+function startWave(){if(running)return;running=true;paused=false;spawnLeft=5+Math.floor(wave*1.5);spawnTimer=0;$('phase').textContent='戦闘中';$('startWave').disabled=true;log(`WAVE ${wave} 開始！`);last=performance.now();raf=requestAnimationFrame(loop)}
+$('startWave').onclick=startWave;$('pause').onclick=()=>{if(!running)return;paused=!paused;$('pause').textContent=paused?'再開':'一時停止';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}};
+function spawn(){let p=bfs();enemies.push({x:p[0].x,y:p[0].y,path:p,index:0,hp:35+wave*9,max:35+wave*9,speed:.85+wave*.012,slow:0});}
+function loop(now){if(!running||paused)return;let dt=Math.min(.05,(now-last)/1000);last=now;
+ spawnTimer-=dt;if(spawnLeft>0&&spawnTimer<=0){spawn();spawnLeft--;spawnTimer=.8}
+ enemies.forEach(e=>{if(e.slow>0)e.slow-=dt;if(e.index<e.path.length-1){let a=e.path[e.index],b=e.path[e.index+1],speed=e.speed*(e.slow>0?.55:1)*dt,dx=b.x-e.x,dy=b.y-e.y,d=Math.hypot(dx,dy);if(d<=speed){e.x=b.x;e.y=b.y;e.index++}else{e.x+=dx/d*speed;e.y+=dy/d*speed}}});
+ for(let t of towers){t.cool-=dt;if(t.cool<=0){let target=enemies.find(e=>Math.hypot(e.x-t.x,e.y-t.y)<=t.range);if(target){let dmg=t.damage*(upgrades.combat?1.05:1);if(t.type==='blast'){enemies.forEach(e=>{if(Math.hypot(e.x-target.x,e.y-target.y)<=1.1)e.hp-=dmg*.75});}else if(t.type==='vibe'){target.hp-=dmg*.6;target.slow=1.2}else target.hp-=dmg;t.cool=t.type==='bullet'?.48:t.type==='blast'?1.25:.8;}}}
+ let alive=[];for(let e of enemies){if(e.hp<=0){kills++;runKills++;let g=Math.floor(5*(upgrades.econ?1.1:1));gold+=g;stats.totalGold+=g;score+=100+wave*5;runScore+=100+wave*5;stats.totalKills++}else if(e.index>=e.path.length-1){lives--;score+=0}else alive.push(e)}enemies=alive;
+ if(lives<=0){finish();return}
+ if(spawnLeft===0&&enemies.length===0){running=false;wave++;stats.totalWaves++;stats.highestWave=Math.max(stats.highestWave,wave-1);$('phase').textContent='準備中';$('startWave').disabled=false;log('ウェーブ突破！次のウェーブに備えよう');updateUI();renderBoard();return}
+ updateUI();renderBoard();raf=requestAnimationFrame(loop)
+}
+function awardAchievement(id){let a=ach.find(x=>x.id===id);if(!a||a.done)return; a.done=true;sp+=a.reward;log(`実績達成：${a.name}（+${a.reward} SP）`);checkAchievements()}
+const ach=[
+{id:'first',name:'初陣',desc:'累計1ウェーブ突破',reward:2,done:false,unlocked:true,check:()=>stats.totalWaves>=1},
+{id:'kills100',name:'討伐者',desc:'累計100体撃破',reward:2,done:false,unlocked:true,check:()=>stats.totalKills>=100},
+{id:'kills1000',name:'熟練討伐者',desc:'累計1,000体撃破',reward:5,done:false,unlocked:false,prev:'kills100',check:()=>stats.totalKills>=1000},
+{id:'wave100',name:'不屈の挑戦者',desc:'最高到達ウェーブ100',reward:10,done:false,unlocked:false,prev:'first',check:()=>stats.highestWave>=100},
+{id:'builder',name:'建築の第一歩',desc:'タワーを累計10基設置',reward:3,done:false,unlocked:true,check:()=>stats.placed>=10}
+];stats.placed=0;
+function checkAchievements(){let changed=true;while(changed){changed=false;for(let a of ach){if(!a.unlocked&&a.prev&&ach.find(x=>x.id===a.prev)?.done){a.unlocked=true;changed=true}if(a.unlocked&&!a.done&&a.check()){awardAchievementNoRecurse(a);changed=true}}}renderAchievements();updateUI()}
+function awardAchievementNoRecurse(a){a.done=true;sp+=a.reward;log(`実績達成：${a.name}（+${a.reward} SP）`)}
+function renderAchievements(){$('achievements').innerHTML=ach.map(a=>`<div class="achievement ${a.done?'done':!a.unlocked?'locked':''}"><div class="row"><b>${a.unlocked?a.name:'？？？'}</b><span class="pill">${a.done?'達成':a.unlocked?`+${a.reward} SP`:'未解放'}</span></div><small>${a.unlocked?a.desc:'条件を満たすと解放'}</small></div>`).join('')}
+function finish(){running=false;cancelAnimationFrame(raf);$('phase').textContent='敗北';$('startWave').disabled=true;stats.runs++;stats.highestWave=Math.max(stats.highestWave,wave);stats.totalScore+=runScore;let earned=Math.floor(runScore/10000);sp+=earned;checkAchievements();$('resWave').textContent=wave;$('resKills').textContent=runKills;$('earnedSP').textContent=earned;$('scoreCount').textContent='0';$('result').classList.add('show');let target=runScore,start=performance.now();function count(t){let p=Math.min(1,(t-start)/1400);$('scoreCount').textContent=Math.floor(target*p).toLocaleString();if(p<1)requestAnimationFrame(count)}requestAnimationFrame(count);updateUI()}
+$('again').onclick=()=>{ $('result').classList.remove('show');towers=[];enemies=[];wave=1;gold=150;lives=20;kills=0;score=0;runScore=0;runKills=0;selectedTower=null;selectedBuild=null;running=false;paused=false;$('phase').textContent='準備中';$('startWave').disabled=false;$('pause').textContent='一時停止';log('新しい挑戦を始めよう！');renderBoard();updateUI();showTower()};
+const oldTap=tapCell;
+// Wrap placement counter via tower count change on placement
+const originalTap=tapCell;
+tapCell=function(x,y){let before=towers.length;originalTap(x,y);if(towers.length>before){stats.placed++;checkAchievements()}};
+renderBoard();renderAchievements();updateUI();showTower();log('タワーを選んで配置し、ウェーブ開始を押そう！');
+</script>
+</body>
+</html>
