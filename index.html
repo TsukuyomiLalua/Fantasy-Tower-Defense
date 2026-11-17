@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fantasy Tower Defense v0.13</title>
+<title>Fantasy Tower Defense v0.14</title>
 <style>
 :root{color-scheme:dark;--bg:#101522;--panel:#1b2435;--panel2:#26334a;--line:#3b4a63;--gold:#f4c96b;--text:#edf2fa;--muted:#aab7ca;--green:#72d6a0;--red:#ef7b83;--blue:#7ebcff;--yellow:#f6d365;--purple:#b388ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#202c43,#101522 60%);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif}
@@ -23,6 +23,13 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
 
 /* タワーレベルバッジ */
 .lvl-badge{position:absolute;top:1px;left:2px;font-size:9px;font-weight:800;color:var(--gold);background:#0d1320cc;padding:0 3px;border-radius:3px;line-height:1.2;pointer-events:none}
+
+/* 仮置きタワーアイコン（スマホ対応型） */
+.ghost-tower{font-size:clamp(12px,3vw,20px);opacity:0.85;animation:pulseGhost 0.8s infinite alternate}
+@keyframes pulseGhost{
+ 0%{transform:scale(0.9);opacity:0.7}
+ 100%{transform:scale(1.1);opacity:1}
+}
 
 /* 1マス内 3x3 (9グリッド) 敵表示システム */
 .enemy-grid{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:1.5px;pointer-events:none;z-index:2}
@@ -70,7 +77,7 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
 </style>
 </head>
 <body>
-<header><div><h1>Fantasy Tower Defense <span class="tag">v0.13 prototype</span></h1><small>迷宮防衛・無限ウェーブ</small></div><div class="muted" id="phase">準備中</div></header>
+<header><div><h1>Fantasy Tower Defense <span class="tag">v0.14 prototype</span></h1><small>迷宮防衛・無限ウェーブ</small></div><div class="muted" id="phase">準備中</div></header>
 <main>
 <section class="panel">
  <div class="stats">
@@ -81,7 +88,7 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <div id="fx-layer"></div>
  </div>
 
- <!-- 盤面直下のクイック操作バー（どのタブを開いていても強化・売却が可能） -->
+ <!-- 盤面直下のクイック操作バー（どのタブからでも強化・売却可能） -->
  <div class="quick-bar" id="quickBar">
   <div class="quick-bar-info" id="quickInfo"><span class="muted">盤面のタワーをタップすると、ここから即座に強化・売却できるよ</span></div>
   <div class="quick-bar-actions">
@@ -111,7 +118,7 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <button class="btn speed" data-speed="3">×3</button>
   <button class="btn speed" data-speed="5">×5</button>
  </div>
- <p class="notice">同じタワーを連続で設置可能！候補マスを選ぶと「新経路（点線）」と「攻撃射程（青枠）」が同時に確認できるよ。</p>
+ <p class="notice">【スマホ対応】1回タップで仮置き（ルート＆射程確認）、もう一度同じマスをタップ（または下の「確定」ボタン）で設置完了！</p>
  <h3>戦況ログ</h3><div class="log" id="log"></div>
 </section>
 <aside class="panel">
@@ -123,7 +130,17 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <div class="tower-option" data-opt="bullet"><div><strong>弾丸塔（射程 3）</strong><small>単体・高速攻撃。命中した敵にダメージ</small></div><button class="btn" data-build="bullet">30G</button></div>
   <div class="tower-option" data-opt="blast"><div><strong>爆発塔（射程 2）</strong><small>範囲攻撃。複数の敵を巻き込む</small></div><button class="btn" data-build="blast">45G</button></div>
   <div class="tower-option" data-opt="vibe"><div><strong>振動塔（射程 2）</strong><small>継続ダメージと移動速度低下</small></div><button class="btn" data-build="vibe">40G</button></div>
-  <p class="notice">ゴールドが足りている間は選択状態が維持されるから、続けてポンポン設置できるよ。やめる時は「選択解除」を押してね。</p>
+  
+  <!-- スマホでも確実に設置できる個別確定アクションパネル -->
+  <div id="pendingActionPanel" style="display:none;margin-top:10px;padding:10px;background:#1b2435;border:1px solid var(--gold);border-radius:10px;text-align:center">
+   <div style="font-size:12px;margin-bottom:6px;color:var(--gold)" id="pendingPrompt">仮置き中：本当にここに置く？</div>
+   <div style="display:flex;gap:6px;justify-content:center">
+    <button class="btn primary" id="confirmBuildBtn" style="flex:1">ここに設置確定</button>
+    <button class="btn" id="cancelBuildBtn">キャンセル</button>
+   </div>
+  </div>
+
+  <p class="notice" style="margin-top:10px">ゴールドが足りている間は選択状態が維持されるから、続けてポンポン設置できるよ。やめる時は「選択解除」を押してね。</p>
  </div>
  <div class="section" id="manage">
   <h3>選択中のタワー詳細</h3><div id="towerInfo" class="notice">盤面のタワーをタップしてね。</div>
@@ -226,9 +243,18 @@ function renderBoard(){
    c.appendChild(lvl);
    if(selectedTower===t)c.style.outline='2px solid #fff';
   }
+
+  // 仮置き（ペンド状態）の表示
   if(pendingCell && pendingCell.x===x && pendingCell.y===y && !t){
    c.classList.add('pending-spot');
+   if(selectedBuild){
+    const ghost = document.createElement('div');
+    ghost.className = 'ghost-tower';
+    ghost.textContent = icons[selectedBuild];
+    c.appendChild(ghost);
+   }
   }
+
   if(activePreview.some(p=>p.x===x&&p.y===y)&&!t)c.classList.add('preview');
   if(rangeCenter && Math.hypot(x - rangeCenter.x, y - rangeCenter.y) <= rangeRadius){
    c.classList.add('in-range');
@@ -283,6 +309,7 @@ function renderBoard(){
   c.addEventListener('click',()=>tapCell(x,y));
   board.appendChild(c);
  }
+ updatePendingActionUI();
 }
 
 board.addEventListener('pointerleave',()=>{
@@ -291,6 +318,78 @@ board.addEventListener('pointerleave',()=>{
   if(!running || paused) renderBoard();
  }
 });
+
+// スマホでも操作しやすいように仮置きパネルを表示・更新する
+function updatePendingActionUI(){
+ const panel = $('pendingActionPanel');
+ if(selectedBuild && pendingCell){
+  panel.style.display = 'block';
+  $('pendingPrompt').textContent = `仮置き中 (${names[selectedBuild]}): (${pendingCell.x+1}, ${pendingCell.y+1})`;
+ } else {
+  panel.style.display = 'none';
+ }
+}
+
+function confirmPlacement(){
+ if(!selectedBuild || !pendingCell) return;
+ const {x, y} = pendingCell;
+ if(gold < costs[selectedBuild]){
+  log('ゴールドが足りないよ');
+  pendingCell = null;
+  preview = [];
+  renderBoard();
+  return;
+ }
+ if(occupied(x, y) || (x===START.x&&y===START.y) || (x===GOAL.x&&y===GOAL.y)){
+  log('そこには設置できないよ');
+  pendingCell = null;
+  preview = [];
+  renderBoard();
+  return;
+ }
+ let p = bfs(pendingCell);
+ if(!p.length){
+  log('その配置では通路が塞がれてしまうよ');
+  pendingCell = null;
+  preview = [];
+  renderBoard();
+  return;
+ }
+
+ // 正式に配置確定
+ gold -= costs[selectedBuild];
+ const newTower = {
+  x, y, type: selectedBuild, level: 1, invested: costs[selectedBuild], cool: 0,
+  damage: selectedBuild==='bullet'?12:selectedBuild==='blast'?18:7,
+  range: ranges[selectedBuild]
+ };
+ towers.push(newTower);
+ stats.placed++;
+ checkAchievements();
+ log(`${names[selectedBuild]}を設置！`);
+
+ const keepBuilding = gold >= costs[selectedBuild];
+ pendingCell = null;
+ preview = [];
+ if(!keepBuilding){
+  selectedBuild = null;
+  log('ゴールド不足のため連続設置を終了したよ');
+ }
+ showTower();
+ updateBuildSelectionUI();
+ renderBoard();
+ updateUI();
+}
+
+function cancelPlacement(){
+ pendingCell = null;
+ preview = [];
+ log('設置をキャンセルしたよ');
+ renderBoard();
+}
+
+$('confirmBuildBtn').onclick = confirmPlacement;
+$('cancelBuildBtn').onclick = cancelPlacement;
 
 function tapCell(x,y){
  let t=towers.find(t=>t.x===x&&t.y===y);
@@ -307,6 +406,7 @@ function tapCell(x,y){
  if(selectedBuild){
   if(gold<costs[selectedBuild]){log('ゴールドが足りないよ');return}
   if((x===START.x&&y===START.y)||(x===GOAL.x&&y===GOAL.y)){log('ここには設置できないよ');return}
+  
   const candidate={x,y};
   let p=bfs(candidate);
   if(!p.length){
@@ -315,36 +415,18 @@ function tapCell(x,y){
    renderBoard();
    return;
   }
-  if(!pendingCell||pendingCell.x!==x||pendingCell.y!==y){
-   pendingCell=candidate;
-   preview=p;
-   log('経路と射程を確認！同じマスをもう一度タップで設置確定');
-   renderBoard();
+
+  // すでに同じマスを仮置きしている状態で、もう一度タップ（または同じマスをタップ）したら設置確定！
+  if(pendingCell && pendingCell.x===x && pendingCell.y===y){
+   confirmPlacement();
    return;
   }
-  // 設置確定
-  gold-=costs[selectedBuild];
-  const newTower = {
-   x,y,type:selectedBuild,level:1,invested:costs[selectedBuild],cool:0,
-   damage: selectedBuild==='bullet'?12:selectedBuild==='blast'?18:7,
-   range: ranges[selectedBuild]
-  };
-  towers.push(newTower);
-  stats.placed++;
-  checkAchievements();
-  log(`${names[selectedBuild]}を設置！`);
 
-  // ゴールドが足りていれば連続設置モードを維持、足りなければ解除
-  pendingCell=null;
-  preview=[];
-  if(gold < costs[selectedBuild]){
-   selectedBuild=null;
-   log('ゴールド不足のため連続設置を終了したよ');
-  }
-  showTower();
-  updateBuildSelectionUI();
+  // 初回タップ：そのマスに「仮置き（ゴースト表示）」して経路と射程を確認させる
+  pendingCell=candidate;
+  preview=p;
+  log('マスを仮置き！もう一度同じマスをタップするか下のボタンで設置確定できるよ');
   renderBoard();
-  updateUI();
   return;
  }
  selectedTower=null;
@@ -367,7 +449,6 @@ function showTower(){
  $('upgrade').disabled = !t || gold < upCost;
  $('sell').disabled = !t;
 
- // 盤面下のクイック操作バーも同期更新
  $('quickInfo').innerHTML = t
   ? `<b>${names[t.type]} Lv.${t.level}</b> <span class="muted">(攻撃:${atk} / 射程:${t.range})</span>`
   : '<span class="muted">盤面のタワーをタップすると、ここから即座に強化・売却できるよ</span>';
@@ -409,6 +490,7 @@ function updateBuildSelectionUI(){
  document.querySelectorAll('[data-opt]').forEach(el=>{
   el.classList.toggle('selected-build', el.dataset.opt === selectedBuild);
  });
+ updatePendingActionUI();
 }
 
 function updateUI(){
@@ -426,7 +508,6 @@ function updateUI(){
 function updateWaveControlUI(){
  const btn = $('startWave');
  if(running && !paused){
-  // 戦闘中でも次のウェーブを前倒し呼び出し可能にする
   btn.disabled = false;
   btn.textContent = `次ウェーブ前倒し (W${wave+1})`;
  } else if(!running && waveCountdown > 0){
@@ -454,7 +535,7 @@ document.querySelectorAll('[data-build]').forEach(b=>b.onclick=()=>{
   selectedTower = null;
   pendingCell = null;
   preview = [];
-  log(`${names[selectedBuild]}を選択（連続配置モード）。設置マスを選んでね`);
+  log(`${names[selectedBuild]}を選択。置きたいマスをタップして仮置きしてね`);
  }
  showTower();
  updateBuildSelectionUI();
@@ -470,7 +551,6 @@ $('quickSell').onclick=sellSelectedTower;
 $('econNode').onclick=()=>buyNode('econ',5);$('combatNode').onclick=()=>buyNode('combat',5);$('strategyNode').onclick=()=>buyNode('strategy',8);
 function buyNode(n,c){if(upgrades[n]||sp<c)return;sp-=c;upgrades[n]=true;if(n==='strategy')refund=Math.min(.9,refund+.05);log('成長ノードを解放！');updateUI();showTower()}
 
-// 自動ウェーブ進行トグル
 $('autoWave').onclick=()=>{
  autoAdvance = !autoAdvance;
  const btn = $('autoWave');
@@ -506,7 +586,6 @@ function beginWave(isEarlyRush = false){
 function handleStartOrRush(){
  if(paused) return;
  if(!running){
-  // 待機中またはカウントダウン中からの即時開始
   const wasCounting = waveCountdown > 0;
   running = true;
   paused = false;
@@ -515,7 +594,6 @@ function handleStartOrRush(){
   last = performance.now();
   raf = requestAnimationFrame(loop);
  } else {
-  // 戦闘中のウェーブ前倒し（現在の敵を残したまま次のウェーブのウェーブ数・敵を追加）
   stats.totalWaves++;
   stats.highestWave = Math.max(stats.highestWave, wave);
   wave++;
@@ -551,7 +629,6 @@ function loop(now){
  const rawDt = Math.min(.05, (now - last) / 1000);
  last = now;
 
- // ウェーブ間の3秒自動進行カウントダウン処理
  if(!running){
   if(autoAdvance && waveCountdown > 0){
    waveCountdown = Math.max(0, waveCountdown - rawDt);
@@ -575,7 +652,7 @@ function loop(now){
  enemies.forEach(e=>{if(e.slow>0)e.slow-=dt;if(e.index<e.path.length-1){let a=e.path[e.index],b=e.path[e.index+1],speed=e.speed*(e.slow>0?.55:1)*dt,dx=b.x-e.x,dy=b.y-e.y,d=Math.hypot(dx,dy);if(d<=speed){e.x=b.x;e.y=b.y;e.index++}else{e.x+=dx/d*speed;e.y+=dy/d*speed}}});
  for(let t of towers){t.cool-=dt;if(t.cool<=0){let target=enemies.find(e=>Math.hypot(e.x-t.x,e.y-t.y)<=t.range);if(target){let dmg=t.damage*(upgrades.combat?1.05:1);if(t.type==='blast'){enemies.forEach(e=>{if(Math.hypot(e.x-target.x,e.y-target.y)<=1.1){let dealt=dmg*.75;e.hp-=dealt;spawnDmgText(e.x,e.y,dealt,'blast')}});
  }else if(t.type==='vibe'){let dealt=dmg*.6;target.hp-=dealt;target.slow=1.2;spawnDmgText(target.x,target.y,dealt,'vibe')}else{target.hp-=dmg;spawnDmgText(target.x,target.y,dmg,'bullet')}t.cool=t.type==='bullet'?.48:t.type==='blast'?1.25:.8;}}}
- let alive=[];for(let e of enemies){if(e.hp<=0){kills++;runKills++;let g=Math.floor(5*(upgrades.econ?1.1:1));gold+=g;stats.totalGold+=g;score+=100+wave*5;runScore+=100+wave*5;stats.totalKills++}else if(e.index>=e.path.length-1){lives--;score+=0}else alive.push(e)}enemies=alive;
+ let alive=[];for(let e of enemies){if(e.hp<=0){kills++;runKills++;let g=Math.floor(5*(upgrades.econ?1.1:1));gold+=g;stats.totalGold+=g;score+=100+wave*5;runScore+=100+wave*5;stats.totalKills++}else if(e.index>=e.path.length-1){lives--;score++;}else alive.push(e)}enemies=alive;
  if(lives<=0){finish();return}
  if(spawnLeft===0&&enemies.length===0){
   running=false;
