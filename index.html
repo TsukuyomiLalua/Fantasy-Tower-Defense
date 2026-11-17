@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Fantasy Tower Defense v0.14</title>
+<title>Fantasy Tower Defense v0.16</title>
 <style>
 :root{color-scheme:dark;--bg:#101522;--panel:#1b2435;--panel2:#26334a;--line:#3b4a63;--gold:#f4c96b;--text:#edf2fa;--muted:#aab7ca;--green:#72d6a0;--red:#ef7b83;--blue:#7ebcff;--yellow:#f6d365;--purple:#b388ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#202c43,#101522 60%);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif}
@@ -21,20 +21,15 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
 .cell.in-range{box-shadow:inset 0 0 0 2px #7ebcff88, inset 0 0 12px #7ebcff33}
 .cell:disabled{opacity:1}
 
-/* タワーレベルバッジ */
 .lvl-badge{position:absolute;top:1px;left:2px;font-size:9px;font-weight:800;color:var(--gold);background:#0d1320cc;padding:0 3px;border-radius:3px;line-height:1.2;pointer-events:none}
-
-/* 仮置きタワーアイコン（スマホ対応型） */
 .ghost-tower{font-size:clamp(12px,3vw,20px);opacity:0.85;animation:pulseGhost 0.8s infinite alternate}
 @keyframes pulseGhost{
  0%{transform:scale(0.9);opacity:0.7}
  100%{transform:scale(1.1);opacity:1}
 }
 
-/* 1マス内 3x3 (9グリッド) 敵表示システム */
 .enemy-grid{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:1.5px;pointer-events:none;z-index:2}
 .enemy-slot{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
-/* 頭上ミニHPバー */
 .mini-hp{position:absolute;top:-2px;left:10%;right:10%;height:2.5px;background:#0a0f18;border-radius:2px;overflow:hidden;z-index:4;box-shadow:0 1px 2px #000a}
 .mini-hp i{display:block;height:100%;background:var(--green);transition:width .1s}
 .mini-hp i.mid{background:var(--yellow)}
@@ -47,7 +42,6 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
 .enemy-unit.slowed{outline:1.5px solid #a8e6ff;box-shadow:0 0 6px #7ebcff}
 .overflow-badge{position:absolute;right:1px;bottom:1px;background:#000c;color:#fff;font-size:9px;padding:0 3px;border-radius:4px;z-index:3;pointer-events:none;line-height:1.2}
 
-/* フローティングダメージ表記（正の数字） */
 #fx-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:10}
 .dmg-pop{position:absolute;font-size:11px;font-weight:800;transform:translate(-50%,-50%);text-shadow:0 1px 3px #000, 0 0 2px #000;animation:floatUp .65s ease-out forwards;white-space:nowrap}
 .dmg-pop.bullet{color:#fff6cc}
@@ -59,7 +53,6 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
  100%{opacity:0;transform:translate(-50%,-160%) scale(0.95)}
 }
 
-/* 盤面下 クイック選択タワーバー（どのタブからでも強化・売却可能） */
 .quick-bar{margin-top:8px;background:#111a2a;border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;min-height:46px}
 .quick-bar-info{font-size:12px;line-height:1.4}
 .quick-bar-actions{display:flex;gap:6px;align-items:center}
@@ -71,13 +64,15 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px;background:#111a2a;padding:6px 10px;border-radius:8px;border:1px solid var(--line)}
 .legend-item{display:flex;align-items:center;gap:5px}
 .dot-sample{width:9px;height:9px;display:inline-block}
-.progress{height:7px;background:#0f1725;border-radius:9px;overflow:hidden;margin-top:5px}.progress i{display:block;height:100%;background:var(--green)}
-.overlay{position:fixed;inset:0;background:#080d17d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}.overlay.show{display:flex}.modal{width:min(440px,100%);background:#202b40;border:1px solid #687b98;border-radius:16px;padding:20px;text-align:center;box-shadow:0 20px 80px #0009}.modal h2{margin-top:0}.big{font-size:32px;color:var(--gold);font-weight:800}.achievement{border:1px solid var(--line);border-radius:9px;padding:9px;margin:7px 0;background:#172135}.achievement.done{border-color:#5d9b7b}.achievement.locked{opacity:.55}.achievement b{display:block}.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.pill{font-size:11px;color:var(--gold)}.notice{font-size:12px;color:var(--muted);line-height:1.5}
+
+.overlay{position:fixed;inset:0;background:#080d17d9;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}.overlay.show{display:flex}.modal{width:min(440px,100%);background:#202b40;border:1px solid #687b98;border-radius:16px;padding:20px;text-align:center;box-shadow:0 20px 80px #0009}.modal h2{margin-top:0}.big{font-size:32px;color:var(--gold);font-weight:800}
+.achievement{border:1px solid var(--line);border-radius:9px;padding:9px;margin:7px 0;background:#172135}.achievement.done{border-color:#5d9b7b}.achievement.locked{opacity:.55}.achievement b{display:block}
+.row{display:flex;justify-content:space-between;gap:8px;align-items:center}.pill{font-size:11px;color:var(--gold)}.notice{font-size:12px;color:var(--muted);line-height:1.5}
 @media(max-width:760px){main{grid-template-columns:1fr}.stats{grid-template-columns:repeat(4,1fr)}header{align-items:flex-start}.panel{padding:10px}}
 </style>
 </head>
 <body>
-<header><div><h1>Fantasy Tower Defense <span class="tag">v0.14 prototype</span></h1><small>迷宮防衛・無限ウェーブ</small></div><div class="muted" id="phase">準備中</div></header>
+<header><div><h1>Fantasy Tower Defense <span class="tag">v0.16 prototype</span></h1><small>迷宮防衛・SPスキル拡張版</small></div><div class="muted" id="phase">準備中</div></header>
 <main>
 <section class="panel">
  <div class="stats">
@@ -88,7 +83,6 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <div id="fx-layer"></div>
  </div>
 
- <!-- 盤面直下のクイック操作バー（どのタブからでも強化・売却可能） -->
  <div class="quick-bar" id="quickBar">
   <div class="quick-bar-info" id="quickInfo"><span class="muted">盤面のタワーをタップすると、ここから即座に強化・売却できるよ</span></div>
   <div class="quick-bar-actions">
@@ -118,7 +112,7 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <button class="btn speed" data-speed="3">×3</button>
   <button class="btn speed" data-speed="5">×5</button>
  </div>
- <p class="notice">【スマホ対応】1回タップで仮置き（ルート＆射程確認）、もう一度同じマスをタップ（または下の「確定」ボタン）で設置完了！</p>
+ <p class="notice">【スマホ対応】マスを1回タップで仮置き（ルート＆射程確認）、もう一度同じマスをタップ（または下の「確定」ボタン）で設置完了！</p>
  <h3>戦況ログ</h3><div class="log" id="log"></div>
 </section>
 <aside class="panel">
@@ -131,7 +125,6 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
   <div class="tower-option" data-opt="blast"><div><strong>爆発塔（射程 2）</strong><small>範囲攻撃。複数の敵を巻き込む</small></div><button class="btn" data-build="blast">45G</button></div>
   <div class="tower-option" data-opt="vibe"><div><strong>振動塔（射程 2）</strong><small>継続ダメージと移動速度低下</small></div><button class="btn" data-build="vibe">40G</button></div>
   
-  <!-- スマホでも確実に設置できる個別確定アクションパネル -->
   <div id="pendingActionPanel" style="display:none;margin-top:10px;padding:10px;background:#1b2435;border:1px solid var(--gold);border-radius:10px;text-align:center">
    <div style="font-size:12px;margin-bottom:6px;color:var(--gold)" id="pendingPrompt">仮置き中：本当にここに置く？</div>
    <div style="display:flex;gap:6px;justify-content:center">
@@ -140,31 +133,43 @@ main{max-width:1100px;margin:auto;padding:12px;display:grid;grid-template-column
    </div>
   </div>
 
-  <p class="notice" style="margin-top:10px">ゴールドが足りている間は選択状態が維持されるから、続けてポンポン設置できるよ。やめる時は「選択解除」を押してね。</p>
+  <p class="notice" style="margin-top:10px">ゴールドが足りている間は選択状態が維持されるから、続けてポンポン設置できるよ。</p>
  </div>
  <div class="section" id="manage">
   <h3>選択中のタワー詳細</h3><div id="towerInfo" class="notice">盤面のタワーをタップしてね。</div>
   <div class="controls"><button class="btn primary" id="upgrade" disabled>強化</button><button class="btn" id="sell" disabled>売却</button></div>
-  <p class="notice">盤面下のクイックバーからでも、建設タブを開いたまま強化・売却ができるよ。売却返金：投資額の70%（最大90%）。</p>
+  <p class="notice">盤面下のクイックバーからでも、建設タブを開いたまま強化・売却ができるよ。</p>
  </div>
  <div class="section" id="growth">
-  <h3>防衛者の成長</h3><div class="stat"><b id="sp">0</b><span>所持SP</span></div>
+  <h3>防衛者の成長（SPスキルツリー）</h3><div class="stat"><b id="sp">0</b><span>所持SP</span></div>
+  
   <div class="achievement"><div class="row"><b>経済：戦利品の知恵</b><span class="pill">5 SP</span></div><small>敵撃破ゴールド +10%</small><button class="btn" id="econNode">解放</button></div>
   <div class="achievement"><div class="row"><b>戦闘：攻撃訓練</b><span class="pill">5 SP</span></div><small>全タワー攻撃力 +5%</small><button class="btn" id="combatNode">解放</button></div>
   <div class="achievement"><div class="row"><b>戦略：熟練解体</b><span class="pill">8 SP</span></div><small>売却返金率 +5%（最大90%）</small><button class="btn" id="strategyNode">解放</button></div>
-  <p class="notice">スキルツリーは試作用の入口。ノードや分岐は今後追加できる構造にするよ。</p>
+  
+  <!-- 新規追加のSPスキルツリーノード -->
+  <div class="achievement"><div class="row"><b>拠点：強靭な壁</b><span class="pill">6 SP</span></div><small>拠点耐久（ライフ）上限 +10</small><button class="btn" id="lifeNode">解放</button></div>
+  <div class="achievement"><div class="row"><b>技術：射程拡大</b><span class="pill">10 SP</span></div><small>全タワー射程 +0.5マス</small><button class="btn" id="rangeNode">解放</button></div>
+  <div class="achievement"><div class="row"><b>錬金：初期資金増強</b><span class="pill">7 SP</span></div><small>ゲーム開始時ゴールド +50G</small><button class="btn" id="goldNode">解放</button></div>
+
+  <p class="notice">SPを消費して様々な永続バフを獲得しよう！</p>
  </div>
- <div class="section" id="achieve"><h3>実績</h3><div id="achievements"></div><p class="notice">未解放実績も内部進捗を蓄積。前段階の達成で解放され、条件達成済みなら即時クリア！</p></div>
+ <div class="section" id="achieve"><h3>実績</h3><div id="achievements"></div><p class="notice">未解放実績も内部進捗を蓄積。</p></div>
 </aside>
 </main>
 <div class="overlay" id="result"><div class="modal"><h2>防衛失敗…！</h2><p>今回の到達ウェーブ <b id="resWave">1</b></p><p>撃破数 <b id="resKills">0</b></p><p>スコア</p><div class="big" id="scoreCount">0</div><p>獲得SP <span class="big" id="earnedSP">0</span></p><p class="notice">スコア報酬と実績報酬を所持SPに加算したよ。</p><button class="btn primary" id="again">もう一度挑戦</button></div></div>
 <script>
 const W=12,H=8,START={x:0,y:3},GOAL={x:11,y:3};
 const costs={bullet:30,blast:45,vibe:40}, names={bullet:"弾丸塔",blast:"爆発塔",vibe:"振動塔"}, icons={bullet:"➤",blast:"✹",vibe:"〰"};
-const ranges={bullet:3,blast:2,vibe:2};
+const baseRanges={bullet:3,blast:2,vibe:2};
 const SLOT_ORDER=[4,0,8,2,6,1,7,3,5];
 
-let towers=[],enemies=[],wave=1,gold=150,lives=20,kills=0,score=0,sp=0,selectedBuild=null,selectedTower=null,route=[],preview=[],pendingCell=null,hoverCell=null,running=false,paused=false,autoAdvance=false,waveCountdown=0,spawnLeft=0,spawnTimer=0,last=0,raf=0,gameSpeed=1,runScore=0,runKills=0,runWave=1,stats={totalKills:0,totalGold:0,totalWaves:0,runs:0,highestWave:0,totalScore:0,placed:0},upgrades={econ:false,combat:false,strategy:false},refund=0.70;
+let towers=[],enemies=[],wave=1,gold=150,maxLives=20,lives=20,kills=0,score=0,sp=0,selectedBuild=null,selectedTower=null,route=[],preview=[],pendingCell=null,hoverCell=null,running=false,paused=false,autoAdvance=false,waveCountdown=0,spawnLeft=0,spawnTimer=0,last=0,raf=0,gameSpeed=1,runScore=0,runKills=0,runWave=1,stats={totalKills:0,totalGold:0,totalWaves:0,runs:0,highestWave:0,totalScore:0,placed:0};
+
+// スキルツリーの拡張
+let upgrades={econ:false, combat:false, strategy:false, life:false, range:false, goldBoost:false};
+let refund=0.70;
+
 const board=document.getElementById('board'),fxLayer=document.getElementById('fx-layer'),logEl=document.getElementById('log');
 const $=id=>document.getElementById(id);
 function log(t){logEl.innerHTML=`<div>› ${t}</div>`+logEl.innerHTML}
@@ -195,6 +200,10 @@ function spawnDmgText(x, y, amount, type){
  setTimeout(() => el.remove(), 650);
 }
 
+function getTowerRange(type){
+ return baseRanges[type] + (upgrades.range ? 0.5 : 0);
+}
+
 function renderBoard(){
  board.innerHTML='';
  route=bfs();
@@ -206,7 +215,6 @@ function renderBoard(){
   cellEnemies.get(k).push(e);
  }
 
- // 射程ハイライトの中心と半径を決定
  let rangeCenter = null;
  let rangeRadius = 0;
  if(selectedTower){
@@ -214,10 +222,9 @@ function renderBoard(){
   rangeRadius = selectedTower.range;
  } else if(selectedBuild && (pendingCell || hoverCell)){
   rangeCenter = pendingCell || hoverCell;
-  rangeRadius = ranges[selectedBuild];
+  rangeRadius = getTowerRange(selectedBuild);
  }
 
- // ホバー中の経路プレビュー（まだpendingCellがない場合）
  let activePreview = preview;
  if(selectedBuild && !pendingCell && hoverCell){
   const isBlocked = occupied(hoverCell.x, hoverCell.y) || (hoverCell.x===START.x&&hoverCell.y===START.y) || (hoverCell.x===GOAL.x&&hoverCell.y===GOAL.y);
@@ -244,7 +251,6 @@ function renderBoard(){
    if(selectedTower===t)c.style.outline='2px solid #fff';
   }
 
-  // 仮置き（ペンド状態）の表示
   if(pendingCell && pendingCell.x===x && pendingCell.y===y && !t){
    c.classList.add('pending-spot');
    if(selectedBuild){
@@ -319,7 +325,6 @@ board.addEventListener('pointerleave',()=>{
  }
 });
 
-// スマホでも操作しやすいように仮置きパネルを表示・更新する
 function updatePendingActionUI(){
  const panel = $('pendingActionPanel');
  if(selectedBuild && pendingCell){
@@ -356,12 +361,11 @@ function confirmPlacement(){
   return;
  }
 
- // 正式に配置確定
  gold -= costs[selectedBuild];
  const newTower = {
   x, y, type: selectedBuild, level: 1, invested: costs[selectedBuild], cool: 0,
   damage: selectedBuild==='bullet'?12:selectedBuild==='blast'?18:7,
-  range: ranges[selectedBuild]
+  range: getTowerRange(selectedBuild)
  };
  towers.push(newTower);
  stats.placed++;
@@ -416,13 +420,11 @@ function tapCell(x,y){
    return;
   }
 
-  // すでに同じマスを仮置きしている状態で、もう一度タップ（または同じマスをタップ）したら設置確定！
   if(pendingCell && pendingCell.x===x && pendingCell.y===y){
    confirmPlacement();
    return;
   }
 
-  // 初回タップ：そのマスに「仮置き（ゴースト表示）」して経路と射程を確認させる
   pendingCell=candidate;
   preview=p;
   log('マスを仮置き！もう一度同じマスをタップするか下のボタンで設置確定できるよ');
@@ -496,7 +498,14 @@ function updateBuildSelectionUI(){
 function updateUI(){
  $('wave').textContent=wave;$('gold').textContent=gold;$('lives').textContent=lives;$('kills').textContent=kills;$('sp').textContent=sp;
  document.querySelectorAll('[data-build]').forEach(b=>b.disabled=gold<costs[b.dataset.build]);
- $('econNode').disabled=upgrades.econ||sp<5;$('combatNode').disabled=upgrades.combat||sp<5;$('strategyNode').disabled=upgrades.strategy||sp<8;
+ 
+ $('econNode').disabled=upgrades.econ||sp<5;
+ $('combatNode').disabled=upgrades.combat||sp<5;
+ $('strategyNode').disabled=upgrades.strategy||sp<8;
+ $('lifeNode').disabled=upgrades.life||sp<6;
+ $('rangeNode').disabled=upgrades.range||sp<10;
+ $('goldNode').disabled=upgrades.goldBoost||sp<7;
+
  if(selectedTower){
   const upCost = 25*selectedTower.level;
   $('upgrade').disabled = gold < upCost;
@@ -548,8 +557,23 @@ $('sell').onclick=sellSelectedTower;
 $('quickUpgrade').onclick=upgradeSelectedTower;
 $('quickSell').onclick=sellSelectedTower;
 
-$('econNode').onclick=()=>buyNode('econ',5);$('combatNode').onclick=()=>buyNode('combat',5);$('strategyNode').onclick=()=>buyNode('strategy',8);
-function buyNode(n,c){if(upgrades[n]||sp<c)return;sp-=c;upgrades[n]=true;if(n==='strategy')refund=Math.min(.9,refund+.05);log('成長ノードを解放！');updateUI();showTower()}
+$('econNode').onclick=()=>buyNode('econ',5);
+$('combatNode').onclick=()=>buyNode('combat',5);
+$('strategyNode').onclick=()=>buyNode('strategy',8);
+$('lifeNode').onclick=()=>buyNode('life',6,()=>{ maxLives+=10; lives+=10; });
+$('rangeNode').onclick=()=>buyNode('range',10,()=>{ towers.forEach(t=>t.range=getTowerRange(t.type)); });
+$('goldNode').onclick=()=>buyNode('goldBoost',7,()=>{ gold+=50; });
+
+function buyNode(n,c,cb=null){
+ if(upgrades[n]||sp<c)return;
+ sp-=c;
+ upgrades[n]=true;
+ if(n==='strategy') refund=Math.min(.9,refund+.05);
+ if(cb) cb();
+ log('SPスキルを解放！');
+ updateUI();
+ showTower();
+}
 
 $('autoWave').onclick=()=>{
  autoAdvance = !autoAdvance;
@@ -568,18 +592,22 @@ $('autoWave').onclick=()=>{
  }
 };
 
+function getTotalEnemiesForWave(w){
+ return Math.floor(18 + w * 7.5);
+}
+
 function beginWave(isEarlyRush = false){
- const addedCount = 5 + Math.floor(wave * 1.5);
- spawnLeft += addedCount;
+ const totalForThisWave = getTotalEnemiesForWave(wave);
+ spawnLeft += totalForThisWave;
  spawnTimer = 0;
  waveCountdown = 0;
  $('phase').textContent = `WAVE ${wave}・戦闘中`;
  if(isEarlyRush){
   const bonusGold = 10 + wave * 2;
   gold += bonusGold;
-  log(`WAVE ${wave} を前倒し開始！（早期ボーナス +${bonusGold}G）`);
+  log(`WAVE ${wave}（総数 ${totalForThisWave}体の大群）を前倒し開始！（早期ボーナス +${bonusGold}G）`);
  } else {
-  log(`WAVE ${wave} 開始！`);
+  log(`WAVE ${wave} 開始！総数 ${totalForThisWave}体の魔物の軍勢が迫る！`);
  }
 }
 
@@ -613,15 +641,29 @@ $('pause').onclick=()=>{
  if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}
 };
 
-function spawn(){
+function spawnSingleEnemy(){
  let p=bfs();
+ if(!p.length) return;
  let r=Math.random();
  let type='normal';
- let baseHp=35+wave*9;
- let speed=0.85+wave*0.012;
- if(wave>=2 && r<0.28){ type='fast'; baseHp*=0.65; speed*=1.45; }
- else if(wave>=3 && r>0.78){ type='tank'; baseHp*=2.1; speed*=0.65; }
+ let baseHp=35+wave*11;
+ let speed=0.85+wave*0.015;
+ if(wave>=2 && r<0.3){ type='fast'; baseHp*=0.6; speed*=1.45; }
+ else if(wave>=3 && r>0.75){ type='tank'; baseHp*=2.3; speed*=0.6; }
  enemies.push({x:p[0].x,y:p[0].y,path:p,index:0,hp:baseHp,max:baseHp,speed:speed,slow:0,type:type});
+}
+
+function spawn(){
+ const totalForThisWave = getTotalEnemiesForWave(wave);
+ const isPackSpawn = totalForThisWave >= 50 && Math.random() < 0.45;
+ const packSize = isPackSpawn ? Math.floor(Math.random() * 3) + 2 : 1;
+
+ for(let i = 0; i < packSize; i++){
+  if(spawnLeft > 0){
+   spawnSingleEnemy();
+   spawnLeft--;
+  }
+ }
 }
 
 function loop(now){
@@ -648,10 +690,18 @@ function loop(now){
  }
 
  let dt = rawDt * gameSpeed;
- spawnTimer-=dt;if(spawnLeft>0&&spawnTimer<=0){spawn();spawnLeft--;spawnTimer=.8}
+ const totalForThisWave = getTotalEnemiesForWave(wave);
+ const interval = totalForThisWave >= 50 ? 0.35 : 0.6;
+
+ spawnTimer-=dt;
+ while(spawnLeft > 0 && spawnTimer <= 0){
+  spawn();
+  spawnTimer += interval;
+ }
+
  enemies.forEach(e=>{if(e.slow>0)e.slow-=dt;if(e.index<e.path.length-1){let a=e.path[e.index],b=e.path[e.index+1],speed=e.speed*(e.slow>0?.55:1)*dt,dx=b.x-e.x,dy=b.y-e.y,d=Math.hypot(dx,dy);if(d<=speed){e.x=b.x;e.y=b.y;e.index++}else{e.x+=dx/d*speed;e.y+=dy/d*speed}}});
  for(let t of towers){t.cool-=dt;if(t.cool<=0){let target=enemies.find(e=>Math.hypot(e.x-t.x,e.y-t.y)<=t.range);if(target){let dmg=t.damage*(upgrades.combat?1.05:1);if(t.type==='blast'){enemies.forEach(e=>{if(Math.hypot(e.x-target.x,e.y-target.y)<=1.1){let dealt=dmg*.75;e.hp-=dealt;spawnDmgText(e.x,e.y,dealt,'blast')}});
- }else if(t.type==='vibe'){let dealt=dmg*.6;target.hp-=dealt;target.slow=1.2;spawnDmgText(target.x,target.y,dealt,'vibe')}else{target.hp-=dmg;spawnDmgText(target.x,target.y,dmg,'bullet')}t.cool=t.type==='bullet'?.48:t.type==='blast'?1.25:.8;}}}
+ }else if(t.type==='vibe'){let dealt=dmg*.6;target.hp-=dealt;target.slow=1.2;spawnDmgText(target.x,target.y,dealt,'vibe')}else{target.hp-=dmg;spawnDmgText(target.x,target.y,dmg,'bullet')}t.cool=t.type==='bullet'?.42:t.type==='blast'?1.1:.75;}}}
  let alive=[];for(let e of enemies){if(e.hp<=0){kills++;runKills++;let g=Math.floor(5*(upgrades.econ?1.1:1));gold+=g;stats.totalGold+=g;score+=100+wave*5;runScore+=100+wave*5;stats.totalKills++}else if(e.index>=e.path.length-1){lives--;score++;}else alive.push(e)}enemies=alive;
  if(lives<=0){finish();return}
  if(spawnLeft===0&&enemies.length===0){
@@ -689,7 +739,14 @@ function checkAchievements(){let changed=true;while(changed){changed=false;for(l
 function awardAchievementNoRecurse(a){a.done=true;sp+=a.reward;log(`実績達成：${a.name}（+${a.reward} SP）`)}
 function renderAchievements(){$('achievements').innerHTML=ach.map(a=>`<div class="achievement ${a.done?'done':!a.unlocked?'locked':''}"><div class="row"><b>${a.unlocked?a.name:'？？？'}</b><span class="pill">${a.done?'達成':a.unlocked?`+${a.reward} SP`:'未解放'}</span></div><small>${a.unlocked?a.desc:'条件を満たすと解放'}</small></div>`).join('')}
 function finish(){running=false;waveCountdown=0;cancelAnimationFrame(raf);$('phase').textContent='敗北';$('startWave').disabled=true;stats.runs++;stats.highestWave=Math.max(stats.highestWave,wave);stats.totalScore+=runScore;let earned=Math.floor(runScore/10000);sp+=earned;checkAchievements();$('resWave').textContent=wave;$('resKills').textContent=runKills;$('earnedSP').textContent=earned;$('scoreCount').textContent='0';$('result').classList.add('show');let target=runScore,start=performance.now();function count(t){let p=Math.min(1,(t-start)/1400);$('scoreCount').textContent=Math.floor(target*p).toLocaleString();if(p<1)requestAnimationFrame(count)}requestAnimationFrame(count);updateUI()}
-$('again').onclick=()=>{ $('result').classList.remove('show');towers=[];enemies=[];wave=1;gold=150;lives=20;kills=0;score=0;runScore=0;runKills=0;selectedTower=null;selectedBuild=null;pendingCell=null;preview=[];running=false;paused=false;waveCountdown=0;$('phase').textContent='準備中';$('pause').textContent='一時停止';log('新しい挑戦を始めよう！');updateBuildSelectionUI();renderBoard();updateUI();showTower()};
+$('again').onclick=()=>{
+ $('result'].classList.remove('show');
+ towers=[];enemies=[];wave=1;
+ maxLives=upgrades.life?30:20;
+ lives=maxLives;
+ gold=150+(upgrades.goldBoost?50:0);
+ kills=0;score=0;runScore=0;runKills=0;selectedTower=null;selectedBuild=null;pendingCell=null;preview=[];running=false;paused=false;waveCountdown=0;$('phase').textContent='準備中';$('startWave').disabled=false;$('pause').textContent='一時停止';log('新しい挑戦を始めよう！');updateBuildSelectionUI();renderBoard();updateUI();showTower();
+};
 
 renderBoard();renderAchievements();updateUI();showTower();log('タワーを選んで配置し、防衛開始を押そう！');
 </script>
