@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense - 3D Prototype</title>
+<title>Fantasy Tower Defense - 3D Prototype v0.21</title>
 <style>
 :root{color-scheme:dark;--panel:rgba(16,24,35,.88);--line:rgba(255,255,255,.16);--gold:#f2cf78}
 *{box-sizing:border-box}
@@ -25,6 +25,22 @@ button.active{background:#35634c;border-color:#7fd4a2}
 #towerPanel.show{display:flex}
 .towerChoice{flex:1;text-align:left;min-width:0}
 .towerChoice small{display:block;color:#c5d0dc;font-weight:400;margin-top:4px;font-size:10px}
+
+#infoWindow{position:fixed;z-index:8;left:50%;top:50%;transform:translate(-50%,-50%);width:min(310px,calc(100% - 34px));max-height:min(72vh,520px);overflow:auto;display:none;background:rgba(7,10,15,.91);border:1px solid rgba(210,225,245,.2);border-radius:16px;padding:13px;color:#f4f6fa;box-shadow:0 16px 48px #0009;backdrop-filter:blur(12px)}
+#infoWindow.show{display:block}
+#infoWindow .infoHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+#infoWindow h3{margin:0;font-size:15px;letter-spacing:.02em}
+#infoWindow .closeInfo{min-height:30px;height:30px;padding:3px 10px;background:#252c36;border-radius:9px}
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.infoStat{background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:8px}
+.infoStat span{display:block;color:#aeb9c8;font-size:10px;margin-bottom:3px}
+.infoStat b{font-size:14px;font-variant-numeric:tabular-nums}
+.infoSection{font-size:11px;color:#c5cfdb;margin:12px 0 7px}
+.upgradeRow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.055);border-radius:10px;padding:8px;margin-top:6px}
+.upgradeRow .upText{min-width:0;font-size:11px}
+.upgradeRow small{display:block;color:#aeb9c8;font-size:10px;margin-top:3px}
+.upgradeRow button{min-height:34px;padding:7px 9px;white-space:nowrap;background:#6d552c;border-color:#b99551;font-size:10px}
+.infoNote{font-size:10px;color:#9daaba;margin-top:8px;line-height:1.5}
 #toast{position:fixed;left:50%;bottom:calc(122px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#172333eF;border:1px solid var(--line);border-radius:12px;padding:9px 13px;font-size:12px;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 #toast.show{opacity:1}
 @media(min-width:800px){#bottom{max-width:760px;left:50%;right:auto;width:calc(100% - 20px);transform:translateX(-50%)}#towerPanel{max-width:760px;left:50%;right:auto;width:calc(100% - 20px);transform:translateX(-50%)}}
@@ -33,10 +49,10 @@ button.active{background:#35634c;border-color:#7fd4a2}
 <body>
 <div id="game"></div>
 <div id="top">
- <div class="pill">3D PROTOTYPE <b>v0.1</b></div>
+ <div class="pill">3D PROTOTYPE <b>v0.21</b></div>
  <div class="pill">敵 <b id="enemyCount">0</b>　タワー <b id="towerCount">0</b></div>
 </div>
-<div id="hint">ドラッグ：回転　／　2本指：移動・ズーム　／　配置ボタン：タワー設置</div>
+<div id="hint">ポータルから敵が出現 → クリスタル拠点を防衛！　／　ドラッグ：回転・2本指：移動とズーム</div>
 <div id="towerPanel" class="panel">
  <button class="towerChoice" data-kind="bolt">弾丸塔 <small>単体攻撃・仮モデル</small></button>
  <button class="towerChoice" data-kind="blast">爆発塔 <small>範囲攻撃・仮モデル</small></button>
@@ -47,6 +63,10 @@ button.active{background:#35634c;border-color:#7fd4a2}
   <button id="build" class="primary">タワー配置</button>
   <button id="resetCam">視点リセット</button>
  </div>
+</div>
+<div id="infoWindow" role="dialog" aria-label="対象の情報">
+ <div class="infoHead"><h3 id="infoTitle">対象情報</h3><button class="closeInfo" id="closeInfo">閉じる</button></div>
+ <div id="infoContent"></div>
 </div>
 <div id="toast"></div>
 <script type="module">
@@ -74,22 +94,22 @@ scene.add(sun);
 const mat=(color,roughness=1)=>new THREE.MeshStandardMaterial({color,roughness,flatShading:true});
 const grassMat=mat(0x6d9b57),grassDark=mat(0x557d49),roadMat=mat(0x9a927d),roadEdge=mat(0x625f55),stoneMat=mat(0x77796f),woodMat=mat(0x705037),leafMat=mat(0x3f7548),leaf2=mat(0x5e8d4d),goldMat=mat(0xd9ae52),enemyMat=mat(0x9b5145),enemyLight=mat(0xd28a65),towerMat=mat(0x667a9b),towerTop=mat(0xb9c6d0),waterMat=mat(0x4d91a0);
 
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(76,54),grassMat);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,74),grassMat);
 ground.rotation.x=-Math.PI/2;ground.position.y=-.12;ground.receiveShadow=true;scene.add(ground);
 // gentle terrain patches
-for(let i=0;i<55;i++){
- const x=(Math.random()-.5)*70,z=(Math.random()-.5)*48;
+for(let i=0;i<78;i++){
+ const x=(Math.random()-.5)*92,z=(Math.random()-.5)*66;
  const patch=new THREE.Mesh(new THREE.CircleGeometry(.35+Math.random()*1.2,5),Math.random()>.5?grassDark:grassMat);
  patch.rotation.x=-Math.PI/2;patch.position.set(x,-.105,z);patch.scale.y=.65;scene.add(patch);
 }
 
 // Three incoming winding lanes that merge into a broad central route.
 const lanes=[
- [[-30,-17],[-23,-15],[-19,-10],[-16,-5],[-11,-2],[-7,1],[0,2]],
- [[-30,0],[-24,2],[-19,5],[-14,8],[-9,8],[0,2]],
- [[-30,17],[-24,15],[-20,11],[-14,6],[-8,2],[0,2]]
+ [[-43,-23],[-34,-21],[-28,-15],[-23,-8],[-16,-3],[-8,1],[0,2]],
+ [[-43,0],[-34,2],[-27,7],[-19,12],[-11,11],[0,2]],
+ [[-43,23],[-34,21],[-28,15],[-20,8],[-12,3],[0,2]]
 ];
-const merged=[[0,2],[6,2],[11,1],[16,0],[22,0],[29,0]];
+const merged=[[0,2],[9,2],[17,1],[25,0],[33,0],[41,0]];
 const routePoints=lanes.map(a=>a.concat(merged.slice(1)));
 function makeRoad(points,width){
  const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(p[0],.015,p[1])));
@@ -111,7 +131,45 @@ function makeRoad(points,width){
   seam.position.set(p.x,.045,p.z);seam.rotation.y=Math.atan2(tan.x,tan.z);scene.add(seam);
  }
 }
-lanes.forEach(p=>makeRoad(p,3.5));makeRoad(merged,5.3);
+
+lanes.forEach(p=>makeRoad(p,4.2));makeRoad(merged,6.2);
+
+// Glowing enemy portals at each route entrance.
+const portalMats = [
+ new THREE.MeshStandardMaterial({color:0x653b9b,emissive:0x5420a8,emissiveIntensity:1.35,metalness:.25,roughness:.35}),
+ new THREE.MeshStandardMaterial({color:0x287e9d,emissive:0x126caa,emissiveIntensity:1.35,metalness:.25,roughness:.35}),
+ new THREE.MeshStandardMaterial({color:0x9b4935,emissive:0x9d321c,emissiveIntensity:1.35,metalness:.25,roughness:.35})
+];
+const portals=[];
+function makePortal(x,z,index){
+ const g=new THREE.Group();g.position.set(x,0,z);
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.35,.38,8),roadEdge);base.position.y=.2;base.castShadow=true;g.add(base);
+ const ring=new THREE.Mesh(new THREE.TorusGeometry(1.42,.22,8,12),goldMat);ring.position.y=1.75;ring.rotation.x=Math.PI/2;ring.castShadow=true;g.add(ring);
+ const inner=new THREE.Mesh(new THREE.TorusGeometry(1.08,.12,7,12),portalMats[index]);inner.position.y=1.75;inner.rotation.x=Math.PI/2;g.add(inner);
+ const core=new THREE.Mesh(new THREE.IcosahedronGeometry(.86,1),portalMats[index]);core.position.y=1.75;g.add(core);
+ for(let k=0;k<4;k++){
+  const pillar=new THREE.Mesh(new THREE.BoxGeometry(.34,2.3,.42),stoneMat);
+  const a=k*Math.PI/2;pillar.position.set(Math.cos(a)*1.75,1.15,Math.sin(a)*1.75);pillar.castShadow=true;g.add(pillar);
+  const crystal=new THREE.Mesh(new THREE.OctahedronGeometry(.28,0),portalMats[index]);crystal.position.copy(pillar.position).add(new THREE.Vector3(0,1.25,0));g.add(crystal);
+ }
+ scene.add(g);portals.push({group:g,ring:inner,core,index});
+}
+lanes.forEach((p,i)=>makePortal(p[0][0]+1,p[0][1],i));
+
+// A clear, fortified destination at the end of the merged road.
+const baseGroup=new THREE.Group();baseGroup.position.set(43,0,0);
+const basePlatform=new THREE.Mesh(new THREE.CylinderGeometry(5.3,5.8,.75,8),roadEdge);basePlatform.position.y=.35;basePlatform.castShadow=true;basePlatform.receiveShadow=true;baseGroup.add(basePlatform);
+const keep=new THREE.Mesh(new THREE.BoxGeometry(5.4,5.2,5.4),stoneMat);keep.position.y=3.1;keep.castShadow=true;baseGroup.add(keep);
+const keepRoof=new THREE.Mesh(new THREE.ConeGeometry(4.1,2.7,4),towerMat);keepRoof.position.y=7.05;keepRoof.rotation.y=Math.PI/4;keepRoof.castShadow=true;baseGroup.add(keepRoof);
+for(const dx of [-3.4,3.4])for(const dz of [-3.4,3.4]){
+ const turret=new THREE.Mesh(new THREE.CylinderGeometry(.8,1,5.2,6),roadEdge);turret.position.set(dx,2.8,dz);turret.castShadow=true;baseGroup.add(turret);
+ const cap=new THREE.Mesh(new THREE.ConeGeometry(1.15,1.8,6),goldMat);cap.position.set(dx,6.25,dz);cap.castShadow=true;baseGroup.add(cap);
+}
+const heart=new THREE.Mesh(new THREE.OctahedronGeometry(1.25,1),new THREE.MeshStandardMaterial({color:0x5ce4f0,emissive:0x1c9eb4,emissiveIntensity:1.8,roughness:.25}));
+heart.position.set(0,4.1,0);baseGroup.add(heart);
+const sign=new THREE.Mesh(new THREE.BoxGeometry(4.4,.22,.35),goldMat);sign.position.set(0,7.2,2.85);baseGroup.add(sign);
+scene.add(baseGroup);
+
 
 // Small low-poly decorations.
 function tree(x,z,s=1){
@@ -137,11 +195,11 @@ function ruin(x,z){
  }
  const cap=new THREE.Mesh(new THREE.BoxGeometry(3.4,.38,2.1),stoneMat);cap.position.y=3.65;cap.castShadow=true;g.add(cap);scene.add(g);
 }
-ruin(-14,-19);ruin(12,19);ruin(25,-16);
+ruin(-22,-29);ruin(17,29);ruin(32,-27);
 
 // Placement areas and visual grid (only shown while placing).
-const grid=new THREE.GridHelper(70,35,0xc9e4a7,0x9db98c);grid.position.y=.025;grid.visible=false;scene.add(grid);
-const placePlane=new THREE.Mesh(new THREE.PlaneGeometry(76,54),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));placePlane.rotation.x=-Math.PI/2;placePlane.position.y=.04;scene.add(placePlane);
+const grid=new THREE.GridHelper(96,48,0xc9e4a7,0x9db98c);grid.position.y=.025;grid.visible=false;scene.add(grid);
+const placePlane=new THREE.Mesh(new THREE.PlaneGeometry(100,74),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));placePlane.rotation.x=-Math.PI/2;placePlane.position.y=.04;scene.add(placePlane);
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
 const towers=[],enemies=[],shots=[];
 let placing=false,selectedKind='bolt',preview=null;
@@ -151,7 +209,10 @@ function makeTower(kind,x,z){
  const body=new THREE.Mesh(new THREE.BoxGeometry(.9,1.15,.9),towerMat);body.position.y=.95;body.castShadow=true;g.add(body);
  const head=new THREE.Mesh(kind==='blast'?new THREE.CylinderGeometry(.48,.62,.48,7):new THREE.BoxGeometry(.72,.45,.72),kind==='blast'?goldMat:towerTop);head.position.y=1.72;head.castShadow=true;g.add(head);
  const barrel=new THREE.Mesh(new THREE.CylinderGeometry(.13,.19,1.05,6),roadEdge);barrel.rotation.x=Math.PI/2;barrel.position.set(0,1.73,.58);g.add(barrel);
- scene.add(g);towers.push({group:g,kind,cool:0,range:kind==='blast'?8:10});updateCounts();
+ scene.add(g);
+ const tower={group:g,kind,cool:0,range:kind==='blast'?8:10,damage:kind==='blast'?2:1,fireInterval:kind==='blast'?.9:.48,powerLevel:0,speedLevel:0};
+ g.userData.entity=tower;g.traverse(o=>{o.userData.entity=tower});
+ towers.push(tower);updateCounts();
 }
 function makeEnemy(laneIndex= Math.floor(Math.random()*3)){
  const g=new THREE.Group();
@@ -159,12 +220,50 @@ function makeEnemy(laneIndex= Math.floor(Math.random()*3)){
  const head=new THREE.Mesh(new THREE.SphereGeometry(.28,6,5),enemyLight);head.position.set(0,1.45,.12);head.castShadow=true;g.add(head);
  for(const side of [-1,1]){const horn=new THREE.Mesh(new THREE.ConeGeometry(.12,.45,5),goldMat);horn.position.set(side*.23,1.72,.08);horn.rotation.z=side*-.35;g.add(horn)}
  scene.add(g);const pts=routePoints[laneIndex].map(p=>new THREE.Vector3(p[0],0,p[1]));
- enemies.push({group:g,pts,segment:0,t:0,speed:2.0+Math.random()*.45,hp:3});updateCounts();
+ const enemy={group:g,pts,segment:0,t:0,speed:0.95+Math.random()*.2,hp:3,maxHp:3};
+ g.userData.entity=enemy;g.traverse(o=>{o.userData.entity=enemy});
+ enemies.push(enemy);updateCounts();
 }
 function updateCounts(){document.querySelector('#enemyCount').textContent=enemies.length;document.querySelector('#towerCount').textContent=towers.length}
 function toast(msg){const el=document.querySelector('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),1600)}
+function closeInfo(){document.querySelector('#infoWindow').classList.remove('show');selectedEntity=null}
+let selectedEntity=null;
+function showInfo(entity){
+ selectedEntity=entity;
+ const panel=document.querySelector('#infoWindow'),title=document.querySelector('#infoTitle'),content=document.querySelector('#infoContent');
+ if(enemies.includes(entity)){
+  title.textContent='敵ユニット';
+  content.innerHTML=`<div class="infoGrid">
+   <div class="infoStat"><span>現在HP</span><b>${Math.max(0,entity.hp)} / ${entity.maxHp}</b></div>
+   <div class="infoStat"><span>移動速度</span><b>${entity.speed.toFixed(2)}</b></div>
+  </div><div class="infoNote">ポータルから防衛拠点へ進行中の敵だよ。</div>`;
+ }else if(towers.includes(entity)){
+  const kindName=entity.kind==='blast'?'爆発塔':'弾丸塔';
+  const attacksPerSecond=1/entity.fireInterval;
+  content.innerHTML=`<div class="infoGrid">
+   <div class="infoStat"><span>攻撃力</span><b>${entity.damage.toFixed(1)}</b></div>
+   <div class="infoStat"><span>攻撃速度</span><b>${attacksPerSecond.toFixed(2)} 回/秒</b></div>
+   <div class="infoStat"><span>射程</span><b>${entity.range.toFixed(1)}</b></div>
+   <div class="infoStat"><span>強化レベル</span><b>${entity.powerLevel+entity.speedLevel}</b></div>
+  </div>
+  <div class="infoSection">アップグレード</div>
+  <div class="upgradeRow"><div class="upText">攻撃力強化<small>攻撃力 +1.0　現在 Lv.${entity.powerLevel}</small></div><button data-upgrade="power">強化する</button></div>
+  <div class="upgradeRow"><div class="upText">攻撃速度強化<small>攻撃間隔 -10%　現在 Lv.${entity.speedLevel}</small></div><button data-upgrade="speed">強化する</button></div>
+  <div class="infoNote">${kindName} / 試作版のため強化コストは未設定だよ。</div>`;
+ }else return;
+ panel.classList.add('show');
+}
+document.querySelector('#closeInfo').addEventListener('click',closeInfo);
+document.querySelector('#infoContent').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-upgrade]');if(!btn||!selectedEntity||!towers.includes(selectedEntity))return;
+ const t=selectedEntity;
+ if(btn.dataset.upgrade==='power'){t.damage+=1;t.powerLevel++}
+ if(btn.dataset.upgrade==='speed'){t.fireInterval=Math.max(.12,t.fireInterval*.9);t.speedLevel++}
+ showInfo(t);toast('タワーを強化したよ！');
+});
+
 function validSpot(x,z){
- if(Math.abs(x)>35||Math.abs(z)>24)return false;
+ if(Math.abs(x)>46||Math.abs(z)>33)return false;
  const nearRoad=routePoints.some(path=>path.some((p,i)=>{const q=path[i+1];if(!q)return false;const vx=q[0]-p[0],vz=q[1]-p[1],t=Math.max(0,Math.min(1,((x-p[0])*vx+(z-p[1])*vz)/(vx*vx+vz*vz)));return Math.hypot(x-(p[0]+t*vx),z-(p[1]+t*vz))<3.5}));
  if(nearRoad)return false;
  if(towers.some(t=>Math.hypot(t.group.position.x-x,t.group.position.z-z)<2.0))return false;
@@ -180,36 +279,49 @@ function worldFromEvent(e){
 }
 
 // Orbit camera, pinch zoom, two-finger pan.
-const target=new THREE.Vector3(0,0,0);let radius=37,theta=Math.PI/4,phi=1.02;
-function updateCamera(){phi=Math.max(.42,Math.min(1.32,phi));radius=Math.max(17,Math.min(67,radius));camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target)}
+const target=new THREE.Vector3(0,0,0);let radius=49,theta=Math.PI/4,phi=1.02;
+function updateCamera(){phi=Math.max(.42,Math.min(1.32,phi));radius=Math.max(23,Math.min(88,radius));camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target)}
 updateCamera();
 const pointers=new Map();let lastSingle=null,lastPinch=null,lastMid=null;
 renderer.domElement.addEventListener('pointerdown',e=>{renderer.domElement.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1)lastSingle={x:e.clientX,y:e.clientY};if(pointers.size===2){const a=[...pointers.values()];lastPinch=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);lastMid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}}});
 renderer.domElement.addEventListener('pointermove',e=>{
  if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(pointers.size===1&&!placing&&lastSingle){theta-=(e.clientX-lastSingle.x)*.006;phi-=(e.clientY-lastSingle.y)*.004;lastSingle={x:e.clientX,y:e.clientY};updateCamera()}
- else if(pointers.size>=2){const a=[...pointers.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),mid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};if(lastPinch){radius*=lastPinch/d;const dx=mid.x-lastMid.x,dy=mid.y-lastMid.y;target.x-=dx*.018*Math.cos(theta)+dy*.012*Math.sin(theta);target.z+=dx*.018*Math.sin(theta)-dy*.012*Math.cos(theta);updateCamera()}lastPinch=d;lastMid=mid}
+ else if(pointers.size>=2){const a=[...pointers.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),mid={x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2};if(lastPinch){radius*=lastPinch/d;const dx=mid.x-lastMid.x,dy=mid.y-lastMid.y;target.x-=dx*.023*Math.cos(theta)+dy*.015*Math.sin(theta);target.z+=dx*.023*Math.sin(theta)-dy*.015*Math.cos(theta);updateCamera()}lastPinch=d;lastMid=mid}
 });
 function endPointer(e){pointers.delete(e.pointerId);if(pointers.size===0){lastSingle=null;lastPinch=null;lastMid=null}else if(pointers.size===1){lastSingle=[...pointers.values()][0];lastPinch=null}}
 renderer.domElement.addEventListener('pointerup',endPointer);renderer.domElement.addEventListener('pointercancel',endPointer);
-renderer.domElement.addEventListener('wheel',e=>{radius=Math.max(17,Math.min(67,radius+e.deltaY*.035));updateCamera()},{passive:true});
+renderer.domElement.addEventListener('wheel',e=>{radius=Math.max(23,Math.min(88,radius+e.deltaY*.045));updateCamera()},{passive:true});
 
 // Pointer taps: build preview confirmation while placement mode is active.
 let downAt=null;
 renderer.domElement.addEventListener('pointerdown',e=>{downAt={x:e.clientX,y:e.clientY}});
 renderer.domElement.addEventListener('pointerup',e=>{
- if(!placing||!downAt||Math.hypot(e.clientX-downAt.x,e.clientY-downAt.y)>12)return;
- const p=worldFromEvent(e);if(!p)return;
- const x=Math.round(p.x),z=Math.round(p.z);
- if(validSpot(x,z)){makeTower(selectedKind,x,z);toast('タワーを設置したよ！');}
- else toast('ここには配置できないよ');
+ if(!downAt)return;
+ const moved=Math.hypot(e.clientX-downAt.x,e.clientY-downAt.y);
+ if(moved>12){downAt=null;return}
+ if(placing){
+  const p=worldFromEvent(e);if(!p){downAt=null;return}
+  const x=Math.round(p.x),z=Math.round(p.z);
+  if(validSpot(x,z)){makeTower(selectedKind,x,z);toast('タワーを設置したよ！')}
+  else toast('ここには配置できないよ');
+ }else{
+  const rect=renderer.domElement.getBoundingClientRect();
+  pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  raycaster.setFromCamera(pointer,camera);
+  const hits=raycaster.intersectObjects(scene.children,true);
+  let entity=null;
+  for(const hit of hits){let obj=hit.object;while(obj&&!entity){entity=obj.userData.entity||null;obj=obj.parent}if(entity)break}
+  if(entity&&(towers.includes(entity)||enemies.includes(entity)))showInfo(entity);
+  else closeInfo();
+ }
  downAt=null;
 });
 renderer.domElement.addEventListener('pointermove',e=>{if(placing){const p=worldFromEvent(e);if(p)setPreview(Math.round(p.x),Math.round(p.z))}});
 document.querySelector('#build').onclick=()=>{placing=!placing;document.querySelector('#build').classList.toggle('active',placing);document.querySelector('#towerPanel').classList.toggle('show',placing);grid.visible=placing;if(!placing&&preview)preview.visible=false;toast(placing?'配置するタワーを選んで、草地をタップしてね':'配置モードを終了したよ')};
 document.querySelectorAll('.towerChoice').forEach(b=>b.onclick=()=>{selectedKind=b.dataset.kind;document.querySelectorAll('.towerChoice').forEach(x=>x.classList.toggle('active',x===b));toast((selectedKind==='bolt'?'弾丸塔':'爆発塔')+'を選択中')});
-document.querySelector('#spawn').onclick=()=>{for(let i=0;i<6;i++)setTimeout(()=>makeEnemy(i%3),i*280);toast('敵の集団がやってきた！')};
-document.querySelector('#resetCam').onclick=()=>{target.set(0,0,0);radius=37;theta=Math.PI/4;phi=1.02;updateCamera();toast('視点をリセットしたよ')};
+document.querySelector('#spawn').onclick=()=>{for(let i=0;i<9;i++)setTimeout(()=>makeEnemy(i%3),i*420);toast('敵の集団がやってきた！')};
+document.querySelector('#resetCam').onclick=()=>{target.set(0,0,0);radius=49;theta=Math.PI/4;phi=1.02;updateCamera();toast('視点をリセットしたよ')};
 
 // Main loop: enemies follow their lane and towers fire automatically.
 const clock=new THREE.Clock();
@@ -218,20 +330,22 @@ function animate(){
  for(let i=enemies.length-1;i>=0;i--){
   const e=enemies[i];e.t+=e.speed*dt;
   while(e.t>=1&&e.segment<e.pts.length-1){e.t-=1;e.segment++}
-  if(e.segment>=e.pts.length-1){scene.remove(e.group);enemies.splice(i,1);continue}
+  if(e.segment>=e.pts.length-1){scene.remove(e.group);if(selectedEntity===e)closeInfo();enemies.splice(i,1);continue}
   const a=e.pts[e.segment],b=e.pts[e.segment+1],pos=a.clone().lerp(b,e.t);e.group.position.set(pos.x,0,pos.z);
   const dir=b.clone().sub(a);e.group.rotation.y=Math.atan2(dir.x,dir.z);
   e.group.position.y=Math.abs(Math.sin(performance.now()*.006+i))*.08;
  }
+ for(const p of portals){p.ring.rotation.z+=dt*.85;p.core.rotation.y+=dt*1.15;p.core.rotation.x+=dt*.45}
+ baseGroup.children[baseGroup.children.length-2].rotation.y+=dt*.55;
  for(const t of towers){
   t.cool-=dt;if(t.cool>0)continue;
   let targetEnemy=null,best=t.range;
   for(const e of enemies){const d=t.group.position.distanceTo(e.group.position);if(d<best){best=d;targetEnemy=e}}
-  if(targetEnemy){t.cool=t.kind==='blast'?.9:.48;const start=t.group.position.clone().add(new THREE.Vector3(0,1.8,0)),end=targetEnemy.group.position.clone().add(new THREE.Vector3(0,.8,0));const dir=end.clone().sub(start);t.group.rotation.y=Math.atan2(dir.x,dir.z);
-   const shot=new THREE.Mesh(new THREE.SphereGeometry(t.kind==='blast'?.22:.13,6,5),t.kind==='blast'?goldMat:towerTop);shot.position.copy(start);scene.add(shot);shots.push({mesh:shot,start,end,life:.22,max:.22,target:targetEnemy});
+  if(targetEnemy){t.cool=t.fireInterval;const start=t.group.position.clone().add(new THREE.Vector3(0,1.8,0)),end=targetEnemy.group.position.clone().add(new THREE.Vector3(0,.8,0));const dir=end.clone().sub(start);t.group.rotation.y=Math.atan2(dir.x,dir.z);
+   const shot=new THREE.Mesh(new THREE.SphereGeometry(t.kind==='blast'?.22:.13,6,5),t.kind==='blast'?goldMat:towerTop);shot.position.copy(start);scene.add(shot);shots.push({mesh:shot,start,end,life:.22,max:.22,target:targetEnemy,damage:t.damage});
   }
  }
- for(let i=shots.length-1;i>=0;i--){const s=shots[i];s.life-=dt;const k=1-s.life/s.max;s.mesh.position.lerpVectors(s.start,s.end,k);if(s.life<=0){scene.remove(s.mesh);const idx=enemies.indexOf(s.target);if(idx>=0){s.target.hp--;if(s.target.hp<=0){scene.remove(s.target.group);enemies.splice(idx,1)}}shots.splice(i,1)}}
+ for(let i=shots.length-1;i>=0;i--){const s=shots[i];s.life-=dt;const k=1-s.life/s.max;s.mesh.position.lerpVectors(s.start,s.end,k);if(s.life<=0){scene.remove(s.mesh);const idx=enemies.indexOf(s.target);if(idx>=0){s.target.hp-=s.damage;if(s.target.hp<=0){scene.remove(s.target.group);if(selectedEntity===s.target)closeInfo();enemies.splice(idx,1)}else if(selectedEntity===s.target)showInfo(s.target);}shots.splice(i,1)}}
  updateCounts();renderer.render(scene,camera);
 }
 animate();
