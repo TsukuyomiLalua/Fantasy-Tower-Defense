@@ -3,18 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.25</title>
+<title>Fantasy Tower Defense 3D v0.26</title>
 <style>
 :root{color-scheme:dark;--panel:rgba(13,18,27,.9);--line:rgba(255,255,255,.17);--gold:#f2cf78;--muted:#aeb9c8;--green:#72d6a0;--red:#ef7b83;--cyan:#75c8ec}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101923;font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN",sans-serif;color:#f4f5f7;touch-action:none}#game{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}
-#top{position:fixed;top:env(safe-area-inset-top,8px);left:9px;right:9px;display:flex;justify-content:space-between;gap:6px;pointer-events:none;flex-wrap:wrap}.pill{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:7px 10px;backdrop-filter:blur(9px);font-size:11px;box-shadow:0 5px 18px #0004}.pill b{color:var(--gold);font-size:13px}.stats{display:flex;gap:5px;flex-wrap:wrap}.statmini{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:10px}.statmini b{color:var(--gold);font-size:13px;margin-left:4px}
+#top{position:fixed;top:env(safe-area-inset-top,8px);left:9px;right:9px;display:flex;justify-content:space-between;gap:6px;pointer-events:none;flex-wrap:wrap}.pill{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:7px 10px;backdrop-filter:blur(9px);font-size:11px;box-shadow:0 5px 18px #0004}.pill b{color:var(--gold);font-size:13px}.stats{display:flex;gap:5px;flex-wrap:wrap}.statmini{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:10px}.statmini b{color:var(--gold);font-size:13px;margin-left:4px}.statmini.rampage b{color:var(--red)}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:9px;backdrop-filter:blur(11px);box-shadow:0 8px 28px #0005}#bottom{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:end}#actions{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:0}button{border:1px solid rgba(255,255,255,.2);background:#29384a;color:#fff;border-radius:10px;padding:9px 10px;font-weight:700;font-size:11px;min-height:38px;touch-action:manipulation}button:active{transform:scale(.97)}button.primary{background:#80622c;border-color:#d9b65e}button.active{background:#35634c;border-color:#7fd4a2}button:disabled{opacity:.4}
 #towerPanel{position:fixed;left:8px;right:8px;bottom:calc(104px + env(safe-area-inset-bottom,0px));display:none;gap:5px;flex-wrap:wrap}#towerPanel.show{display:flex}.towerChoice{flex:1 1 45%;text-align:left;min-width:0;padding:7px 8px}.towerChoice small{display:block;color:#c5d0dc;font-weight:400;margin-top:2px;font-size:9px}
 #infoWindow,#systemsWindow,#resultWindow{position:fixed;z-index:35;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 24px));max-height:min(82vh,660px);overflow:auto;display:none;background:rgba(5,8,13,.95);border:1px solid rgba(210,225,245,.22);border-radius:16px;padding:13px;color:#f4f6fa;box-shadow:0 16px 48px #000a;backdrop-filter:blur(14px)}#infoWindow.show,#systemsWindow.show,#resultWindow.show{display:block}.infoHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}.infoHead h3{margin:0;font-size:15px}.closeInfo{min-height:29px;height:29px;padding:3px 9px;background:#252c36;border-radius:8px}.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.infoStat{background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:8px}.infoStat span{display:block;color:#aeb9c8;font-size:10px;margin-bottom:3px}.infoStat b{font-size:14px;font-variant-numeric:tabular-nums}.infoSection{font-size:11px;color:#c5cfdb;margin:11px 0 6px}.upgradeRow{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.055);border-radius:9px;padding:7px;margin-top:5px}.upgradeRow .upText{min-width:0;font-size:11px}.upgradeRow small{display:block;color:#aeb9c8;font-size:10px;margin-top:2px}.upgradeRow button{min-height:31px;padding:6px 8px;white-space:nowrap;background:#6d552c;border-color:#b99551;font-size:10px}.infoNote{font-size:10px;color:#9daaba;margin-top:8px;line-height:1.5}
 #toast{position:fixed;left:50%;bottom:calc(165px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#101a28f2;border:1px solid var(--line);border-radius:11px;padding:8px 12px;font-size:11px;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:40}#toast.show{opacity:1}
 .sysTabs{display:flex;gap:5px;margin:7px 0 10px}.sysTabs button{flex:1}.sysPage{display:none}.sysPage.active{display:block}.sysPage h4{margin:5px 0 8px}.achievement{border:1px solid var(--line);border-radius:9px;padding:8px;margin:6px 0;background:#151d2a;font-size:11px}.achievement.done{border-color:#5d9b7b}.achievement.locked{opacity:.55}.achievement b{display:block}.row{display:flex;justify-content:space-between;gap:7px;align-items:center}.muted{color:var(--muted)}
 
-/* ツリー状（複数起点から伸ばせる階層ツリー）スタイル */
 .tree-branch-wrap{display:flex;flex-direction:column;gap:8px;padding:6px 2px 10px}
 .tree-branch{background:#101928;border:1px solid rgba(145,168,204,.22);border-radius:12px;padding:8px}
 .tree-branch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.08)}
@@ -60,8 +59,8 @@
       <button class="difficulty-btn" data-difficulty="hell">HELL<small>高密度・高耐久の過酷な戦場</small></button>
     </div>
     <div class="map-note">
-      配置地形：草原や台座に自由に配置可能！（弾丸・爆発・振動・ミサイル対応）<br>
-      振動塔は周囲へ円形の振動波を放ち、敵へダメージと減速を与えます。
+      20×nウェーブ毎に暴走Lv+1（出現頻度・HP・出現量アップ）！<br>
+      待機中の敵が多いほど出現間隔もさらに短縮されるよ。
     </div>
     <div class="lobby-actions">
       <button class="primary" id="deploy">出撃する</button>
@@ -73,9 +72,10 @@
 </div>
 
 <div id="top">
-  <div class="pill">FANTASY TD <b>3D v0.25</b></div>
+  <div class="pill">FANTASY TD <b>3D v0.26</b></div>
   <div class="stats">
     <div class="statmini">WAVE<b id="wave">1</b></div>
+    <div class="statmini rampage">暴走Lv<b id="rampageLv">0</b></div>
     <div class="statmini">GOLD<b id="gold">150</b></div>
     <div class="statmini">拠点<b id="lives">20</b></div>
     <div class="statmini">結界<b id="shield">0</b></div>
@@ -193,7 +193,6 @@ const buildPads=[
 const padMeshes=[];for(const pad of buildPads){const elevated=pad.type==='open';const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.0,3.35,elevated?pad.y:0.35,8),elevated?stoneMat:roadEdge);platform.position.set(pad.x,elevated?pad.y/2:0.16,pad.z);platform.receiveShadow=true;platform.castShadow=true;scene.add(platform);const ring=new THREE.Mesh(new THREE.TorusGeometry(2.35,.12,6,12),pad.type==='magic'?blueMat:pad.type==='open'?goldMat:leaf2);ring.rotation.x=Math.PI/2;ring.position.set(pad.x,pad.y+.08,pad.z);scene.add(ring);padMeshes.push({pad,platform,ring});}
 function padAt(x,z){return buildPads.find(p=>Math.hypot(p.x-x,p.z-z)<=2.7)||null}
 
-// 振動塔も草原・高台・魔力地点すべてに配置可能
 function padAllows(pad,kind){
  if(!pad)return true;
  if(pad.type==='open')return true;
@@ -213,13 +212,31 @@ let running=false,paused=false,autoAdvance=false,waveCountdown=0,spawnLeft=0,spa
 const stats={totalKills:0,totalGold:0,totalWaves:0,runs:0,highestWave:0,totalScore:0,placed:0,towerUpgrades:0,totalSpentSP:0};
 const prestige={power:0,haste:0,growth:0,critical:0,loot:0,startGold:0,scoreBonus:0,spBonus:0,vitality:0,ward:0,repair:0,clutch:0,buildDiscount:0,upgradeDiscount:0,refund:0,range:0,blastRadius:0,slowDuration:0,slowPower:0,rushBonus:0};
 const costs={bullet:30,blast:45,vibe:40,missile:65},names={bullet:'弾丸塔',blast:'爆発塔',vibe:'振動塔',missile:'ミサイル塔'},baseDamages={bullet:12,blast:18,vibe:8,missile:32},baseRanges={bullet:10,blast:8,vibe:8.5,missile:15},baseIntervals={bullet:.42,blast:1.1,vibe:.95,missile:1.55};
+
+// 20*nウェーブ毎に暴走レベルが1上昇（Wave 20でLv.1、Wave 40でLv.2…）
+function getRampageLevel(w=wave){return Math.floor(Math.max(0,w)/20)}
+
+// 待機中の敵の数と暴走レベルに応じた出現間隔（秒）を計算
+function getSpawnInterval(w=wave,waiting=spawnLeft){
+ const rampage=getRampageLevel(w);
+ const base=(getTotalEnemiesForWave(w)>=50?.35:.6);
+ const rampageFactor=1/(1+rampage*.28);
+ // 待機中の敵が増えるほど出現間隔が短くなる（最大で約65%短縮）
+ const waitingFactor=Math.max(0.35,1/(1+Math.max(0,waiting)*.022));
+ return Math.max(0.06,base*rampageFactor*waitingFactor);
+}
+
 function nodeLevel(id){return prestige[id]||0}function log(msg){toast(msg)}function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1700)}
 function saveMeta(){try{localStorage.setItem('fantasyTD_v023_meta',JSON.stringify({sp,prestige,stats,achievements:ach.map(a=>({id:a.id,done:a.done,unlocked:a.unlocked}))}))}catch(e){console.warn('save failed',e)}}
 function calcBuildCost(kind){return Math.max(1,Math.floor(costs[kind]*(1-nodeLevel('buildDiscount')*.02)))}function calcUpgradeCost(t){return Math.max(1,Math.floor(25*t.level*(1-nodeLevel('upgradeDiscount')*.02)))}function refundRate(){return Math.min(.9,.70+nodeLevel('refund')*.02)}function towerRange(t){return (t.baseRange+nodeLevel('range')*.1)*(t.padType==='open'?1.12:1)}
 function towerDamage(t,level=t.level){const growth=Math.pow(1.001,nodeLevel('growth'));return t.baseDamage*(1+.35*(level-1))*growth*(1+nodeLevel('power')*.04)}
 function updateCounts(){$('enemyCount').textContent=enemies.length;$('towerCount').textContent=towers.length;$('waitingCount').textContent=spawnLeft.toLocaleString()}
 function updateUI(){
- $('wave').textContent=wave;$('gold').textContent=Math.floor(gold).toLocaleString();$('lives').textContent=lives;$('shield').textContent=shield;$('kills').textContent=kills;$('score').textContent=score.toLocaleString();
+ const activeWave=spawnQueue.length?spawnQueue[0].wave:wave;
+ const rampage=getRampageLevel(Math.max(wave,activeWave));
+ $('wave').textContent=wave;
+ if($('rampageLv'))$('rampageLv').textContent=rampage;
+ $('gold').textContent=Math.floor(gold).toLocaleString();$('lives').textContent=lives;$('shield').textContent=shield;$('kills').textContent=kills;$('score').textContent=score.toLocaleString();
  $('enemyCount').textContent=enemies.length;$('towerCount').textContent=towers.length;$('waitingCount').textContent=spawnLeft.toLocaleString();
  $('rpCount').textContent=sp.toLocaleString();$('totalKills').textContent=stats.totalKills.toLocaleString();
  if($('lobbyRP'))$('lobbyRP').textContent=sp.toLocaleString();
@@ -229,7 +246,7 @@ function updateUI(){
  document.querySelectorAll('.speed').forEach(b=>b.classList.toggle('active',Number(b.dataset.speed)===gameSpeed));
 }
 
-function setInfo(entity){selectedEntity=entity;const panel=$('infoWindow');if(enemies.includes(entity)){ $('infoTitle').textContent=entity.type==='boss'?'渓谷の魔獣':entity.type==='fast'?'高速魔物':entity.type==='tank'?'重装魔物':'魔物';$('infoContent').innerHTML=`<div class="infoGrid"><div class="infoStat"><span>現在HP</span><b>${Math.max(0,entity.hp).toFixed(1)} / ${entity.maxHp.toFixed(1)}</b></div><div class="infoStat"><span>移動速度</span><b>${entity.speed.toFixed(2)}</b></div><div class="infoStat"><span>属性</span><b>${entity.type==='boss'?'ボス':entity.type==='fast'?'高速':entity.type==='tank'?'重装':'通常'}</b></div><div class="infoStat"><span>出現Wave</span><b>${entity.wave}</b></div></div><div class="infoNote">ポータルから防衛拠点へ進行中。</div>`}
+function setInfo(entity){selectedEntity=entity;const panel=$('infoWindow');if(enemies.includes(entity)){ $('infoTitle').textContent=entity.type==='boss'?'渓谷の魔獣':entity.type==='fast'?'高速魔物':entity.type==='tank'?'重装魔物':'魔物';$('infoContent').innerHTML=`<div class="infoGrid"><div class="infoStat"><span>現在HP</span><b>${Math.max(0,entity.hp).toFixed(1)} / ${entity.maxHp.toFixed(1)}</b></div><div class="infoStat"><span>移動速度</span><b>${entity.speed.toFixed(2)}</b></div><div class="infoStat"><span>属性</span><b>${entity.type==='boss'?'ボス':entity.type==='fast'?'高速':entity.type==='tank'?'重装':'通常'}</b></div><div class="infoStat"><span>出現Wave / 暴走</span><b>W${entity.wave} / Lv.${entity.rampageLv||0}</b></div></div><div class="infoNote">ポータルから防衛拠点へ進行中。</div>`}
  else if(towers.includes(entity)){const aps=1/(entity.baseInterval*Math.max(.65,1-nodeLevel('haste')*.025));$('infoTitle').textContent=`${names[entity.kind]} Lv.${entity.level}`;$('infoContent').innerHTML=`<div class="infoGrid"><div class="infoStat"><span>攻撃力</span><b>${towerDamage(entity).toFixed(1)}</b></div><div class="infoStat"><span>攻撃速度</span><b>${aps.toFixed(2)} 回/秒</b></div><div class="infoStat"><span>射程 / 波紋</span><b>${towerRange(entity).toFixed(2)}</b></div><div class="infoStat"><span>投資額</span><b>${entity.invested.toLocaleString()}G</b></div></div><div class="infoSection">アップグレード</div><div class="upgradeRow"><div class="upText">タワーレベル強化<small>攻撃力 ${towerDamage(entity).toFixed(1)} → ${towerDamage(entity,entity.level+1).toFixed(1)}</small></div><button data-upgrade="level" ${gold<calcUpgradeCost(entity)?'disabled':''}>${calcUpgradeCost(entity)}G 強化</button></div><div class="upgradeRow"><div class="upText">売却<small>投資額の${Math.round(refundRate()*100)}%を返金</small></div><button data-upgrade="sell">${Math.floor(entity.invested*refundRate())}G 売却</button></div><div class="infoNote">${entity.kind==='vibe'?'塔を中心とした円形の振動波で範囲内の敵にダメージと減速を与えます。':entity.padType==='open'?'高台効果：射程 +12%。':entity.padType==='grass'?'草原配置：自由な防衛ライン。':'地形に応じた配置効果が適用中。'}</div>`}
  else return;panel.classList.add('show')}
 function closeInfo(){selectedEntity=null;$('infoWindow').classList.remove('show')}
@@ -260,7 +277,20 @@ function createTowerModel(kind,x,z){
 
 function makeTower(kind,x,z,cost=0,pad=null){const group=createTowerModel(kind,x,z),t={group,kind,x,z,y:pad?.y||0,padType:pad?.type||'grass',level:1,invested:cost,baseDamage:baseDamages[kind],baseRange:baseRanges[kind],baseInterval:baseIntervals[kind],cool:0};group.position.y=t.y;group.userData.entity=t;group.traverse(o=>o.userData.entity=t);towers.push(t);stats.placed++;updateCounts();return t}
 function enemyModel(type){const g=new THREE.Group();const bodyMat=type==='boss'?mat(0x39283f):type==='fast'?mat(0xd7b34f):type==='tank'?mat(0x56677e):mat(0x9b5145);const glow=type==='boss'?new THREE.MeshStandardMaterial({color:0x301b2d,emissive:0x9b2448,emissiveIntensity:1.1,flatShading:true}):enemyLight;const body=new THREE.Mesh(type==='tank'||type==='boss'?new THREE.DodecahedronGeometry(type==='boss'?1.25:.92,1):new THREE.DodecahedronGeometry(.68,0),bodyMat);body.position.y=type==='boss'?1.05:.78;body.scale.set(type==='boss'?1.45:.95,type==='boss'?1.65:type==='tank'?1.35:1.12,type==='boss'?1.35:.9);body.castShadow=true;g.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.3,7,6),glow);head.position.set(0,1.5,.12);g.add(head);for(const side of [-1,1]){const horn=new THREE.Mesh(new THREE.ConeGeometry(type==='tank'?.2:.13,type==='tank'?.7:.5,5),type==='tank'?goldMat:redMat);horn.position.set(side*(type==='tank'?.48:.24),1.82,.05);horn.rotation.z=side*-.38;g.add(horn)}if(type==='boss'){for(let i=0;i<6;i++){const a=i*Math.PI/3,spike=new THREE.Mesh(new THREE.ConeGeometry(.24,.95,5),redMat);spike.position.set(Math.cos(a)*.95,1.75,Math.sin(a)*.75);spike.rotation.z=Math.cos(a)*-.7;g.add(spike)}const crown=new THREE.Mesh(new THREE.ConeGeometry(.5,.9,6),goldMat);crown.position.y=2.55;g.add(crown)}if(type==='tank'){const shieldMesh=new THREE.Mesh(new THREE.BoxGeometry(1.55,1.0,.28),goldMat);shieldMesh.position.set(0,.95,.72);g.add(shieldMesh);for(const side of [-1,1]){const spike=new THREE.Mesh(new THREE.ConeGeometry(.22,.65,5),stoneMat);spike.position.set(side*.72,1.1,-.1);spike.rotation.z=side*-1.1;g.add(spike)}}if(type==='fast'){const fin=new THREE.Mesh(new THREE.ConeGeometry(.28,.85,5),goldMat);fin.position.set(0,.45,-.65);fin.rotation.x=-Math.PI/2;g.add(fin)}scene.add(g);return g}
-function makeEnemy(laneIndex,w=wave){let r=Math.random(),type='normal',hp=(35+w*11)*difficultyMods.enemyHp,speed=6.5+w*.06;if(w>=10&&w%10===0&&!bossWavesSpawned.has(w)){bossWavesSpawned.add(w);type='boss';hp*=9;speed*=.72}else if(w>=2&&r<.3){type='fast';hp*=.6;speed*=1.45}else if(w>=3&&r>.75){type='tank';hp*=2.3;speed*=.6}if(lives<=5)speed*=Math.max(.65,1-nodeLevel('clutch')*.04);const pts=routePoints[0].map(p=>new THREE.Vector3(p[0],0,p[1]));const group=enemyModel(type),e={group,pts,segment:0,segmentDist:0,speed,hp,maxHp:hp,slow:0,slowFactor:.55,type,wave:w,laneIndex:0};group.userData.entity=e;group.traverse(o=>o.userData.entity=e);group.position.copy(pts[0]);enemies.push(e);updateCounts();return e}
+
+function makeEnemy(laneIndex,w=wave){
+ const rampage=getRampageLevel(w);
+ const rampageHpMult=1+rampage*.25;
+ let r=Math.random(),type='normal',hp=(35+w*11)*difficultyMods.enemyHp*rampageHpMult,speed=6.5+w*.06+rampage*.18;
+ if(w>=10&&w%10===0&&!bossWavesSpawned.has(w)){bossWavesSpawned.add(w);type='boss';hp*=9;speed*=.72}
+ else if(w>=2&&r<.3){type='fast';hp*=.6;speed*=1.45}
+ else if(w>=3&&r>.75){type='tank';hp*=2.3;speed*=.6}
+ if(lives<=5)speed*=Math.max(.65,1-nodeLevel('clutch')*.04);
+ const pts=routePoints[0].map(p=>new THREE.Vector3(p[0],0,p[1]));
+ const group=enemyModel(type),e={group,pts,segment:0,segmentDist:0,speed,hp,maxHp:hp,slow:0,slowFactor:.55,type,wave:w,rampageLv:rampage,laneIndex:0};
+ group.userData.entity=e;group.traverse(o=>o.userData.entity=e);group.position.copy(pts[0]);enemies.push(e);updateCounts();return e;
+}
+
 function enemyPosition(e){const a=e.pts[e.segment],b=e.pts[e.segment+1];if(!b)return a.clone();const len=a.distanceTo(b),f=Math.min(1,e.segmentDist/len);return a.clone().lerp(b,f)}
 
 function validSpot(x,z){
@@ -282,7 +312,27 @@ function worldFromEvent(e){const r=renderer.domElement.getBoundingClientRect();p
 function buildAt(x,z){const bx=Math.round(x),bz=Math.round(z),pad=padAt(bx,bz);if(!validSpot(bx,bz)){toast('その場所にはこのタワーを配置できないよ');return}const cost=calcBuildCost(selectedKind);if(gold<cost){toast('ゴールドが足りないよ');return}gold-=cost;const t=makeTower(selectedKind,bx,bz,cost,pad);checkAchievements();saveMeta();updateUI();toast(`${names[t.kind]}を設置したよ！`)}
 function upgradeTower(t){const c=calcUpgradeCost(t);if(gold<c){toast('ゴールドが足りないよ');return}gold-=c;t.level++;t.invested+=c;stats.towerUpgrades++;checkAchievements();saveMeta();updateUI();setInfo(t);toast(`${names[t.kind]}をLv.${t.level}に強化！`)}
 function sellTower(t){const refund=Math.floor(t.invested*refundRate());gold+=refund;scene.remove(t.group);const i=towers.indexOf(t);if(i>=0)towers.splice(i,1);closeInfo();updateUI();saveMeta();toast(`${refund}Gで売却したよ`)}
-function getTotalEnemiesForWave(w){return Math.max(6,Math.floor((18+w*7.5)*difficultyMods.enemyCount))}function beginWave(early=false){const n=getTotalEnemiesForWave(wave);spawnQueue.push({wave,remaining:n});wavesInProgress.push(wave);spawnLeft+=n;spawnTimer=0;waveCountdown=0;if(early){const bonus=Math.floor((10+wave*2)*(1+nodeLevel('rushBonus')*.1)*difficultyMods.reward);gold+=bonus;toast(`WAVE ${wave} 前倒し開始！ +${bonus}G`)}else toast(`WAVE ${wave} 開始！ ${n}体が接近中`);updateUI()}
+
+// 暴走レベル（20*nウェーブ毎）に応じた敵出現量の増加
+function getTotalEnemiesForWave(w){
+ const rampage=getRampageLevel(w);
+ const rampageCountMult=1+rampage*.15;
+ return Math.max(6,Math.floor((18+w*7.5)*difficultyMods.enemyCount*rampageCountMult));
+}
+
+function beginWave(early=false){
+ const n=getTotalEnemiesForWave(wave);
+ const rampage=getRampageLevel(wave);
+ spawnQueue.push({wave,remaining:n});wavesInProgress.push(wave);spawnLeft+=n;spawnTimer=0;waveCountdown=0;
+ if(early){
+  const bonus=Math.floor((10+wave*2)*(1+nodeLevel('rushBonus')*.1)*difficultyMods.reward);
+  gold+=bonus;
+  toast(`WAVE ${wave} 前倒し開始！ +${bonus}G${rampage>0?`（暴走Lv.${rampage}）`:''}`);
+ }else{
+  toast(`WAVE ${wave} 開始！ ${n}体が接近中${rampage>0?`（暴走Lv.${rampage}）`:''}`);
+ }
+ updateUI();
+}
 function handleStart(){if(paused)return;if(!running){const early=waveCountdown>0;running=true;beginWave(early);last=performance.now();requestAnimationFrame(loop)}else{wave++;beginWave(true)}}
 $('startWave').onclick=handleStart;$('autoWave').onclick=()=>{autoAdvance=!autoAdvance;$('autoWave').textContent=`自動：${autoAdvance?'ON':'OFF'}`;toast(`自動進行 ${autoAdvance?'ON':'OFF'}`);if(autoAdvance&&!running&&wave>1){waveCountdown=3;last=performance.now();requestAnimationFrame(loop)}};$('pause').onclick=()=>{if(!running&&waveCountdown<=0)return;paused=!paused;$('pause').textContent=paused?'再開':'一時停止';if(!paused){last=performance.now();requestAnimationFrame(loop)}};document.querySelectorAll('.speed').forEach(b=>b.onclick=()=>{gameSpeed=Number(b.dataset.speed);document.querySelectorAll('.speed').forEach(x=>x.classList.toggle('active',x===b));updateUI()});
 $('build').onclick=()=>{placing=!placing;$('build').classList.toggle('active',placing);$('towerPanel').classList.toggle('show',placing);grid.visible=placing;if(!placing&&preview)preview.visible=false;closeInfo();toast(placing?'タワーを選んで配置したい場所をタップしてね':'配置モードを終了')};document.querySelectorAll('.towerChoice').forEach(b=>b.onclick=()=>{selectedKind=b.dataset.kind;document.querySelectorAll('.towerChoice').forEach(x=>x.classList.toggle('active',x===b));toast(`${names[selectedKind]}を選択中`) });
@@ -347,7 +397,6 @@ function loadMeta(){try{const raw=localStorage.getItem('fantasyTD_v023_meta')||l
 function renderAchievements(){$('achievements').innerHTML=ach.map(a=>`<div class="achievement ${a.done?'done':!a.unlocked?'locked':''}"><div class="row"><b>${a.unlocked?a.name:'？？？'}</b><span>${a.done?'達成':a.unlocked?`+${a.reward} RP`:'未解放'}</span></div><small>${a.unlocked?a.desc:'条件を満たすと解放'}</small></div>`).join('')}
 function awardAchievement(a){a.done=true;sp+=a.reward;toast(`実績達成：${a.name}（+${a.reward} RP）`)}function checkAchievements(){let changed=true;while(changed){changed=false;for(const a of ach){if(!a.unlocked&&a.prev&&ach.find(x=>x.id===a.prev)?.done){a.unlocked=true;changed=true}if(a.unlocked&&!a.done&&a.check()){awardAchievement(a);changed=true}}}renderAchievements();updateUI();saveMeta()}
 
-// 複数系統の根元（tier:0）から枝分かれ・階層解放できるツリー定義
 const TREE_BRANCHES=[
  {key:'戦闘',title:'戦闘ツリー（起点：攻撃訓練）'},
  {key:'経済',title:'経済ツリー（起点：戦利品の知恵）'},
@@ -435,7 +484,6 @@ function spawnOne(w){makeEnemy(Math.floor(Math.random()*lanes.length),w)}functio
 function damageEnemy(e,dmg,kind){e.hp-=dmg;if(e.hp<=0){return}if(kind==='vibe'){e.slow=1.35+nodeLevel('slowDuration')*.15;e.slowFactor=Math.max(.22,.52-nodeLevel('slowPower')*.03)}}
 function burstAt(pos,radius,color=0xffc45a){const ring=new THREE.Mesh(new THREE.TorusGeometry(.25,.12,6,18),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.95}));ring.rotation.x=Math.PI/2;ring.position.set(pos.x,.18,pos.z);scene.add(ring);effects.push({mesh:ring,life:.42,max:.42,kind:'ring',radius});const flash=new THREE.Mesh(new THREE.IcosahedronGeometry(.45,1),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.85}));flash.position.set(pos.x,.7,pos.z);scene.add(flash);effects.push({mesh:flash,life:.2,max:.2,kind:'flash',radius});for(let i=0;i<7;i++){const bit=new THREE.Mesh(new THREE.TetrahedronGeometry(.12+Math.random()*.1),new THREE.MeshBasicMaterial({color,transparent:true}));bit.position.set(pos.x,.35+Math.random()*.6,pos.z);scene.add(bit);effects.push({mesh:bit,life:.35+Math.random()*.25,max:.6,kind:'debris',vx:(Math.random()-.5)*5,vy:2+Math.random()*3,vz:(Math.random()-.5)*5})}}
 
-// 振動塔の円形波状エフェクト
 function spawnVibeWave(t,radius){
  const waveRing=new THREE.Mesh(
   new THREE.RingGeometry(0.45,0.85,32),
@@ -480,14 +528,31 @@ function leakEnemy(e){const i=enemies.indexOf(e);if(i<0)return;scene.remove(e.gr
 function finish(){running=false;paused=false;stats.runs++;stats.highestWave=Math.max(stats.highestWave,wave);stats.totalScore+=runScore;const before=sp,earned=Math.floor((runScore/10000)*(1+nodeLevel('spBonus')*.03));sp+=earned;checkAchievements();const total=sp-before;$('resWave').textContent=wave;$('resKills').textContent=runKills;$('earnedRP').textContent=total;$('scoreCount').textContent='0';$('result').classList.add('show');let start=performance.now();function count(now){const p=Math.min(1,(now-start)/1300);$('scoreCount').textContent=Math.floor(runScore*p).toLocaleString();if(p<1)requestAnimationFrame(count)}requestAnimationFrame(count);saveMeta();updateUI()}
 $('again').onclick=()=>{$('result').classList.remove('show');for(const t of towers)scene.remove(t.group);for(const e of enemies)scene.remove(e.group);for(const s of shots)scene.remove(s.mesh);towers.length=0;enemies.length=0;shots.length=0;spawnQueue=[];wavesInProgress=[];spawnLeft=0;wave=1;gold=150+nodeLevel('startGold')*20;maxLives=20+nodeLevel('vitality')*2;lives=maxLives;shield=nodeLevel('ward');kills=0;score=0;runScore=0;runKills=0;running=false;paused=false;waveCountdown=0;selectedEntity=null;closeInfo();updateUI();toast('新しい防衛戦を始めよう！')};
 
-function loop(now){if(paused)return;const raw=Math.min(.05,(now-last)/1000||0);last=now;if(!running){if(autoAdvance&&waveCountdown>0){waveCountdown=Math.max(0,waveCountdown-raw);if(waveCountdown<=0){running=true;beginWave(false)}else{updateUI();requestAnimationFrame(loop);return}}else return}const dt=raw*gameSpeed;const spawnWave=spawnQueue.length?spawnQueue[0].wave:wave,interval=(getTotalEnemiesForWave(spawnWave)>=50?.35:.6);spawnTimer-=dt;while(spawnLeft>0&&spawnTimer<=0){spawnBatch();spawnTimer+=interval}
+function loop(now){
+ if(paused)return;
+ const raw=Math.min(.05,(now-last)/1000||0);last=now;
+ if(!running){
+  if(autoAdvance&&waveCountdown>0){
+   waveCountdown=Math.max(0,waveCountdown-raw);
+   if(waveCountdown<=0){running=true;beginWave(false)}
+   else{updateUI();requestAnimationFrame(loop);return}
+  }else return;
+ }
+ const dt=raw*gameSpeed;
+ const spawnWave=spawnQueue.length?spawnQueue[0].wave:wave;
+ spawnTimer-=dt;
+ while(spawnLeft>0&&spawnTimer<=0){
+  spawnBatch();
+  // 出現待機中の敵の数（spawnLeft）と暴走レベルに応じて間隔を動的更新
+  spawnTimer+=getSpawnInterval(spawnWave,spawnLeft);
+ }
+
  for(const e of [...enemies]){if(e.slow>0)e.slow=Math.max(0,e.slow-dt);let remain=e.speed*(e.slow>0?e.slowFactor:1)*dt;while(remain>0&&e.segment<e.pts.length-1){const a=e.pts[e.segment],b=e.pts[e.segment+1],len=a.distanceTo(b),left=len-e.segmentDist,step=Math.min(remain,left);e.segmentDist+=step;remain-=step;if(e.segmentDist>=len-.0001){e.segment++;e.segmentDist=0}}if(e.segment>=e.pts.length-1){leakEnemy(e);continue}const pos=enemyPosition(e);e.group.position.set(pos.x,Math.abs(Math.sin(now*.006+e.laneIndex))*.08,pos.z);const b=e.pts[e.segment+1],dir=b.clone().sub(e.pts[e.segment]);e.group.rotation.y=Math.atan2(dir.x,dir.z)}
 
  for(const t of towers){
   t.cool-=dt;if(t.cool>0)continue;
   const rng=towerRange(t);
 
-  // 振動塔は塔を中心とした円形の波状攻撃（弾丸は飛ばさない）
   if(t.kind==='vibe'){
    const inRange=enemies.filter(e=>{const p=enemyPosition(e);return Math.hypot(p.x-t.x,p.z-t.z)<=rng});
    if(inRange.length>0){
@@ -573,7 +638,20 @@ function loop(now){if(paused)return;const raw=Math.min(.05,(now-last)/1000||0);l
  for(const p of portals){p.ring.rotation.z+=dt*.85;p.core.rotation.y+=dt*1.15}heart.rotation.y+=dt*.55;
  for(const e of [...enemies])if(e.hp<=0)killEnemy(e);
  if(lives<=0){finish();return}
- if(spawnLeft===0&&enemies.length===0&&spawnQueue.length===0&&running){running=false;const completed=wavesInProgress.splice(0);const repair=nodeLevel('repair'),repairEvery=Math.max(1,6-repair);stats.totalWaves+=completed.length;if(completed.length)stats.highestWave=Math.max(stats.highestWave,...completed);checkAchievements();for(const w of completed)if(repair>0&&w%repairEvery===0&&lives<maxLives)lives=Math.min(maxLives,lives+1);wave++;if(autoAdvance){waveCountdown=3;updateUI();requestAnimationFrame(loop);return}toast('ウェーブ突破！次の防衛に備えよう');updateUI();return}
+ if(spawnLeft===0&&enemies.length===0&&spawnQueue.length===0&&running){
+  running=false;
+  const completed=wavesInProgress.splice(0);
+  const repair=nodeLevel('repair'),repairEvery=Math.max(1,6-repair);
+  stats.totalWaves+=completed.length;
+  if(completed.length)stats.highestWave=Math.max(stats.highestWave,...completed);
+  checkAchievements();
+  for(const w of completed)if(repair>0&&w%repairEvery===0&&lives<maxLives)lives=Math.min(maxLives,lives+1);
+  wave++;
+  const nextRampage=getRampageLevel(wave);
+  if(autoAdvance){waveCountdown=3;updateUI();requestAnimationFrame(loop);return}
+  toast(nextRampage>getRampageLevel(wave-1)?`WAVE ${wave} 到達！暴走Lv.${nextRampage}に突入！`:'ウェーブ突破！次の防衛に備えよう');
+  updateUI();return;
+ }
  if(selectedEntity&&enemies.includes(selectedEntity)&&Math.random()<.08)setInfo(selectedEntity);updateUI();requestAnimationFrame(loop)}
 
 function loadInitial(){loadMeta();maxLives=20+nodeLevel('vitality')*2;lives=maxLives;gold=150+nodeLevel('startGold')*20;shield=nodeLevel('ward');updateUI();renderAchievements();renderPrestigeTree()}
