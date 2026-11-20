@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cygnus Defense v0.31b - Blanche's Sanctuary</title>
+<style>
+  :root {
+    --bg: #0b0914;
+    --panel: rgba(20, 16, 36, 0.94);
+    --border: rgba(186, 148, 255, 0.35);
+    --accent: #c792ea;
+    --gold: #ffd166;
+    --cyan: #64dfdf;
+    --danger: #ff5964;
+    --text: #f3efff;
+    --muted: #a69ec4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: radial-gradient(circle at top, #1b1336 0%, var(--bg) 75%);
+    color: var(--text);
+    font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .screen { display: none; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* Header */
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; background: rgba(12, 9, 24, 0.9);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(8px);
+  }
+  .title-badge { font-weight: 800; font-size: 1rem; color: var(--accent); letter-spacing: 0.04em; }
+  .rp-pill {
+    background: linear-gradient(135deg, rgba(199,146,234,0.22), rgba(100,223,223,0.18));
+    border: 1px solid var(--accent); border-radius: 999px;
+    padding: 5px 12px; font-weight: 700; font-size: 0.88rem; color: var(--gold);
+  }
+
+  /* Lobby */
+  .lobby-body { padding: 12px; display: flex; flex-direction: column; gap: 12px; flex: 1; max-width: 900px; margin: 0 auto; width: 100%; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  }
+  .card-title { font-size: 0.9rem; font-weight: 700; color: var(--cyan); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+
+  /* Deck 4 slots */
+  .deck-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .slot-box {
+    background: rgba(255,255,255,0.04); border: 1.5px dashed var(--border);
+    border-radius: 10px; padding: 8px 4px; text-align: center; cursor: pointer;
+    transition: 0.15s; min-height: 68px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .slot-box.filled { border-style: solid; border-color: var(--accent); background: rgba(199,146,234,0.12); }
+  .slot-box.selected { box-shadow: 0 0 0 2px var(--gold); }
+  .slot-icon { font-size: 1.35rem; }
+  .slot-name { font-size: 0.72rem; font-weight: 700; margin-top: 3px; }
+
+  .tower-roster { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; max-height: 210px; overflow-y: auto; }
+  .roster-item {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 9px; padding: 7px 6px; font-size: 0.75rem; cursor: pointer;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .roster-item.locked { opacity: 0.45; cursor: not-allowed; }
+  .roster-item.equipped { border-color: var(--cyan); background: rgba(100,223,223,0.12); }
+  .roster-item.blanche { border-color: #ff9ebb; background: linear-gradient(135deg, rgba(255,158,187,0.14), rgba(199,146,234,0.14)); }
+
+  /* Multi-row Mobile Research Tabs */
+  .branch-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+  .tab-btn {
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 8px 4px; font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; text-align: center;
+  }
+  .tab-btn.active { background: var(--accent); color: #120b24; border-color: #fff; }
+
+  .research-controls { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+  .mini-btn {
+    background: rgba(100,223,223,0.15); border: 1px solid var(--cyan); color: var(--cyan);
+    border-radius: 8px; padding: 5px 10px; font-size: 0.74rem; font-weight: 700; cursor: pointer;
+  }
+  .node-list { display: flex; flex-direction: column; gap: 7px; max-height: 360px; overflow-y: auto; padding-right: 2px; }
+  .node-card {
+    background: rgba(14, 11, 26, 0.9); border: 1px solid rgba(186,148,255,0.25);
+    border-radius: 10px; padding: 9px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .node-card.maxed { border-color: var(--gold); background: rgba(255, 209, 102, 0.08); }
+  .node-card.secret-trigger { border-color: #ff758f; box-shadow: inset 0 0 12px rgba(255,117,143,0.18); }
+  .node-info { flex: 1; }
+  .node-title { font-size: 0.82rem; font-weight: 700; color: #fff; }
+  .node-desc { font-size: 0.71rem; color: var(--muted); margin-top: 2px; }
+  .node-lv { font-size: 0.7rem; color: var(--cyan); margin-top: 3px; font-weight: 700; }
+  .buy-btn {
+    background: linear-gradient(135deg, #9d4edd, #5a189a); border: 1px solid var(--accent);
+    color: #fff; border-radius: 8px; padding: 7px 10px; font-size: 0.75rem; font-weight: 800;
+    cursor: pointer; min-width: 86px; text-align: center;
+  }
+  .buy-btn:disabled { opacity: 0.38; cursor: not-allowed; background: #2a243d; border-color: #443c5c; }
+
+  .start-btn {
+    background: linear-gradient(135deg, #ff758f, #c77dff); color: #120822;
+    border: none; border-radius: 12px; padding: 14px; font-size: 1.02rem; font-weight: 900;
+    cursor: pointer; box-shadow: 0 6px 20px rgba(199,125,255,0.4); letter-spacing: 0.05em;
+  }
+
+  /* Battle Screen */
+  #battle-screen { position: relative; height: 100vh; overflow: hidden; }
+  #game-canvas { width: 100%; height: 100%; display: block; background: #090712; }
+  .hud-top {
+    position: absolute; top: 8px; left: 8px; right: 8px;
+    display: flex; flex-wrap: wrap; gap: 6px; justify-content: space-between; pointer-events: none;
+  }
+  .hud-chip {
+    background: rgba(14,11,28,0.84); border: 1px solid var(--border);
+    border-radius: 8px; padding: 5px 9px; font-size: 0.74rem; font-weight: 700; pointer-events: auto;
+  }
+  .hud-bottom {
+    position: absolute; bottom: 8px; left: 8px; right: 8px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .skill-row, .build-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .act-btn {
+    background: rgba(22, 17, 42, 0.92); border: 1px solid var(--border);
+    color: var(--text); border-radius: 10px; padding: 7px 4px; font-size: 0.72rem; font-weight: 700;
+    text-align: center; cursor: pointer;
+  }
+  .act-btn.active { border-color: var(--gold); background: rgba(255,209,102,0.2); }
+
+  /* Result Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(6, 4, 14, 0.86);
+    display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px;
+    backdrop-filter: blur(6px);
+  }
+  .modal-overlay.show { display: flex; }
+  .result-card {
+    background: linear-gradient(160deg, #1d1538, #110c24);
+    border: 1.5px solid var(--accent); border-radius: 18px;
+    padding: 20px; width: 100%; max-width: 420px; text-align: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+  }
+  .result-stat {
+    background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px;
+    margin: 10px 0; font-size: 0.85rem; line-height: 1.7; text-align: left;
+  }
+  .lobby-return-btn {
+    width: 100%; margin-top: 12px; padding: 13px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, var(--cyan), var(--accent));
+    color: #100820; font-weight: 900; font-size: 0.98rem; cursor: pointer;
+  }
+  .toast {
+    position: fixed; top: 58px; left: 50%; transform: translateX(-50%);
+    background: rgba(255, 117, 143, 0.95); color: #140718; font-weight: 800;
+    padding: 8px 16px; border-radius: 999px; font-size: 0.8rem; z-index: 60;
+    display: none; box-shadow: 0 4px 16px rgba(0,0,0,0.5); white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- LOBBY SCREEN -->
+<div id="lobby-screen" class="screen active">
+  <div class="top-bar">
+    <div class="title-badge">✦ CYGNUS SANCTUARY v0.31b</div>
+    <div class="rp-pill">RP: <span id="rp-display">0</span></div>
+  </div>
+
+  <div class="lobby-body">
+    <!-- 4-Slot Loadout -->
+    <div class="card">
+      <div class="card-title">
+        <span>編成デッキ（4スロット）</span>
+        <span style="font-size:0.74rem; color:var(--gold);">設置上限: <span id="cap-display">15</span>基</span>
+      </div>
+      <div class="deck-slots" id="deck-slots"></div>
+      <div class="tower-roster" id="tower-roster"></div>
+    </div>
+
+    <!-- Expanded 300-Node Research Tree (6 Branches x 50 Nodes) -->
+    <div class="card">
+      <div class="card-title">
+        <span>研究ツリー（全300ノード / 最大 1e12 RP）</span>
+        <span id="tree-progress" style="font-size:0.74rem; color:var(--accent);">0 / 300</span>
+      </div>
+      <div class="branch-tabs" id="branch-tabs"></div>
+      <div class="research-controls">
+        <button class="mini-btn" onclick="buyCheapestInBranch()">最安ノードを研究</button>
+        <button class="mini-btn" onclick="resetSave()" style="border-color:var(--danger); color:var(--danger);">データ初期化</button>
+        <span style="font-size:0.7rem; color:var(--muted); margin-left:auto;">※特定ノードMAXで隠し塔解放</span>
+      </div>
+      <div class="node-list" id="node-list"></div>
+    </div>
+
+    <button class="start-btn" onclick="startBattle()">防衛戦へ出撃する（エンドレス／暴走対応）</button>
+  </div>
+</div>
+
+<!-- BATTLE SCREEN -->
+<div id="battle-screen" class="screen">
+  <canvas id="game-canvas"></canvas>
+  <div class="hud-top">
+    <div class="hud-chip">WAVE <span id="hud-wave">1</span> (<span id="hud-berserk">通常</span>)</div>
+    <div class="hud-chip" style="color:var(--gold);">資金: <span id="hud-gold">250</span>G</div>
+    <div class="hud-chip" style="color:var(--cyan);">スコア: <span id="hud-score">0</span></div>
+    <div class="hud-chip">拠点HP: <span id="hud-hp">100</span> | 塔: <span id="hud-towers">0/15</span></div>
+    <button class="hud-chip" id="speed-btn" onclick="toggleSpeed()" style="color:#ff9ebb;">速度 x1</button>
+    <button class="hud-chip" onclick="endBattle(false)" style="color:var(--danger);">撤退・精算</button>
+  </div>
+
+  <div class="hud-bottom">
+    <div class="skill-row">
+      <button class="act-btn" onclick="useSkill('orbital')">☄ 軌道砲撃<br><span id="cd-orbital">READY</span></button>
+      <button class="act-btn" onclick="useSkill('freeze')">❄ 絶対零度<br><span id="cd-freeze">READY</span></button>
+      <button class="act-btn" onclick="useSkill('tank')">🛡 戦車出撃<br><span id="cd-tank">READY</span></button>
+      <button class="act-btn" onclick="spawnBerserkWave()" style="border-color:#ff758f; color:#ff9ebb;">🔥 暴走誘発<br>スコア倍率UP</button>
+    </div>
+    <div class="build-row" id="build-row"></div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="result-modal" class="modal-overlay">
+  <div class="result-card">
+    <h2 id="result-title" style="color:var(--accent); font-size:1.25rem;">防衛戦 結果報告</h2>
+    <p id="result-sub" style="font-size:0.78rem; color:var(--muted); margin-top:4px;">シグナスの書庫へ記録を綴じましたわ。</p>
+    <div class="result-stat" id="result-details"></div>
+    <button class="lobby-return-btn" onclick="returnToLobby()">🏛 ロビーに戻る</button>
+  </div>
+</div>
+
+<script>
+// Scientific Notation Formatter (>= 1e7)
+function fmt(n) {
+  if (!isFinite(n)) return "∞";
+  if (Math.abs(n) < 1e7) return Math.floor(n).toLocaleString();
+  const exp = Math.floor(Math.log10(Math.abs(n)));
+  const mant = n / Math.pow(10, exp);
+  return mant.toFixed(2) + "e" + exp;
+}
+
+// Tower Definitions (Including Blanche Selection & Secret Missile Evolution)
+const TOWERS = {
+  arrow:   { id:'arrow',   name:'連射矢塔', icon:'🏹', cost:50,  dmg:18,  rate:2.2, range:145, color:'#a8dadc', unlock:null },
+  cannon:  { id:'cannon',  name:'爆発砲塔', icon:'💣', cost:90,  dmg:55,  rate:0.8, range:135, splash:55, color:'#f4a261', unlock:null },
+  laser:   { id:'laser',   name:'光線塔',   icon:'🔆', cost:110, dmg:28,  rate:3.5, range:160, beam:true, color:'#ffd166', unlock:null },
+  ward:    { id:'ward',    name:'結界塔',   icon:'🔮', cost:80,  dmg:12,  rate:1.5, range:130, slow:0.25, color:'#b5179e', unlock:null },
+  sniper:  { id:'sniper',  name:'スナイパー塔', icon:'🎯', cost:140, dmg:240, rate:0.55, range:290, critBonus:0.25, color:'#ff5964', unlock:'unlock_sniper' },
+  frost:   { id:'frost',   name:'霜柱塔',   icon:'🧊', cost:125, dmg:30,  rate:1.4, range:150, slow:0.55, color:'#48cae4', unlock:'unlock_frost' },
+  pull:    { id:'pull',    name:'牽引塔',   icon:'🌀', cost:150, dmg:20,  rate:1.2, range:165, pull:true, color:'#9d4edd', unlock:'unlock_pull' },
+  recruit: { id:'recruit', name:'徴兵塔',   icon:'⚔️', cost:160, dmg:45,  rate:1.0, range:155, spawnAlly:true, color:'#80ed99', unlock:'unlock_recruit' },
+  shock:   { id:'shock',   name:'電撃塔',   icon:'⚡', cost:175, dmg:65,  rate:1.8, range:160, chain:4, color:'#fee440', unlock:'unlock_shock' },
+  gravity: { id:'gravity', name:'重力塔',   icon:'🪐', cost:210, dmg:40,  rate:0.9, range:175, gravity:true, color:'#7209b7', unlock:'unlock_gravity' },
+  // Secret Auto-Unlock on maxing Explosive Overload node
+  missile: { id:'missile', name:'【隠し】終末ミサイル塔', icon:'🚀', cost:320, dmg:680, rate:0.75, range:340, splash:95, color:'#ff2a6d', secret:true },
+  // Blanche Selection Towers
+  cygnus_quill: { id:'cygnus_quill', name:'[B]白鳥の羽ペン塔', icon:'🪶', cost:240, dmg:150, rate:4.2, range:210, beam:true, blanche:true, color:'#ffe5ec', unlock:'unlock_blanche_1' },
+  barry_claw:   { id:'barry_claw',   name:'[B]黒猫バリーの影爪塔', icon:'🐈‍⬛', cost:260, dmg:210, rate:2.8, range:185, critBonus:0.45, blanche:true, color:'#c77dff', unlock:'unlock_blanche_2' },
+  eternal_tome: { id:'eternal_tome', name:'[B]永遠愛の魔導書庫塔', icon:'📖', cost:350, dmg:320, rate:1.6, range:240, splash:80, slow:0.45, blanche:true, color:'#ff8fab', unlock:'unlock_blanche_3' }
+};
+
+// 6 Branches x 50 Nodes = 300 Nodes with Steeper Exponential Costs
+const BRANCHES = [
+  { id:'combat',   name:'⚔ 戦闘 (50)' },
+  { id:'economy',  name:'💰 経済 (50)' },
+  { id:'defense',  name:'🛡 防衛 (50)' },
+  { id:'build',    name:'🏗 建設 (50)' },
+  { id:'tactics',  name:'📜 戦術 (50)' },
+  { id:'blanche',  name:'👑 汎用・特化・愛蔵 (50)' }
+];
+
+const NODES = [];
+(function buildNodes() {
+  // Special named nodes + procedural deep scaling nodes per branch
+  const specs = {
+    combat: [
+      { id:'c_atk_1', name:'基礎攻撃力増幅 I', desc:'全タワー攻撃力 +12%/Lv', max:25, base:120, mult:1.62, stat:'atk', val:0.12 },
+      { id:'c_crit_r', name:'多段会心率の極意', desc:'クリティカル率 +6%/Lv (100%超で多段化)', max:30, base:250, mult:1.68, stat:'critRate', val:0.06 },
+      { id:'c_crit_k', name:'多段会心指数増幅', desc:'多段会心指数 k +0.25/Lv (1.5^(1.06^k))', max:20, base:600, mult:1.85, stat:'critK', val:0.25 },
+      { id:'c_explosive_overload', name:'【禁呪】爆装過負荷コア', desc:'爆発系ダメージ+20%/Lv ★MAX到達で隠し『終末ミサイル塔』が自動解放！', max:10, base:1800, mult:2.35, stat:'cannonDmg', val:0.20, triggersMissile:true },
+      { id:'unlock_sniper', name:'塔解放：スナイパー塔', desc:'超長射程・高会心の狙撃塔を解放', max:1, base:450, mult:1, unlockTower:'sniper' },
+      { id:'unlock_shock', name:'塔解放：電撃塔', desc:'複数体へ連鎖する雷撃塔を解放', max:1, base:1400, mult:1, unlockTower:'shock' },
+      { id:'single_arrow', name:'単体極限：連射矢塔特化', desc:'連射矢塔の攻撃力・速度 +25%/Lv', max:20, base:500, mult:1.75, single:'arrow', val:0.25 },
+      { id:'single_sniper', name:'単体極限：スナイパー塔特化', desc:'スナイパー塔のダメージ +30%/Lv', max:20, base:1600, mult:1.82, single:'sniper', val:0.30 },
+      { id:'single_missile', name:'単体極限：終末ミサイル塔特化', desc:'ミサイル塔の爆風と威力 +35%/Lv', max:20, base:15000, mult:2.05, single:'missile', val:0.35 }
+    ],
+    economy: [
+      { id:'e_gold', name:'撃破報酬錬金', desc:'敵撃破時の獲得ゴールド +10%/Lv', max:30, base:140, mult:1.60, stat:'goldMult', val:0.10 },
+      { id:'e_start_g', name:'初期軍資金増強', desc:'出撃時の初期資金 +60G/Lv', max:25, base:180, mult:1.65, stat:'startGold', val:60 },
+      { id:'e_rp_gain', name:'書庫の叡智還元', desc:'リザルトRP変換効率 +8%/Lv (基礎変換率の低さを補う貴重ノード)', max:25, base:900, mult:1.95, stat:'rpBonus', val:0.08 },
+      { id:'e_berserk_score', name:'暴走記録倍率増幅', desc:'暴走ウェーブ時のスコア効率 +12%/Lv', max:20, base:1200, mult:1.85, stat:'berserkMult', val:0.12 }
+    ],
+    defense: [
+      { id:'d_hp', name:'書庫結界耐久強化', desc:'拠点最大HP +40/Lv', max:30, base:130, mult:1.58, stat:'maxHp', val:40 },
+      { id:'d_aegis', name:'基地防衛緊急トリガー', desc:'拠点被弾時に衝撃波で敵を押し戻す威力強化', max:15, base:800, mult:1.80, stat:'aegis', val:1 },
+      { id:'unlock_frost', name:'塔解放：霜柱塔', desc:'広範囲に強力な減速を与える氷塔を解放', max:1, base:650, mult:1, unlockTower:'frost' },
+      { id:'unlock_gravity', name:'塔解放：重力塔', desc:'敵を重力の渦に引き留める制御塔を解放', max:1, base:2200, mult:1, unlockTower:'gravity' },
+      { id:'single_frost', name:'単体極限：霜柱塔特化', desc:'霜柱塔の威力と減速効果 +22%/Lv', max:20, base:1100, mult:1.78, single:'frost', val:0.22 },
+      { id:'single_ward', name:'単体極限：結界塔特化', desc:'結界塔の魔力ダメージ +28%/Lv', max:20, base:600, mult:1.72, single:'ward', val:0.28 }
+    ],
+    build: [
+      { id:'b_cap', name:'防衛陣地拡張', desc:'全タワー設置上限 +1基/Lv (初期15基)', max:25, base:500, mult:1.88, stat:'towerCap', val:1 },
+      { id:'b_spd', name:'装填機構高速化', desc:'全タワー攻撃速度 +7%/Lv (上限20/s)', max:25, base:220, mult:1.70, stat:'atkSpd', val:0.07 },
+      { id:'b_rng', name:'観測照準レンズ', desc:'全タワー射程 +4%/Lv', max:20, base:260, mult:1.68, stat:'range', val:0.04 },
+      { id:'single_laser', name:'単体極限：光線塔特化', desc:'光線塔の収束出力 +26%/Lv', max:20, base:950, mult:1.76, single:'laser', val:0.26 },
+      { id:'single_cannon', name:'単体極限：爆発砲塔特化', desc:'爆発砲塔の榴弾威力 +26%/Lv', max:20, base:850, mult:1.75, single:'cannon', val:0.26 }
+    ],
+    tactics: [
+      { id:'t_orbital', name:'軌道砲撃・出力増強', desc:'スキル『軌道砲撃』の威力 +30%/Lv', max:20, base:350, mult:1.72, stat:'orbitalDmg', val:0.30 },
+      { id:'t_freeze', name:'絶対零度・氷結延長', desc:'スキル『絶対零度』の凍結時間 +0.4秒/Lv', max:15, base:420, mult:1.74, stat:'freezeDur', val:0.4 },
+      { id:'t_tank', name:'重装戦車召喚強化', desc:'『戦車出撃』の耐久と突破力 +35%/Lv', max:20, base:550, mult:1.76, stat:'tankPow', val:0.35 },
+      { id:'unlock_pull', name:'塔解放：牽引塔', desc:'敵をキルゾーンへ引き寄せる塔を解放', max:1, base:950, mult:1, unlockTower:'pull' },
+      { id:'unlock_recruit', name:'塔解放：徴兵塔', desc:'防衛兵を前線へ送り出す塔を解放', max:1, base:1300, mult:1, unlockTower:'recruit' },
+      { id:'single_shock', name:'単体極限：電撃塔特化', desc:'電撃塔の連鎖威力 +28%/Lv', max:20, base:2400, mult:1.84, single:'shock', val:0.28 },
+      { id:'single_gravity', name:'単体極限：重力塔特化', desc:'重力塔の重力崩壊ダメージ +30%/Lv', max:20, base:3600, mult:1.88, single:'gravity', val:0.30 }
+    ],
+    blanche: [
+      { id:'u_omni_1', name:'汎用強化：全性能の調和 I', desc:'全タワーの攻撃力・速度・射程を総合強化 (+8%/Lv)', max:30, base:400, mult:1.78, stat:'omni', val:0.08 },
+      { id:'u_omni_2', name:'汎用強化：無限書庫の加護 II', desc:'全タワー最終ダメージ乗算 +15%/Lv', max:25, base:2500, mult:1.95, stat:'finalMult', val:0.15 },
+      { id:'unlock_blanche_1', name:'ブランシュ愛蔵：白鳥の羽ペン塔', desc:'超高速の光の軌跡で敵を貫く特別タワーを解放', max:1, base:3200, mult:1, unlockTower:'cygnus_quill' },
+      { id:'unlock_blanche_2', name:'ブランシュ愛蔵：黒猫バリーの影爪塔', desc:'超高会心率で敵の急所を切り裂く特別タワーを解放', max:1, base:6800, mult:1, unlockTower:'barry_claw' },
+      { id:'unlock_blanche_3', name:'ブランシュ愛蔵：永遠愛の魔導書庫塔', desc:'広域爆風と時間減速を同時に放つ至高のタワーを解放', max:1, base:18000, mult:1, unlockTower:'eternal_tome' },
+      { id:'single_blanche_all', name:'ブランシュ愛蔵塔・溺愛特化', desc:'愛蔵タワー3種の全性能 +30%/Lv', max:25, base:9500, mult:1.98, stat:'blancheBoost', val:0.30 }
+    ]
+  };
+
+  BRANCHES.forEach((b, bIdx) => {
+    const list = specs[b.id] || [];
+    list.forEach(item => NODES.push({ ...item, branch: b.id }));
+    let idx = list.length + 1;
+    while (idx <= 50) {
+      const tier = Math.ceil(idx / 10);
+      const baseCost = Math.floor(300 * Math.pow(3.4, tier) * (1 + (idx % 10) * 0.35));
+      const mult = 1.65 + tier * 0.08;
+      const isSingle = (idx % 4 === 0);
+      const towerKeys = Object.keys(TOWERS);
+      const tKey = towerKeys[(idx + bIdx) % towerKeys.length];
+      if (isSingle) {
+        NODES.push({
+          id: `${b.id}_gen_${idx}`,
+          branch: b.id,
+          name: `単体極限：${TOWERS[tKey].name} 深化 Lv.${tier}-${idx}`,
+          desc: `${TOWERS[tKey].name}の単体火力 +22%/Lv`,
+          max: 20, base: baseCost, mult, single: tKey, val: 0.22
+        });
+      } else {
+        NODES.push({
+          id: `${b.id}_gen_${idx}`,
+          branch: b.id,
+          name: `汎用強化：${b.name.split(' ')[1]}理論 第${idx}章`,
+          desc: `全タワー総合攻撃力 +10%/Lv・会心倍率微増`,
+          max: 25, base: baseCost, mult, stat: 'omni', val: 0.10
+        });
+      }
+      idx++;
+    }
+  });
+})();
+
+// Persistent State
+let state = {
+  rp: 500,
+  levels: {},
+  deck: ['arrow', 'cannon', 'laser', 'ward'],
+  selectedSlot: 0,
+  activeBranch: 'combat',
+  missileUnlocked: false
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('cygnus_td_v031b');
+    if (raw) state = { ...state, ...JSON.parse(raw) };
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem('cygnus_td_v031b', JSON.stringify(state)); } catch(e) {}
+}
+function resetSave() {
+  if (!confirm('研究データとRPを初期化しますか？')) return;
+  localStorage.removeItem('cygnus_td_v031b');
+  location.reload();
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.style.display = 'none', 2800);
+}
+
+function getNodeCost(node) {
+  const lv = state.levels[node.id] || 0;
+  return Math.floor(node.base * Math.pow(node.mult, lv));
+}
+
+function isTowerUnlocked(tKey) {
+  const t = TOWERS[tKey];
+  if (!t) return false;
+  if (t.secret) return !!state.missileUnlocked;
+  if (!t.unlock) return true;
+  return (state.levels[t.unlock] || 0) >= 1;
+}
+
+function getStats() {
+  const s = {
+    atk: 1, critRate: 0.05, critK: 1, cannonDmg: 1, goldMult: 1,
+    startGold: 250, rpBonus: 1, berserkMult: 1, maxHp: 100, aegis: 0,
+    towerCap: 15, atkSpd: 1, range: 1, orbitalDmg: 1, freezeDur: 2.5,
+    tankPow: 1, omni: 1, finalMult: 1, blancheBoost: 1, single: {}
+  };
+  NODES.forEach(n => {
+    const lv = state.levels[n.id] || 0;
+    if (!lv) return;
+    if (n.stat === 'atk') s.atk += n.val * lv;
+    if (n.stat === 'critRate') s.critRate += n.val * lv;
+    if (n.stat === 'critK') s.critK += n.val * lv;
+    if (n.stat === 'cannonDmg') s.cannonDmg += n.val * lv;
+    if (n.stat === 'goldMult') s.goldMult += n.val * lv;
+    if (n.stat === 'startGold') s.startGold += n.val * lv;
+    if (n.stat === 'rpBonus') s.rpBonus += n.val * lv;
+    if (n.stat === 'berserkMult') s.berserkMult += n.val * lv;
+    if (n.stat === 'maxHp') s.maxHp += n.val * lv;
+    if (n.stat === 'aegis') s.aegis += n.val * lv;
+    if (n.stat === 'towerCap') s.towerCap += n.val * lv;
+    if (n.stat === 'atkSpd') s.atkSpd += n.val * lv;
+    if (n.stat === 'range') s.range += n.val * lv;
+    if (n.stat === 'orbitalDmg') s.orbitalDmg += n.val * lv;
+    if (n.stat === 'freezeDur') s.freezeDur += n.val * lv;
+    if (n.stat === 'tankPow') s.tankPow += n.val * lv;
+    if (n.stat === 'omni') s.omni += n.val * lv;
+    if (n.stat === 'finalMult') s.finalMult *= Math.pow(1 + n.val, lv);
+    if (n.stat === 'blancheBoost') s.blancheBoost += n.val * lv;
+    if (n.single) s.single[n.single] = (s.single[n.single] || 1) + n.val * lv;
+  });
+  return s;
+}
+
+function buyNode(id) {
+  const node = NODES.find(n => n.id === id);
+  if (!node) return;
+  const lv = state.levels[id] || 0;
+  if (lv >= node.max) return;
+  const cost = getNodeCost(node);
+  if (state.rp < cost) return;
+  state.rp -= cost;
+  state.levels[id] = lv + 1;
+
+  // Secret Missile Auto-Unlock Trigger when Explosive Overload reaches MAX
+  if (node.triggersMissile && state.levels[id] >= node.max && !state.missileUnlocked) {
+    state.missileUnlocked = true;
+    showToast('🚀 禁呪完成！隠しタワー『終末ミサイル塔』が自動解放されました！');
+  }
+  saveState();
+  renderLobby();
+}
+
+function buyCheapestInBranch() {
+  const candidates = NODES.filter(n => n.branch === state.activeBranch && (state.levels[n.id] || 0) < n.max);
+  if (!candidates.length) return;
+  candidates.sort((a, b) => getNodeCost(a) - getNodeCost(b));
+  if (state.rp >= getNodeCost(candidates[0])) buyNode(candidates[0].id);
+  else showToast('RPが不足していますわ、ラルア。');
+}
+
+function renderLobby() {
+  document.getElementById('rp-display').textContent = fmt(state.rp);
+  const stats = getStats();
+  document.getElementById('cap-display').textContent = stats.towerCap;
+
+  const unlockedCount = NODES.filter(n => (state.levels[n.id] || 0) > 0).length;
+  document.getElementById('tree-progress').textContent = `${unlockedCount} / ${NODES.length}`;
+
+  // Deck Slots
+  const slotsEl = document.getElementById('deck-slots');
+  slotsEl.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const tKey = state.deck[i];
+    const t = TOWERS[tKey];
+    const div = document.createElement('div');
+    div.className = `slot-box ${t ? 'filled' : ''} ${state.selectedSlot === i ? 'selected' : ''}`;
+    div.onclick = () => { state.selectedSlot = i; renderLobby(); };
+    div.innerHTML = t
+      ? `<div class="slot-icon">${t.icon}</div><div class="slot-name">${t.name}</div>`
+      : `<div style="font-size:0.75rem;color:var(--muted);">空き枠 ${i+1}</div>`;
+    slotsEl.appendChild(div);
+  }
+
+  // Tower Roster
+  const rosterEl = document.getElementById('tower-roster');
+  rosterEl.innerHTML = '';
+  Object.values(TOWERS).forEach(t => {
+    const unlocked = isTowerUnlocked(t.id);
+    const equipped = state.deck.includes(t.id);
+    const div = document.createElement('div');
+    div.className = `roster-item ${unlocked ? '' : 'locked'} ${equipped ? 'equipped' : ''} ${t.blanche ? 'blanche' : ''}`;
+    div.onclick = () => {
+      if (!unlocked) {
+        showToast(t.secret ? '特定の研究ノードをMAXにすると自動解放されます！' : '研究ツリーで解放してくださいね。');
+        return;
+      }
+      const existingIdx = state.deck.indexOf(t.id);
+      if (existingIdx !== -1) state.deck[existingIdx] = state.deck[state.selectedSlot];
+      state.deck[state.selectedSlot] = t.id;
+      saveState();
+      renderLobby();
+    };
+    const lockLabel = unlocked ? `${t.cost}G` : (t.secret ? '🔒条件MAX解放' : '🔒未研究');
+    div.innerHTML = `<div><strong>${t.icon} ${t.name}</strong></div><div style="color:var(--muted);font-size:0.68rem;">${lockLabel}</div>`;
+    rosterEl.appendChild(div);
+  });
+
+  // Tabs
+  const tabsEl = document.getElementById('branch-tabs');
+  tabsEl.innerHTML = '';
+  BRANCHES.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = `tab-btn ${state.activeBranch === b.id ? 'active' : ''}`;
+    btn.textContent = b.name;
+    btn.onclick = () => { state.activeBranch = b.id; renderLobby(); };
+    tabsEl.appendChild(btn);
+  });
+
+  // Nodes
+  const listEl = document.getElementById('node-list');
+  listEl.innerHTML = '';
+  NODES.filter(n => n.branch === state.activeBranch).forEach(n => {
+    const lv = state.levels[n.id] || 0;
+    const maxed = lv >= n.max;
+    const cost = getNodeCost(n);
+    const row = document.createElement('div');
+    row.className = `node-card ${maxed ? 'maxed' : ''} ${n.triggersMissile ? 'secret-trigger' : ''}`;
+    row.innerHTML = `
+      <div class="node-info">
+        <div class="node-title">${n.name}</div>
+        <div class="node-desc">${n.desc}</div>
+        <div class="node-lv">Lv. ${lv} / ${n.max}</div>
+      </div>
+      <button class="buy-btn" ${maxed || state.rp < cost ? 'disabled' : ''} onclick="buyNode('${n.id}')">
+        ${maxed ? 'MAX' : fmt(cost) + ' RP'}
+      </button>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+// ================= BATTLE ENGINE =================
+let game = null;
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+
+function startBattle() {
+  const stats = getStats();
+  document.getElementById('lobby-screen').classList.remove('active');
+  document.getElementById('battle-screen').classList.add('active');
+  document.getElementById('result-modal').classList.remove('show');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const w = canvas.width, h = canvas.height;
+  const path = [
+    { x: 0, y: h * 0.25 },
+    { x: w * 0.72, y: h * 0.25 },
+    { x: w * 0.72, y: h * 0.52 },
+    { x: w * 0.24, y: h * 0.52 },
+    { x: w * 0.24, y: h * 0.78 },
+    { x: w * 0.92, y: h * 0.78 }
+  ];
+
+  game = {
+    running: true,
+    stats,
+    gold: stats.startGold,
+    hp: stats.maxHp,
+    maxHp: stats.maxHp,
+    score: 0,
+    wave: 1,
+    berserkLv: 0,
+    speed: 1,
+    selectedBuild: state.deck[0] || 'arrow',
+    towers: [],
+    enemies: [],
+    projectiles: [],
+    allies: [],
+    path,
+    spawnTimer: 0,
+    enemiesToSpawn: 8,
+    waveTimer: 0,
+    cds: { orbital: 0, freeze: 0, tank: 0 },
+    freezeTime: 0,
+    fps: 60,
+    lastFrame: performance.now()
+  };
+
+  renderBuildButtons();
+  requestAnimationFrame(loop);
+}
+
+function renderBuildButtons() {
+  const row = document.getElementById('build-row');
+  row.innerHTML = '';
+  state.deck.forEach(tKey => {
+    const t = TOWERS[tKey];
+    if (!t) return;
+    const btn = document.createElement('button');
+    btn.className = `act-btn ${game.selectedBuild === tKey ? 'active' : ''}`;
+    btn.innerHTML = `${t.icon} ${t.name}<br>${t.cost}G`;
+    btn.onclick = () => { game.selectedBuild = tKey; renderBuildButtons(); };
+    row.appendChild(btn);
+  });
+}
+
+canvas.addEventListener('pointerdown', (e) => {
+  if (!game || !game.running) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  if (y < 60 || y > canvas.height - 115) return;
+  if (game.towers.length >= game.stats.towerCap) {
+    showToast(`設置上限 (${game.stats.towerCap}基) に達していますわ！`);
+    return;
+  }
+  const t = TOWERS[game.selectedBuild];
+  if (!t || game.gold < t.cost) {
+    showToast('資金が足りませんわ！');
+    return;
+  }
+  // Prevent overlapping towers
+  if (game.towers.some(tw => Math.hypot(tw.x - x, tw.y - y) < 34)) return;
+  game.gold -= t.cost;
+  game.towers.push({ x, y, type: t.id, cd: 0 });
+});
+
+function toggleSpeed() {
+  if (!game) return;
+  if (game.speed === 1) {
+    if (game.gold < 40) { showToast('倍速起動には 40G 必要ですわ'); return; }
+    game.gold -= 40;
+    game.speed = 2;
+  } else if (game.speed === 2) {
+    if (game.gold < 100) { showToast('3倍速には 100G 必要ですわ'); return; }
+    game.gold -= 100;
+    game.speed = 3;
+  } else {
+    game.speed = 1;
+  }
+  document.getElementById('speed-btn').textContent = `速度 x${game.speed}`;
+}
+
+function spawnBerserkWave() {
+  if (!game || !game.running) return;
+  game.berserkLv += 1;
+  game.enemiesToSpawn += 10;
+  showToast(`🔥 暴走Lv.${game.berserkLv} 発動！スコア指数倍率上昇！`);
+}
+
+function useSkill(type) {
+  if (!game || !game.running || game.cds[type] > 0) return;
+  if (type === 'orbital') {
+    game.cds.orbital = 14;
+    const dmg = 450 * game.stats.orbitalDmg * game.stats.finalMult;
+    game.enemies.forEach(en => en.hp -= dmg);
+    showToast('☄ 軌道砲撃が戦場を焼き払いましたわ！');
+  } else if (type === 'freeze') {
+    game.cds.freeze = 16;
+    game.freezeTime = game.stats.freezeDur;
+    showToast('❄ 絶対零度で敵の動きを封じましたわ！');
+  } else if (type === 'tank') {
+    game.cds.tank = 18;
+    const end = game.path[game.path.length - 1];
+    game.allies.push({ x: end.x, y: end.y, pathIdx: game.path.length - 2, hp: 600 * game.stats.tankPow, dmg: 180 * game.stats.tankPow });
+    showToast('🛡 重装戦車が前線へ出撃しましたわ！');
+  }
+}
+
+function calcDamage(baseDmg, towerDef) {
+  const s = game.stats;
+  let dmg = baseDmg * s.atk * s.omni * s.finalMult;
+  if (towerDef.blanche) dmg *= s.blancheBoost;
+  if (towerDef.id === 'cannon' || towerDef.id === 'missile') dmg *= s.cannonDmg;
+  if (s.single[towerDef.id]) dmg *= s.single[towerDef.id];
+
+  // Multi-tier Critical: 1.5^(1.06^k)
+  const totalCrit = s.critRate + (towerDef.critBonus || 0);
+  if (Math.random() < Math.min(1, totalCrit)) {
+    const tier = Math.max(1, Math.floor(totalCrit));
+    const k = s.critK + (tier - 1);
+    const critMult = Math.pow(1.5, Math.pow(1.06, k));
+    dmg *= critMult;
+  }
+  return dmg;
+}
+
+function spawnEnemy() {
+  const w = game.wave;
+  const bScale = Math.pow(1.28, game.berserkLv);
+  const maxHp = Math.floor((45 + w * 24 + Math.pow(w, 1.55) * 12) * bScale);
+  game.enemies.push({
+    x: game.path[0].x,
+    y: game.path[0].y,
+    pathIdx: 1,
+    hp: maxHp,
+    maxHp,
+    speed: (52 + Math.min(75, w * 1.6)) * (1 + game.berserkLv * 0.04),
+    slowTimer: 0
+  });
+}
+
+function endBattle(isGameOver) {
+  if (!game || !game.running) return;
+  game.running = false;
+
+  // Lowered RP Conversion Rate (Score ^ 0.54 * 0.14 * rpBonus)
+  const rawRp = Math.pow(Math.max(0, game.score), 0.54) * 0.14;
+  const earnedRp = Math.max(1, Math.floor(rawRp * game.stats.rpBonus));
+  state.rp += earnedRp;
+  saveState();
+
+  document.getElementById('result-title').textContent = isGameOver ? '防衛ライン突破 — 戦果集計' : '戦略的撤退 — 戦果集計';
+  document.getElementById('result-details').innerHTML = `
+    <div>到達ウェーブ：<strong>WAVE ${game.wave}</strong>（暴走Lv.${game.berserkLv}）</div>
+    <div>累計スコア：<strong>${fmt(game.score)}</strong></div>
+    <div>RP変換レート：<strong>低レート精密査定 (スコア^0.54 × 0.14)</strong></div>
+    <div style="margin-top:6px; font-size:1rem; color:var(--gold);">獲得研究ポイント：<strong>+${fmt(earnedRp)} RP</strong></div>
+    <div style="font-size:0.75rem; color:var(--muted);">現在の所持RP：${fmt(state.rp)} RP</div>
+  `;
+  document.getElementById('result-modal').classList.add('show');
+}
+
+function returnToLobby() {
+  document.getElementById('result-modal').classList.remove('show');
+  document.getElementById('battle-screen').classList.remove('active');
+  document.getElementById('lobby-screen').classList.add('active');
+  renderLobby();
+}
+
+function loop(now) {
+  if (!game || !game.running) return;
+  const rawDt = Math.min(0.05, (now - game.lastFrame) / 1000);
+  game.lastFrame = now;
+  game.fps = game.fps * 0.9 + (1 / Math.max(0.001, rawDt)) * 0.1;
+  const lowFps = game.fps < 35;
+
+  const dt = rawDt * game.speed;
+
+  // Cooldowns & Spawning
+  Object.keys(game.cds).forEach(k => game.cds[k] = Math.max(0, game.cds[k] - dt));
+  if (game.freezeTime > 0) game.freezeTime -= dt;
+
+  if (game.enemiesToSpawn > 0) {
+    game.spawnTimer -= dt;
+    if (game.spawnTimer <= 0) {
+      spawnEnemy();
+      game.enemiesToSpawn--;
+      game.spawnTimer = Math.max(0.18, 0.72 - game.wave * 0.015);
+    }
+  } else if (game.enemies.length === 0) {
+    game.wave++;
+    game.enemiesToSpawn = 8 + Math.floor(game.wave * 2.2);
+  }
+
+  // Update Enemies
+  for (let i = game.enemies.length - 1; i >= 0; i--) {
+    const en = game.enemies[i];
+    if (en.slowTimer > 0) en.slowTimer -= dt;
+    const target = game.path[en.pathIdx];
+    if (!target) {
+      game.hp -= 10;
+      game.enemies.splice(i, 1);
+      // Base Defense Trigger
+      if (game.stats.aegis > 0) {
+        game.enemies.forEach(e2 => e2.hp -= 60 * game.stats.aegis);
+      }
+      if (game.hp <= 0) { endBattle(true); return; }
+      continue;
+    }
+    const dx = target.x - en.x, dy = target.y - en.y;
+    const dist = Math.hypot(dx, dy);
+    const spdMult = game.freezeTime > 0 ? 0 : (en.slowTimer > 0 ? 0.52 : 1);
+    if (dist < 6) {
+      en.pathIdx++;
+    } else {
+      en.x += (dx / dist) * en.speed * spdMult * dt;
+      en.y += (dy / dist) * en.speed * spdMult * dt;
+    }
+    if (en.hp <= 0) {
+      // Berserk Score Formula: HP ^ ((berserkLv / 20) + 1)
+      const exp = (game.berserkLv / 20) + 1;
+      const gainedScore = Math.pow(Math.max(1, en.maxHp), exp) * game.stats.berserkMult;
+      game.score += gainedScore;
+      game.gold += Math.floor((8 + game.wave * 1.4) * game.stats.goldMult);
+      game.enemies.splice(i, 1);
+    }
+  }
+
+  // Update Allies (Tanks & Recruits)
+  for (let i = game.allies.length - 1; i >= 0; i--) {
+    const al = game.allies[i];
+    const target = game.path[al.pathIdx];
+    if (!target) { game.allies.splice(i, 1); continue; }
+    const dx = target.x - al.x, dy = target.y - al.y;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 8) al.pathIdx--;
+    else { al.x += (dx / dist) * 75 * dt; al.y += (dy / dist) * 75 * dt; }
+
+    game.enemies.forEach(en => {
+      if (Math.hypot(en.x - al.x, en.y - al.y) < 26) {
+        en.hp -= al.dmg * dt * 3;
+        al.hp -= 18 * dt;
+      }
+    });
+    if (al.hp <= 0) game.allies.splice(i, 1);
+  }
+
+  // Update Towers (Attack speed cap 20/s)
+  game.towers.forEach(tw => {
+    const def = TOWERS[tw.type];
+    const effRate = Math.min(20, def.rate * game.stats.atkSpd);
+    const effRange = def.range * game.stats.range;
+    tw.cd -= dt;
+    if (tw.cd > 0) return;
+
+    const inRange = game.enemies.filter(en => Math.hypot(en.x - tw.x, en.y - tw.y) <= effRange);
+    if (!inRange.length) return;
+    tw.cd = 1 / effRate;
+
+    if (def.spawnAlly) {
+      if (game.allies.length < 18) {
+        game.allies.push({ x: tw.x, y: tw.y, pathIdx: Math.max(0, inRange[0].pathIdx - 1), hp: 90 * game.stats.atk, dmg: calcDamage(def.dmg, def) });
+      }
+      return;
+    }
+
+    const primary = inRange[0];
+    const dmg = calcDamage(def.dmg, def);
+    primary.hp -= dmg;
+    if (def.slow) primary.slowTimer = 1.6;
+    if (def.pull || def.gravity) {
+      inRange.slice(0, 4).forEach(en => {
+        en.x += (tw.x - en.x) * 0.14;
+        en.y += (tw.y - en.y) * 0.14;
+        if (def.gravity) en.hp -= dmg * 0.35;
+      });
+    }
+    if (def.splash) {
+      game.enemies.forEach(en => {
+        if (en !== primary && Math.hypot(en.x - primary.x, en.y - primary.y) <= def.splash) {
+          en.hp -= dmg * 0.65;
+        }
+      });
+    }
+    if (def.chain) {
+      inRange.slice(1, def.chain).forEach(en => en.hp -= dmg * 0.75);
+    }
+
+    // Visual Projectile / Beam Throttling when FPS is low or atkSpd near 20/s
+    if (!lowFps || Math.random() < 0.35) {
+      game.projectiles.push({
+        x1: tw.x, y1: tw.y, x2: primary.x, y2: primary.y,
+        color: def.color, beam: !!def.beam || effRate >= 16, life: 0.09
+      });
+    }
+  });
+
+  // Render Scene
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Path
+  ctx.strokeStyle = 'rgba(186, 148, 255, 0.24)';
+  ctx.lineWidth = 28;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  game.path.forEach((p, idx) => idx === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+  ctx.stroke();
+
+  // Towers
+  game.towers.forEach(tw => {
+    const def = TOWERS[tw.type];
+    ctx.fillStyle = def.color;
+    ctx.beginPath();
+    ctx.arc(tw.x, tw.y, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = '15px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(def.icon, tw.x, tw.y);
+  });
+
+  // Allies
+  game.allies.forEach(al => {
+    ctx.fillStyle = '#80ed99';
+    ctx.fillRect(al.x - 7, al.y - 7, 14, 14);
+  });
+
+  // Enemies
+  game.enemies.forEach(en => {
+    ctx.fillStyle = en.slowTimer > 0 ? '#48cae4' : '#ff5964';
+    ctx.beginPath();
+    ctx.arc(en.x, en.y, 9, 0, Math.PI * 2);
+    ctx.fill();
+    const ratio = Math.max(0, en.hp / en.maxHp);
+    ctx.fillStyle = '#222';
+    ctx.fillRect(en.x - 10, en.y - 15, 20, 3);
+    ctx.fillStyle = '#ffd166';
+    ctx.fillRect(en.x - 10, en.y - 15, 20 * ratio, 3);
+  });
+
+  // Projectiles
+  for (let i = game.projectiles.length - 1; i >= 0; i--) {
+    const pr = game.projectiles[i];
+    pr.life -= rawDt;
+    if (pr.life <= 0) { game.projectiles.splice(i, 1); continue; }
+    ctx.strokeStyle = pr.color;
+    ctx.lineWidth = pr.beam ? 2.5 : 1.5;
+    ctx.beginPath();
+    ctx.moveTo(pr.x1, pr.y1);
+    ctx.lineTo(pr.x2, pr.y2);
+    ctx.stroke();
+  }
+
+  // Update HUD
+  document.getElementById('hud-wave').textContent = game.wave;
+  document.getElementById('hud-berserk').textContent = game.berserkLv > 0 ? `暴走Lv.${game.berserkLv}` : '通常';
+  document.getElementById('hud-gold').textContent = fmt(game.gold);
+  document.getElementById('hud-score').textContent = fmt(game.score);
+  document.getElementById('hud-hp').textContent = Math.max(0, Math.floor(game.hp));
+  document.getElementById('hud-towers').textContent = `${game.towers.length}/${game.stats.towerCap}`;
+  document.getElementById('cd-orbital').textContent = game.cds.orbital > 0 ? game.cds.orbital.toFixed(1)+'s' : 'READY';
+  document.getElementById('cd-freeze').textContent = game.cds.freeze > 0 ? game.cds.freeze.toFixed(1)+'s' : 'READY';
+  document.getElementById('cd-tank').textContent = game.cds.tank > 0 ? game.cds.tank.toFixed(1)+'s' : 'READY';
+
+  requestAnimationFrame(loop);
+}
+
+loadState();
+renderLobby();
+</script>
+</body>
+</html>
