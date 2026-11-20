@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.32</title>
+<title>Fantasy Tower Defense 3D v0.33</title>
 <style>
 :root{
   color-scheme:dark;
@@ -27,7 +27,6 @@ html,body{margin:0;width:100%;height:100%;max-width:100vw;overflow:hidden;backgr
 canvas{display:block;width:100%;height:100%}
 #dmgCanvas{position:fixed;inset:0;pointer-events:none;z-index:18}
 
-/* 上部スタイリッシュHUD */
 #top{position:fixed;top:env(safe-area-inset-top,8px);left:8px;right:8px;max-width:calc(100vw - 16px);display:flex;justify-content:space-between;align-items:flex-start;gap:6px;pointer-events:none;flex-wrap:wrap;z-index:20}
 .brand-badge{
   background:linear-gradient(135deg,rgba(11,19,34,.92),rgba(18,30,50,.88));
@@ -124,7 +123,6 @@ button.active{
 }
 button:disabled{opacity:.38;cursor:not-allowed}
 
-/* 4スロットデッキ配置パネル */
 #towerPanel{position:fixed;left:8px;right:8px;max-width:calc(100vw - 16px);bottom:calc(102px + env(safe-area-inset-bottom,0px));display:none;gap:6px;flex-wrap:wrap;z-index:20}
 #towerPanel.show{display:flex}
 .towerChoice{flex:1 1 46%;text-align:left;min-width:0;padding:7px 9px}
@@ -158,7 +156,6 @@ button:disabled{opacity:.38;cursor:not-allowed}
 #toast{position:fixed;left:50%;bottom:calc(168px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:rgba(9,16,28,.95);border:1px solid var(--line);border-radius:11px;padding:7px 13px;font-size:11px;color:#fff8e6;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;z-index:40;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 #toast.show{opacity:1}
 
-/* モバイル最適化：複数行システムタブ */
 .sysTabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0 10px}
 .sysTabs button{min-height:32px;padding:5px 6px;font-size:10.5px}
 .sysPage{display:none}
@@ -170,7 +167,6 @@ button:disabled{opacity:.38;cursor:not-allowed}
 .row{display:flex;justify-content:space-between;gap:7px;align-items:center}
 .muted{color:var(--muted)}
 
-/* 5系統・全225ノード研究ツリーUI */
 .branchTabs{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:8px}
 .branchTabs button{min-height:32px;padding:4px 2px;font-size:10px;border-radius:8px}
 .branchTabs button.active{background:linear-gradient(135deg,#7c5c20,#4e3810);border-color:var(--gold);color:#fff8e6}
@@ -204,7 +200,6 @@ button:disabled{opacity:.38;cursor:not-allowed}
 .buy-btns{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
 .buy-btns button{flex:1;min-height:33px;font-size:10.5px}
 
-/* 4スロットデッキ編成UI */
 .deck-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
 .deck-slot{background:rgba(16,26,44,.92);border:1.5px solid var(--gold);border-radius:10px;padding:7px 5px;text-align:center;font-size:10px}
 .deck-slot span{display:block;font-size:8.5px;color:var(--cyan);margin-bottom:2px}
@@ -230,7 +225,6 @@ button:disabled{opacity:.38;cursor:not-allowed}
   .towerChoice{flex:1}
 }
 
-/* スタイリッシュ・ロビー */
 #lobby{
   position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px;
   background:radial-gradient(circle at 20% 20%,rgba(22,42,68,.55),rgba(5,10,18,.84));
@@ -314,9 +308,9 @@ button:disabled{opacity:.38;cursor:not-allowed}
     <div class="lobby-grid">
       <div class="lobby-hero">
         <div>
-          <div class="lobby-kicker">Cygnus Tactical Defense // v0.32</div>
+          <div class="lobby-kicker">Cygnus Tactical Defense // v0.33</div>
           <h1 class="lobby-title">FANTASY TOWER<br>DEFENSE 3D</h1>
-          <p class="lobby-desc">5系統・全225ノードの壮大な研究ツリーと、14種の個性豊かな防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
+          <p class="lobby-desc">5系統・全240ノードの研究ツリーと、13種の防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
         </div>
         <div class="lobby-stats-card">
           <div><span>RESEARCH POINTS</span><b id="lobbyRP">0 RP</b></div>
@@ -335,8 +329,8 @@ button:disabled{opacity:.38;cursor:not-allowed}
           </div>
         </div>
         <div class="map-note">
-          ・<b>5系統・240ノード研究ツリー</b>（最大1e10 RP対応）で無限の強化と新タワー解放！<br>
-          ・<b>4スロット編成＆初期15基上限</b>（研究で拡張）。隠し進化「ミサイル塔」も存在！<br>
+          ・<b>5系統・240ノード研究ツリー</b>（1,500RP帯の塔解放〜1e7〜1e10 RP終盤対応）<br>
+          ・<b>4スロット編成＆初期15基上限</b>（研究で拡張）。星辰塔のフリーズ＆砲塔旋回も修正済み！<br>
           ・20×nウェーブ毎に<b>暴走Lv+1</b>、FPS低下時は自動で段階軽量化。
         </div>
         <div class="lobby-actions">
@@ -351,7 +345,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
 </div>
 
 <div id="top">
-  <div class="brand-badge">FANTASY TD<b>3D v0.32</b></div>
+  <div class="brand-badge">FANTASY TD<b>3D v0.33</b></div>
   <div class="hud-groups">
     <div class="hud-group" id="hudBattleGroup">
       <div class="hud-item"><span>WAVE</span><b id="wave">1</b></div>
@@ -414,7 +408,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
   <div class="sysTabs">
     <button data-sys="research" class="active">研究ツリー</button>
     <button data-sys="deck">4枠編成</button>
-    <button data-sys="towers">全14塔図鑑</button>
+    <button data-sys="towers">全13塔図鑑</button>
     <button data-sys="achievements">実績</button>
     <button data-sys="stats">統計</button>
     <button data-sys="lobbyBack">ロビーへ</button>
@@ -455,9 +449,6 @@ button:disabled{opacity:.38;cursor:not-allowed}
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 const $=id=>document.getElementById(id);
 
-// ==========================================
-// 1. 数値フォーマット＆コア計算式 (v0.32)
-// ==========================================
 const SCI_THRESHOLD = 1e7;
 const MAX_RP_CAP = 1e10;
 
@@ -470,7 +461,6 @@ function fmtNum(v){
   return Number(v.toFixed(2)).toLocaleString();
 }
 
-// 加速コスト：毎Lv +0.01、5レベル毎に +0.1
 function getAccelMultiplier(level, baseRate=1.15, mitigate=0){
   const lv=Math.max(0,level);
   const stepGain=Math.max(0.002,0.01-mitigate);
@@ -486,7 +476,6 @@ function calcAccelCost(baseCost, level, baseRate=1.15, mitigate=0){
   return Math.max(1,Math.round(c));
 }
 
-// 多段クリティカル：100%超過時に多段抽選し 1.5^(1.06^k) で乗算
 function rollCritHits(critRate){
   if(critRate<=0)return 0;
   const maxAttempts=Math.min(35,Math.ceil(critRate));
@@ -505,7 +494,6 @@ function calcCritMultiplier(hits){
   return Number.isFinite(val)?val:1e300;
 }
 
-// 暴走ウェーブスコア倍率：HP^((暴走Lv/20)+1)
 function getRampageLevel(w=wave){return Math.floor(Math.max(0,w)/20)}
 function calcRampageScoreMult(enemyHp, rampageLv){
   if(rampageLv<=0)return 1;
@@ -520,9 +508,6 @@ function calcRampageScoreMult(enemyHp, rampageLv){
   return Number.isFinite(p)?p:1e300;
 }
 
-// ==========================================
-// 2. Three.js 3Dシーン＆FPS段階軽量化
-// ==========================================
 const host=$('game'),scene=new THREE.Scene();
 scene.background=new THREE.Color(0x9fc4d1);
 scene.fog=new THREE.Fog(0x9fc4d1,58,135);
@@ -578,7 +563,6 @@ function tickPerf(rawDt){
   }
 }
 
-// 2Dダメージオーバーレイ
 const dmgCanvas=$('dmgCanvas'),dmgCtx=dmgCanvas.getContext('2d');
 let dmgDpr=Math.min(devicePixelRatio||1,1.5);
 function resizeDmgCanvas(){
@@ -653,9 +637,6 @@ function renderDamagePopups(dt){
   dmgCtx.globalAlpha=1;
 }
 
-// ==========================================
-// 3. マップ・渓谷・ポータル・拠点の3D構築
-// ==========================================
 scene.add(new THREE.HemisphereLight(0xe7f5ff,0x59634a,2));
 const sun=new THREE.DirectionalLight(0xffedc6,2.2);
 sun.position.set(-18,30,14);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
@@ -664,6 +645,13 @@ scene.add(sun);
 
 const mat=(color,roughness=1)=>new THREE.MeshStandardMaterial({color,roughness,flatShading:true});
 const grassMat=mat(0x6d9b57),grassDark=mat(0x557d49),roadMat=mat(0x9a927d),roadEdge=mat(0x625f55),stoneMat=mat(0x77796f),woodMat=mat(0x705037),leafMat=mat(0x3f7548),leaf2=mat(0x5e8d4d),goldMat=mat(0xd9ae52),towerMat=mat(0x667a9b),towerTop=mat(0xb9c6d0),blueMat=mat(0x75c8ec),redMat=mat(0xd65c50),pinkMat=mat(0xff9eb8),creamMat=mat(0xfff4e4),darkEyeMat=mat(0x1f2430),purpleMat=mat(0x9b6ef3),yellowMat=mat(0xf5e050),iceMat=mat(0xa8ecff);
+
+// 共有ジオメトリ・マテリアル（星辰塔＆エフェクトのメモリ/GC負荷軽減）
+const sharedRingGeo = new THREE.TorusGeometry(.25,.12,6,14);
+const sharedFlashGeo = new THREE.IcosahedronGeometry(.45,0);
+const sharedAstralBodyGeo = new THREE.OctahedronGeometry(.18,0);
+const sharedAstralTailGeo = new THREE.ConeGeometry(.11,.34,6);
+const sharedAstralMat = new THREE.MeshBasicMaterial({color:0x9be7ff});
 
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(100,74),grassMat);
 ground.rotation.x=-Math.PI/2;ground.position.y=-.12;ground.receiveShadow=true;scene.add(ground);
@@ -786,7 +774,7 @@ const placePlane=new THREE.Mesh(new THREE.PlaneGeometry(100,74),new THREE.MeshBa
 placePlane.rotation.x=-Math.PI/2;placePlane.position.y=.04;scene.add(placePlane);
 
 // ==========================================
-// 4. 全11種タワー定義＆4スロット編成システム
+// 4. 全13種タワー定義＆4スロット編成システム
 // ==========================================
 const TOWER_CATALOG = {
   bullet:    {id:'bullet',    name:'弾丸塔',     cost:30,  dmg:12,  range:10.0, interval:0.42, unlockReq:null,             short:'単体連射・レーザー進化対応', desc:'草原や台座に配置可能な基本の防衛塔。研究ツリーでレーザー塔へ進化すると貫通光線を放つ。'},
@@ -822,14 +810,14 @@ function getMaxTowers(){
 }
 
 // ==========================================
-// 5. 5系統・全225ノード研究ツリー自動生成エンジン
+// 5. 5系統・全240ノード研究ツリー（1500RP解放＆1e7〜1e10終盤対応）
 // ==========================================
 const BRANCH_SPECS = [
-  {key:'戦闘', title:'戦闘系統 (45ノード)', rootId:'power', desc:'火力・連射・多段会心・狙撃・電撃・レーザー覚醒'},
-  {key:'経済', title:'経済系統 (45ノード)', rootId:'loot',  desc:'撃破報酬・初期資金・スコア倍率・RP収穫・利息'},
-  {key:'防衛', title:'防衛系統 (45ノード)', rootId:'vitality',desc:'拠点耐久・守護結界・自動修復・徴兵・背水の陣'},
-  {key:'建設', title:'建設系統 (45ノード)', rootId:'buildDiscount',desc:'設置割引・加速緩和・売却返金・射程・霜柱/重力塔'},
-  {key:'戦術', title:'戦術系統 (45ノード)', rootId:'blastRadius',desc:'爆圧拡張・牽引・設置上限拡張・スキル・隠しミサイル塔'}
+  {key:'戦闘', title:'戦闘系統 (48ノード)', rootId:'power', desc:'火力・連射・多段会心・狙撃・電撃・レーザー覚醒'},
+  {key:'経済', title:'経済系統 (48ノード)', rootId:'loot',  desc:'撃破報酬・初期資金・スコア倍率・RP収穫'},
+  {key:'防衛', title:'防衛系統 (48ノード)', rootId:'vitality',desc:'拠点耐久・守護結界・自動修復・徴兵・背水の陣'},
+  {key:'建設', title:'建設系統 (48ノード)', rootId:'buildDiscount',desc:'設置割引・加速緩和・売却返金・射程・霜柱/重力塔'},
+  {key:'戦術', title:'戦術系統 (48ノード)', rootId:'blastRadius',desc:'爆圧拡張・牽引・設置上限拡張・スキル・隠しミサイル塔'}
 ];
 
 const NODE_DEFS = [];
@@ -840,53 +828,52 @@ function registerNode(def){
   if(!(def.id in prestige))prestige[def.id]=0;
 }
 
-// --- 戦闘系統 (45ノード) ---
-registerNode({id:'power',name:'攻撃訓練',branch:'戦闘',lane:'基礎火力',tier:0,reqs:[],desc:'全タワーの攻撃力 +5% / Lv',max:20,base:3});
-registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 +3% / Lv（上限20/sまで有効）',max:20,base:4});
-registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +4% ＆ 攻撃速度 +2.5% / Lv',max:20,base:5});
-registerNode({id:'growth',name:'成長促進',branch:'戦闘',lane:'成長系統',tier:1,reqs:['power'],desc:'タワーのレベルアップ毎に別枠で 1.001倍を乗算（加速コスト）',max:0,base:2});
-registerNode({id:'critical',name:'会心の一撃',branch:'戦闘',lane:'会心系統',tier:2,reqs:['haste','battleHarmony'],desc:'会心率 +18% / Lv。100%超で多段累乗 1.5^(1.06^k) 発生！',max:25,base:5});
-registerNode({id:'unlock_sniper',name:'精密狙撃理論',branch:'戦闘',lane:'新塔解放',tier:2,reqs:['power'],transform:true,desc:'【新タワー解放】超長射程「スナイパー塔」が使用可能になる',max:1,base:15});
-registerNode({id:'unlock_lightning',name:'高圧雷撃回路',branch:'戦闘',lane:'新塔解放',tier:3,reqs:['haste'],transform:true,desc:'【新タワー解放】最大5体連鎖「電撃塔」が使用可能になる',max:1,base:35});
-registerNode({id:'laserEvolution',name:'光線覚醒',branch:'戦闘',lane:'進化覚醒',tier:4,reqs:['battleHarmony','growth'],transform:true,desc:'【攻撃変化】弾丸塔が「レーザー塔」へ進化！貫通光線照射＋威力上昇',max:1,base:50});
+// --- 戦闘系統 ---
+registerNode({id:'power',name:'攻撃訓練',branch:'戦闘',lane:'基礎火力',tier:0,reqs:[],desc:'全タワーの攻撃力 +5% / Lv',max:25,base:12});
+registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 +3% / Lv（上限20/sまで有効）',max:25,base:15});
+registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +4% ＆ 攻撃速度 +2.5% / Lv',max:25,base:18});
+registerNode({id:'growth',name:'成長促進',branch:'戦闘',lane:'成長系統',tier:1,reqs:['power'],desc:'タワーのレベルアップ毎に別枠で 1.001倍を乗算（加速コスト）',max:0,base:10});
+registerNode({id:'critical',name:'会心の一撃',branch:'戦闘',lane:'会心系統',tier:2,reqs:['haste','battleHarmony'],desc:'会心率 +18% / Lv。100%超で多段累乗 1.5^(1.06^k) 発生！',max:30,base:20});
+registerNode({id:'unlock_sniper',name:'精密狙撃理論',branch:'戦闘',lane:'新塔解放',tier:2,reqs:['power'],transform:true,desc:'【新タワー解放】超長射程「スナイパー塔」が使用可能になる',max:1,base:1500});
+registerNode({id:'unlock_lightning',name:'高圧雷撃回路',branch:'戦闘',lane:'新塔解放',tier:3,reqs:['haste'],transform:true,desc:'【新タワー解放】最大5体連鎖「電撃塔」が使用可能になる',max:1,base:1600});
+registerNode({id:'laserEvolution',name:'光線覚醒',branch:'戦闘',lane:'進化覚醒',tier:4,reqs:['battleHarmony','growth'],transform:true,desc:'【攻撃変化】弾丸塔が「レーザー塔」へ進化！貫通光線照射＋威力上昇',max:1,base:1700});
 
-// --- 経済系統 (45ノード) ---
-registerNode({id:'loot',name:'戦利品の知恵',branch:'経済',lane:'資金獲得',tier:0,reqs:[],desc:'敵撃破ゴールド +12% / Lv',max:20,base:3});
-registerNode({id:'startGold',name:'潤沢な資金',branch:'経済',lane:'資金獲得',tier:1,reqs:['loot'],desc:'出撃時の初期所持ゴールド +35G / Lv',max:20,base:3});
-registerNode({id:'scoreBonus',name:'戦果の記録',branch:'経済',lane:'スコア',tier:1,reqs:['loot'],desc:'獲得スコア +8% / Lv',max:25,base:4});
-registerNode({id:'spBonus',name:'魂の収穫',branch:'経済',lane:'RP収穫',tier:2,reqs:['startGold','scoreBonus'],desc:'リザルトのスコア由来RP +6% / Lv',max:25,base:6});
+// --- 経済系統 ---
+registerNode({id:'loot',name:'戦利品の知恵',branch:'経済',lane:'資金獲得',tier:0,reqs:[],desc:'敵撃破ゴールド +12% / Lv',max:25,base:12});
+registerNode({id:'startGold',name:'潤沢な資金',branch:'経済',lane:'資金獲得',tier:1,reqs:['loot'],desc:'出撃時の初期所持ゴールド +35G / Lv',max:25,base:12});
+registerNode({id:'scoreBonus',name:'戦果の記録',branch:'経済',lane:'スコア',tier:1,reqs:['loot'],desc:'獲得スコア +8% / Lv',max:30,base:15});
+registerNode({id:'spBonus',name:'魂の収穫',branch:'経済',lane:'RP収穫',tier:2,reqs:['startGold','scoreBonus'],desc:'リザルトのスコア由来RP +6% / Lv',max:30,base:25});
 
-// --- 防衛系統 (45ノード) ---
-registerNode({id:'vitality',name:'拠点増強',branch:'防衛',lane:'拠点防衛',tier:0,reqs:[],desc:'出撃時の拠点最大耐久 +3 / Lv',max:20,base:3});
-registerNode({id:'ward',name:'守護結界',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'敵の侵入を肩代わりする結界 +1 / Lv',max:15,base:4});
-registerNode({id:'repair',name:'自動修復',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'ウェーブ突破時に拠点耐久を回復する頻度と量が上昇',max:10,base:5});
-registerNode({id:'clutch',name:'背水の陣',branch:'防衛',lane:'拠点防衛',tier:2,reqs:['ward','repair'],desc:'拠点耐久が5以下の時、敵の移動速度 -5% / Lv',max:10,base:6});
-registerNode({id:'unlock_barracks',name:'王都防衛兵団',branch:'防衛',lane:'新塔解放',tier:2,reqs:['vitality'],transform:true,desc:'【新タワー解放】防衛兵を送り出す「徴兵塔」が使用可能になる',max:1,base:25});
-registerNode({id:'baseTrigger',name:'基地防衛トリガー',branch:'防衛',lane:'切り札',tier:4,reqs:['clutch'],transform:true,desc:'【特殊発動】拠点被弾時、全敵に衝撃波ダメージ＆ノックバック発動！',max:5,base:80});
+// --- 防衛系統 ---
+registerNode({id:'vitality',name:'拠点増強',branch:'防衛',lane:'拠点防衛',tier:0,reqs:[],desc:'出撃時の拠点最大耐久 +3 / Lv',max:25,base:12});
+registerNode({id:'ward',name:'守護結界',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'敵の侵入を肩代わりする結界 +1 / Lv',max:20,base:15});
+registerNode({id:'repair',name:'自動修復',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'ウェーブ突破時に拠点耐久を回復する頻度と量が上昇',max:15,base:18});
+registerNode({id:'clutch',name:'背水の陣',branch:'防衛',lane:'拠点防衛',tier:2,reqs:['ward','repair'],desc:'拠点耐久が5以下の時、敵の移動速度 -5% / Lv',max:15,base:20});
+registerNode({id:'unlock_barracks',name:'王都防衛兵団',branch:'防衛',lane:'新塔解放',tier:2,reqs:['vitality'],transform:true,desc:'【新タワー解放】防衛兵を送り出す「徴兵塔」が使用可能になる',max:1,base:1500});
+registerNode({id:'baseTrigger',name:'基地防衛トリガー',branch:'防衛',lane:'切り札',tier:4,reqs:['clutch'],transform:true,desc:'【特殊発動】拠点被弾時、全敵に衝撃波ダメージ＆ノックバック発動！',max:5,base:1850});
 
-// --- 建設系統 (45ノード) ---
-registerNode({id:'buildDiscount',name:'建築技術',branch:'建設',lane:'コスト効率',tier:0,reqs:[],desc:'タワー設置費用 -2.5% / Lv（最大50%割引）',max:20,base:3});
-registerNode({id:'upgradeDiscount',name:'効率強化',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー強化の加速倍率増加を緩和 / Lv',max:15,base:4});
-registerNode({id:'refund',name:'熟練解体',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー売却時の返金率 +2% / Lv（最大95%）',max:12,base:4});
-registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +0.18 / Lv',max:20,base:5});
-registerNode({id:'unlock_frost',name:'永久凍土結晶',branch:'建設',lane:'新塔解放',tier:2,reqs:['buildDiscount'],transform:true,desc:'【新タワー解放】冷気で敵を凍らせる「霜柱塔」が使用可能になる',max:1,base:20});
-registerNode({id:'unlock_gravity',name:'特異点制御論',branch:'建設',lane:'新塔解放',tier:4,reqs:['range'],transform:true,desc:'【新タワー解放】重力渦で敵を束ねる「重力塔」が使用可能になる',max:1,base:65});
+// --- 建設系統 ---
+registerNode({id:'buildDiscount',name:'建築技術',branch:'建設',lane:'コスト効率',tier:0,reqs:[],desc:'タワー設置費用 -2.5% / Lv（最大50%割引）',max:20,base:12});
+registerNode({id:'upgradeDiscount',name:'効率強化',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー強化の加速倍率増加を緩和 / Lv',max:20,base:15});
+registerNode({id:'refund',name:'熟練解体',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー売却時の返金率 +2% / Lv（最大95%）',max:15,base:15});
+registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +0.18 / Lv',max:25,base:18});
+registerNode({id:'unlock_frost',name:'永久凍土結晶',branch:'建設',lane:'新塔解放',tier:2,reqs:['buildDiscount'],transform:true,desc:'【新タワー解放】冷気で敵を凍らせる「霜柱塔」が使用可能になる',max:1,base:1500});
+registerNode({id:'unlock_gravity',name:'特異点制御論',branch:'建設',lane:'新塔解放',tier:4,reqs:['range'],transform:true,desc:'【新タワー解放】重力渦で敵を束ねる「重力塔」が使用可能になる',max:1,base:1800});
 
-// --- 戦術系統 (45ノード) ---
-registerNode({id:'blastRadius',name:'爆圧拡張',branch:'戦術',lane:'範囲戦術',tier:0,reqs:[],desc:'爆発・ミサイル・重力・霜柱の効果範囲 +0.12 / Lv',max:20,base:4});
-registerNode({id:'slowDuration',name:'振動共鳴',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'振動・霜柱の減速効果時間 +0.2秒 / Lv',max:15,base:4});
-registerNode({id:'slowPower',name:'減速波',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'減速状態の敵の移動速度をさらに低下 / Lv',max:15,base:5});
-registerNode({id:'overdriveVibe',name:'共振増幅',branch:'戦術',lane:'範囲戦術',tier:2,reqs:['slowDuration','slowPower'],desc:'振動塔・電撃塔・重力塔の特殊ダメージ +10% / Lv',max:15,base:6});
-registerNode({id:'rushBonus',name:'奇襲報酬',branch:'戦術',lane:'戦術支援',tier:2,reqs:['slowDuration','slowPower'],desc:'ウェーブ前倒し開始ボーナスゴールド +15% / Lv',max:15,base:4});
-registerNode({id:'towerCapUp',name:'防衛網拡張',branch:'戦術',lane:'戦術支援',tier:2,reqs:['blastRadius'],desc:'戦場のタワー最大設置上限 +2基 / Lv（初期15基）',max:10,base:12});
-registerNode({id:'unlock_pull',name:'磁力空間歪曲',branch:'戦術',lane:'新塔解放',tier:2,reqs:['slowPower'],transform:true,desc:'【新タワー解放】敵を引き戻す「牽引塔」が使用可能になる',max:1,base:30});
-registerNode({id:'unlock_skills',name:'戦術指令権限',branch:'戦術',lane:'切り札',tier:3,reqs:['rushBonus'],transform:true,desc:'【アクティブ解放】軌道砲撃・絶対零度・戦車出撃スキルが使用可能に！',max:1,base:45});
-registerNode({id:'unlock_missile',name:'超弾道兵器開発',branch:'戦術',lane:'隠し進化',tier:5,reqs:['overdriveVibe','towerCapUp'],transform:true,desc:'【隠し進化解放】決戦兵器「ミサイル塔」が編成可能になる！',max:1,base:120});
-registerNode({id:'unlock_blanche_arbiter',name:'白銀の裁定',branch:'戦闘',lane:'ブランシュ選',tier:5,reqs:['laserEvolution'],transform:true,desc:'【ブランシュセレクション解放】貫通閃光と冷気裁定を放つ「白銀の裁定塔」を解放！',max:1,base:140});
-registerNode({id:'unlock_blanche_bind',name:'深淵の愛縛',branch:'戦術',lane:'ブランシュ選',tier:5,reqs:['unlock_pull'],transform:true,desc:'【ブランシュセレクション解放】強減速と引き戻しを兼ね備えた「深淵の愛縛塔」を解放！',max:1,base:135});
-registerNode({id:'unlock_blanche_astral',name:'書庫の星辰',branch:'建設',lane:'ブランシュ選',tier:5,reqs:['unlock_gravity'],transform:true,desc:'【ブランシュセレクション解放】追尾星光弾幕を放つ「書庫の星辰塔」を解放！',max:1,base:160});
+// --- 戦術系統 ---
+registerNode({id:'blastRadius',name:'爆圧拡張',branch:'戦術',lane:'範囲戦術',tier:0,reqs:[],desc:'爆発・ミサイル・重力・霜柱の効果範囲 +0.12 / Lv',max:25,base:14});
+registerNode({id:'slowDuration',name:'振動共鳴',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'振動・霜柱の減速効果時間 +0.2秒 / Lv',max:20,base:15});
+registerNode({id:'slowPower',name:'減速波',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'減速状態の敵の移動速度をさらに低下 / Lv',max:20,base:18});
+registerNode({id:'overdriveVibe',name:'共振増幅',branch:'戦術',lane:'範囲戦術',tier:2,reqs:['slowDuration','slowPower'],desc:'振動塔・電撃塔・重力塔の特殊ダメージ +10% / Lv',max:20,base:22});
+registerNode({id:'rushBonus',name:'奇襲報酬',branch:'戦術',lane:'戦術支援',tier:2,reqs:['slowDuration','slowPower'],desc:'ウェーブ前倒し開始ボーナスゴールド +15% / Lv',max:20,base:15});
+registerNode({id:'towerCapUp',name:'防衛網拡張',branch:'戦術',lane:'戦術支援',tier:2,reqs:['blastRadius'],desc:'戦場のタワー最大設置上限 +2基 / Lv（初期15基）',max:15,base:45});
+registerNode({id:'unlock_pull',name:'磁力空間歪曲',branch:'戦術',lane:'新塔解放',tier:2,reqs:['slowPower'],transform:true,desc:'【新タワー解放】敵を引き戻す「牽引塔」が使用可能になる',max:1,base:1500});
+registerNode({id:'unlock_skills',name:'戦術指令権限',branch:'戦術',lane:'切り札',tier:3,reqs:['rushBonus'],transform:true,desc:'【アクティブ解放】軌道砲撃・絶対零度・戦車出撃スキルが使用可能に！',max:1,base:1650});
+registerNode({id:'unlock_missile',name:'超弾道兵器開発',branch:'戦術',lane:'隠し進化',tier:5,reqs:['overdriveVibe','towerCapUp'],transform:true,desc:'【隠し進化解放】決戦兵器「ミサイル塔」が編成可能になる！',max:1,base:2000});
+registerNode({id:'unlock_blanche_arbiter',name:'白銀の裁定',branch:'戦闘',lane:'ブランシュ選',tier:5,reqs:['laserEvolution'],transform:true,desc:'【ブランシュセレクション解放】貫通閃光と冷気裁定を放つ「白銀の裁定塔」を解放！',max:1,base:2400});
+registerNode({id:'unlock_blanche_bind',name:'深淵の愛縛',branch:'戦術',lane:'ブランシュ選',tier:5,reqs:['unlock_pull'],transform:true,desc:'【ブランシュセレクション解放】強減速と引き戻しを兼ね備えた「深淵の愛縛塔」を解放！',max:1,base:2200});
+registerNode({id:'unlock_blanche_astral',name:'書庫の星辰',branch:'建設',lane:'ブランシュ選',tier:5,reqs:['unlock_gravity'],transform:true,desc:'【ブランシュセレクション解放】追尾星光弾幕を放つ「書庫の星辰塔」を解放！',max:1,base:2500});
 
-// 各系統48ノード（5系統×48＝全240ノード、1e10 RPスケール対応）
 const GENERATED_TEMPLATES = {
   '戦闘': [
     {lane:'一本道：極限火力', prefix:'極限火砲', stat:'dmg', val:0.06, unit:'攻撃力 +6%'},
@@ -924,8 +911,10 @@ for(const br of BRANCH_SPECS){
     const stepIdx = Math.floor(i / templates.length) + 1;
     const prevId = stepIdx === 1 ? br.rootId : `${br.key}_gen_${i - templates.length}`;
     const id = `${br.key}_gen_${i}`;
-    // 1e10 RPまでスケールするコスト曲線
-    const baseCost = Math.min(MAX_RP_CAP, Math.round(10 * Math.pow(1.42, stepIdx - 1) * (1 + (i % templates.length)*0.25)));
+    // 終盤ステップ（stepIdx > 10）で1e7〜1e10 RP領域まで到達するコスト曲線
+    const lateBoost = stepIdx <= 10 ? 1 : Math.pow(4.8, stepIdx - 10);
+    const rawBase = 20 * Math.pow(1.55, stepIdx - 1) * lateBoost * (1 + (i % templates.length)*0.25);
+    const baseCost = Math.min(MAX_RP_CAP, Math.max(1, Math.round(rawBase)));
     registerNode({
       id,
       name:`${tpl.prefix} ${toRoman(stepIdx)}`,
@@ -933,7 +922,7 @@ for(const br of BRANCH_SPECS){
       lane:tpl.lane,
       tier:stepIdx,
       reqs:[prevId],
-      desc:`${tpl.unit} / Lv（最大1e10 RP対応の深層研究）`,
+      desc:`${tpl.unit} / Lv（1e7〜1e10 RP対応の深層研究）`,
       max:10,
       base:baseCost,
       genStat:tpl.stat,
@@ -973,11 +962,16 @@ let running=false,paused=false,autoAdvance=false,waveCountdown=0,spawnLeft=0,spa
 const skillCooldowns={barrage:0,freeze:0,tank:0};
 const stats={totalKills:0,totalGold:0,totalWaves:0,runs:0,highestWave:0,totalScore:0,placed:0,towerUpgrades:0,totalSpentSP:0};
 
+// 再利用ベクトル（毎フレームのGC負荷削減）
+const _tmpPosA = new THREE.Vector3();
+const _tmpPosB = new THREE.Vector3();
+const _tmpLook = new THREE.Vector3();
+
 function nodeLevel(id){return prestige[id]||0}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1700)}
 function saveMeta(){
   try{
-    localStorage.setItem('fantasyTD_v032_3d_meta',JSON.stringify({
+    localStorage.setItem('fantasyTD_v033_3d_meta',JSON.stringify({
       sp,prestige,stats,equippedDeck,
       achievements:ach.map(a=>({id:a.id,done:a.done,unlocked:a.unlocked}))
     }));
@@ -1017,7 +1011,6 @@ function towerDamage(t,level=t.level){
   return def.dmg*(1+.35*(level-1))*growthMult*powerMult*typeMult;
 }
 
-// 攻撃速度上限 20/s（最小間隔 0.05s）を保証
 function towerInterval(t){
   const def=TOWER_CATALOG[t.kind];
   const haste=nodeLevel('haste')*.03 + nodeLevel('battleHarmony')*.025 + sumGenStat('spd');
@@ -1115,7 +1108,7 @@ $('infoContent').addEventListener('click',e=>{
 });
 
 // ==========================================
-// 8. 全11種タワー3Dモデル＆特殊挙動実装
+// 8. 全13種タワー3Dモデル＆旋回リグ実装
 // ==========================================
 function createTowerModel(kind,x,z){
   const g=new THREE.Group();g.position.set(x,0,z);
@@ -1193,12 +1186,21 @@ function refreshBulletTowersToLaser(){
 
 function attachAnimRig(group, kind){
   const rig = { head:null, barrel:null, spinner:null, pulse:null, orbit:null, bob:null, recoil:0, phase:Math.random()*Math.PI*2 };
-  // Build named animated sub-meshes on top of the 3D tower group
-  if(kind==='bullet' || kind==='sniper' || kind==='blast' || kind==='missile' || kind==='blancheAstral'){
+  // 照準・旋回ヘッドを付与（blancheArbiterやレーザー塔含む）
+  if(['bullet','sniper','blast','missile','blancheAstral','blancheArbiter','lightning'].includes(kind)){
     const head = new THREE.Group();
-    head.position.set(0, kind==='sniper'?2.05:(kind==='blancheAstral'?2.0:1.73), 0);
+    const hY = kind==='sniper'?2.05:(kind==='blancheAstral'?2.0:(kind==='blancheArbiter'?2.12:1.78));
+    head.position.set(0, hY, 0);
+    const pointer = new THREE.Mesh(
+      new THREE.ConeGeometry(0.14, 0.42, 6),
+      kind==='blancheArbiter'?creamMat : kind==='blancheAstral'?blueMat : kind==='lightning'?yellowMat : goldMat
+    );
+    pointer.rotation.x = Math.PI/2;
+    pointer.position.set(0, 0, 0.55);
+    head.add(pointer);
     group.add(head);
     rig.head = head;
+    rig.barrel = pointer;
   }
   if(kind==='vibe' || kind==='lightning' || kind==='gravity' || (kind==='bullet'&&isLaserUnlocked())){
     const spinner = new THREE.Group();
@@ -1221,11 +1223,11 @@ function attachAnimRig(group, kind){
     group.add(pulse);
     rig.pulse = pulse;
   }
-  if(kind==='gravity' || kind==='pull'){
+  if(kind==='gravity' || kind==='pull' || kind==='blancheBind'){
     const orbit = new THREE.Group();
     orbit.position.set(0, 1.9, 0);
     for(let i=0;i<2;i++){
-      const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), i===0?purpleMat:goldMat);
+      const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), kind==='blancheBind'?pinkMat : i===0?purpleMat:goldMat);
       sat.position.set(Math.cos(i*Math.PI)*0.85, 0, Math.sin(i*Math.PI)*0.85);
       orbit.add(sat);
     }
@@ -1309,7 +1311,6 @@ function makeEnemy(laneIndex,w=wave){
 
 function enemyPosition(e){const a=e.pts[e.segment],b=e.pts[e.segment+1];if(!b)return a.clone();const len=a.distanceTo(b),f=Math.min(1,e.segmentDist/len);return a.clone().lerp(b,f)}
 
-// 徴兵塔＆戦車出撃の味方ユニット（拠点からポータル方向へ逆走進軍）
 function spawnAllyUnit(isTank=false,dmg=30,hp=120){
   const g=new THREE.Group();
   if(isTank){
@@ -1374,7 +1375,6 @@ function sellTower(t){
   closeInfo();updateUI();saveMeta();toast(`${fmtNum(refund)}Gで売却したよ`);
 }
 
-// アクティブスキル（研究「戦術指令権限」で解放）
 function getSkillMaxCD(){return Math.max(8, 22 * (1 - sumGenStat('cd')))}
 function updateSkillButtons(){
   const b1=$('skillBarrage'),b2=$('skillFreeze'),b3=$('skillTank');
@@ -1492,12 +1492,11 @@ $('lobbySave').onclick=()=>{
   if(ok){saveMeta();toast('セーブデータを保存したよ')}
   else{
     const wipe=confirm('セーブデータを初期化しますか？この操作は取り消せません');
-    if(wipe){localStorage.removeItem('fantasyTD_v032_3d_meta');location.reload()}
+    if(wipe){localStorage.removeItem('fantasyTD_v033_3d_meta');location.reload()}
   }
 };
 $('resetCam').onclick=()=>{target.set(0,0,0);radius=49;theta=Math.PI/4;phi=1.02;updateCamera();toast('視点をリセット')};
 
-// カメラ操作
 const target=new THREE.Vector3(0,0,0);let radius=49,theta=Math.PI/4,phi=1.02;
 function updateCamera(){phi=Math.max(.42,Math.min(1.32,phi));radius=Math.max(23,Math.min(88,radius));camera.position.set(target.x+radius*Math.sin(phi)*Math.sin(theta),target.y+radius*Math.cos(phi),target.z+radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(target)}
 updateCamera();
@@ -1548,7 +1547,7 @@ renderer.domElement.addEventListener('pointerup',e=>{
 renderer.domElement.addEventListener('pointermove',e=>{if(placing){const p=worldFromEvent(e);if(p)setPreview(Math.round(p.x),Math.round(p.z))}});
 
 // ==========================================
-// 12. 4枠編成・図鑑・5系統225ノード研究ツリーUI
+// 12. 4枠編成・図鑑・5系統240ノード研究ツリーUI
 // ==========================================
 function renderDeckTab(){
   const slotsEl=$('deckSlots'),rosterEl=$('towerRoster');
@@ -1597,9 +1596,10 @@ function renderEncyclopedia(){
 function nodeCost(d){
   if(d.id==='growth'){
     const mitigate=nodeLevel('upgradeDiscount')*0.0005;
-    return calcAccelCost(2,nodeLevel(d.id),1.15,mitigate);
+    return calcAccelCost(10,nodeLevel(d.id),1.15,mitigate);
   }
-  return Math.min(MAX_RP_CAP, Math.round(d.base * Math.pow(1.28, nodeLevel(d.id))));
+  const growthExp = d.max === 1 ? 1.0 : 1.42;
+  return Math.min(MAX_RP_CAP, Math.round(d.base * Math.pow(growthExp, nodeLevel(d.id))));
 }
 function nodePrereq(d){
   if(!d.reqs||d.reqs.length===0)return true;
@@ -1692,21 +1692,21 @@ $('prestigeTree').addEventListener('click',e=>{const b=e.target.closest('[data-n
 // 13. 実績システム
 // ==========================================
 const ach=[
-  {id:'first',name:'初陣',desc:'累計1ウェーブ突破',reward:5,done:false,unlocked:true,check:()=>stats.totalWaves>=1},
-  {id:'kills100',name:'討伐者',desc:'累計100体撃破',reward:8,done:false,unlocked:true,check:()=>stats.totalKills>=100},
-  {id:'kills1000',name:'熟練討伐者',desc:'累計1,000体撃破',reward:25,done:false,unlocked:false,prev:'kills100',check:()=>stats.totalKills>=1000},
-  {id:'kills10000',name:'魔物の天敵',desc:'累計10,000体撃破',reward:120,done:false,unlocked:false,prev:'kills1000',check:()=>stats.totalKills>=10000},
-  {id:'wave10',name:'防衛線の構築',desc:'最高到達ウェーブ10',reward:15,done:false,unlocked:true,check:()=>stats.highestWave>=10},
-  {id:'wave50',name:'難攻不落',desc:'最高到達ウェーブ50',reward:80,done:false,unlocked:false,prev:'wave10',check:()=>stats.highestWave>=50},
-  {id:'wave100',name:'不屈の挑戦者',desc:'最高到達ウェーブ100',reward:300,done:false,unlocked:false,prev:'wave50',check:()=>stats.highestWave>=100},
-  {id:'builder',name:'建築の第一歩',desc:'タワーを累計10基設置',reward:10,done:false,unlocked:true,check:()=>stats.placed>=10},
-  {id:'research25',name:'書庫の探究者',desc:'研究ノードを25個以上解放',reward:50,done:false,unlocked:true,check:()=>NODE_DEFS.filter(n=>nodeLevel(n.id)>0).length>=25},
-  {id:'research100',name:'大賢者の叡智',desc:'研究ノードを100個以上解放',reward:500,done:false,unlocked:false,prev:'research25',check:()=>NODE_DEFS.filter(n=>nodeLevel(n.id)>0).length>=100},
-  {id:'scoreMillion',name:'伝説の防衛者',desc:'累計スコア1,000,000',reward:150,done:false,unlocked:false,prev:'wave50',check:()=>stats.totalScore>=1000000}
+  {id:'first',name:'初陣',desc:'累計1ウェーブ突破',reward:25,done:false,unlocked:true,check:()=>stats.totalWaves>=1},
+  {id:'kills100',name:'討伐者',desc:'累計100体撃破',reward:40,done:false,unlocked:true,check:()=>stats.totalKills>=100},
+  {id:'kills1000',name:'熟練討伐者',desc:'累計1,000体撃破',reward:120,done:false,unlocked:false,prev:'kills100',check:()=>stats.totalKills>=1000},
+  {id:'kills10000',name:'魔物の天敵',desc:'累計10,000体撃破',reward:600,done:false,unlocked:false,prev:'kills1000',check:()=>stats.totalKills>=10000},
+  {id:'wave10',name:'防衛線の構築',desc:'最高到達ウェーブ10',reward:80,done:false,unlocked:true,check:()=>stats.highestWave>=10},
+  {id:'wave50',name:'難攻不落',desc:'最高到達ウェーブ50',reward:400,done:false,unlocked:false,prev:'wave10',check:()=>stats.highestWave>=50},
+  {id:'wave100',name:'不屈の挑戦者',desc:'最高到達ウェーブ100',reward:1500,done:false,unlocked:false,prev:'wave50',check:()=>stats.highestWave>=100},
+  {id:'builder',name:'建築の第一歩',desc:'タワーを累計10基設置',reward:50,done:false,unlocked:true,check:()=>stats.placed>=10},
+  {id:'research25',name:'書庫の探究者',desc:'研究ノードを25個以上解放',reward:250,done:false,unlocked:true,check:()=>NODE_DEFS.filter(n=>nodeLevel(n.id)>0).length>=25},
+  {id:'research100',name:'大賢者の叡智',desc:'研究ノードを100個以上解放',reward:2500,done:false,unlocked:false,prev:'research25',check:()=>NODE_DEFS.filter(n=>nodeLevel(n.id)>0).length>=100},
+  {id:'scoreMillion',name:'伝説の防衛者',desc:'累計スコア1,000,000',reward:750,done:false,unlocked:false,prev:'wave50',check:()=>stats.totalScore>=1000000}
 ];
 function loadMeta(){
   try{
-    const raw=localStorage.getItem('fantasyTD_v032_3d_meta');
+    const raw=localStorage.getItem('fantasyTD_v033_3d_meta');
     if(!raw)return;
     const d=JSON.parse(raw);
     if(Number.isFinite(d.sp))sp=Math.min(MAX_RP_CAP,Math.max(0,d.sp));
@@ -1757,25 +1757,31 @@ function damageEnemy(e,dmg,kind,crit=false){
   }
 }
 
+let burstsThisFrame = 0;
 function burstAt(pos,radius,color=0xffc45a){
   if(perfState.tier>=3)return;
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(.25,.12,6,18),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.95}));
+  const maxBursts = perfState.tier===0?16 : perfState.tier===1?8 : 4;
+  if(burstsThisFrame>=maxBursts)return;
+  burstsThisFrame++;
+  const ringMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.95});
+  const ring=new THREE.Mesh(sharedRingGeo,ringMat);
   ring.rotation.x=Math.PI/2;ring.position.set(pos.x,.18,pos.z);scene.add(ring);
-  effects.push({mesh:ring,life:.42,max:.42,kind:'ring',radius});
-  const flash=new THREE.Mesh(new THREE.IcosahedronGeometry(.45,1),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.85}));
-  flash.position.set(pos.x,.7,pos.z);scene.add(flash);
-  effects.push({mesh:flash,life:.2,max:.2,kind:'flash',radius});
+  effects.push({mesh:ring,life:.36,max:.36,kind:'ring',radius,sharedGeo:true});
+  if(perfState.tier===0){
+    const flashMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:.85});
+    const flash=new THREE.Mesh(sharedFlashGeo,flashMat);
+    flash.position.set(pos.x,.7,pos.z);scene.add(flash);
+    effects.push({mesh:flash,life:.18,max:.18,kind:'flash',radius,sharedGeo:true});
+  }
 }
 
 function spawnVibeWave(t,radius,color=0x75c8ec){
   if(perfState.tier>=3)return;
-  const waveRing=new THREE.Mesh(new THREE.RingGeometry(0.45,0.85,perfState.tier>=2?16:32),new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,transparent:true,opacity:.9}));
+  const waveRing=new THREE.Mesh(new THREE.RingGeometry(0.45,0.85,perfState.tier>=2?14:24),new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,transparent:true,opacity:.9}));
   waveRing.rotation.x=-Math.PI/2;waveRing.position.set(t.x,(t.y||0)+.22,t.z);scene.add(waveRing);
-  effects.push({mesh:waveRing,life:.48,max:.48,kind:'vibeWave',radius});
+  effects.push({mesh:waveRing,life:.45,max:.45,kind:'vibeWave',radius});
 }
 
-// 20/s高速攻撃時のレーザー描画最適化（同フレーム重複抑止）
-let lastLaserFrameStamp = -1;
 let lasersThisFrame = 0;
 function spawnBeam(start,end,color=0xff66d9,thick=0.09){
   if(perfState.tier>=3)return;
@@ -1795,28 +1801,47 @@ function spawnBeam(start,end,color=0xff66d9,thick=0.09){
 function deathBurst(e){
   if(perfState.tier>=2)return;
   const p=enemyPosition(e);
-  const count=perfState.tier===0?4:2;
+  const count=perfState.tier===0?3:1;
   for(let i=0;i<count;i++){
-    const shard=new THREE.Mesh(new THREE.TetrahedronGeometry(.18+Math.random()*.14),new THREE.MeshStandardMaterial({color:e.type==='boss'?0x9b2448:e.type==='tank'?0x7ca2c4:e.type==='fast'?0xffd66b:0xf28b82,flatShading:true,transparent:true}));
+    const shard=new THREE.Mesh(new THREE.TetrahedronGeometry(.18+Math.random()*.12),new THREE.MeshStandardMaterial({color:e.type==='boss'?0x9b2448:e.type==='tank'?0x7ca2c4:e.type==='fast'?0xffd66b:0xf28b82,flatShading:true,transparent:true}));
     shard.position.set(p.x,.8+Math.random()*.8,p.z);scene.add(shard);
-    effects.push({mesh:shard,life:.6,max:.6,kind:'debris',vx:(Math.random()-.5)*4,vy:2+Math.random()*3,vz:(Math.random()-.5)*4});
+    effects.push({mesh:shard,life:.55,max:.55,kind:'debris',vx:(Math.random()-.5)*4,vy:2+Math.random()*3,vz:(Math.random()-.5)*4});
   }
 }
 
 function makeShot(t,e,dmg,kind,crit=false){
-  const start=t.group.position.clone().add(new THREE.Vector3(0,1.8,0));
-  const end=e.group.position.clone().add(new THREE.Vector3(0,.8,0));
+  const start=new THREE.Vector3(t.x,(t.y||0)+1.85,t.z);
+  const ep=enemyPosition(e);
+  const end=new THREE.Vector3(ep.x,.8,ep.z);
   if(kind==='missile'){
     const mGroup=new THREE.Group();
     const body=new THREE.Mesh(new THREE.CylinderGeometry(.11,.13,.65,6),towerTop);body.rotation.x=Math.PI/2;mGroup.add(body);
     const nose=new THREE.Mesh(new THREE.ConeGeometry(.13,.28,6),redMat);nose.rotation.x=Math.PI/2;nose.position.z=.46;mGroup.add(nose);
     mGroup.position.copy(start);scene.add(mGroup);
-    shots.push({mesh:mGroup,start,end:end.clone(),life:.52,max:.52,target:e,damage:dmg,kind:'missile',crit,prevPos:start.clone()});
+    shots.push({mesh:mGroup,start,end,life:.48,max:.48,target:e,damage:dmg,kind:'missile',crit,prevPos:start.clone()});
+  }else if(kind==='blancheAstral'){
+    const mGroup=new THREE.Group();
+    const core=new THREE.Mesh(sharedAstralBodyGeo,sharedAstralMat);mGroup.add(core);
+    const tail=new THREE.Mesh(sharedAstralTailGeo,goldMat);tail.rotation.x=-Math.PI/2;tail.position.z=-.2;mGroup.add(tail);
+    mGroup.position.copy(start);scene.add(mGroup);
+    shots.push({mesh:mGroup,start,end,life:.45,max:.45,target:e,damage:dmg,kind:'blancheAstral',crit,prevPos:start.clone(),sharedGeo:true});
   }else{
     const mesh=new THREE.Mesh(new THREE.SphereGeometry(kind==='blast'?.25:.14,6,5),kind==='blast'?goldMat:towerTop);
     mesh.position.copy(start);scene.add(mesh);
     shots.push({mesh,start,end,life:.22,max:.22,target:e,damage:dmg,kind,crit});
   }
+}
+
+function disposeObject3D(obj, skipGeo=false){
+  obj.traverse(child=>{
+    if(child.isMesh){
+      if(!skipGeo && child.geometry)child.geometry.dispose();
+      if(child.material){
+        if(Array.isArray(child.material))child.material.forEach(m=>m.dispose());
+        else if(child.material!==sharedAstralMat)child.material.dispose();
+      }
+    }
+  });
 }
 
 function rollDamageWithCrit(baseDmg){
@@ -1918,6 +1943,7 @@ function loop(now){
   if(paused)return;
   const raw=Math.min(.05,(now-last)/1000||0);last=now;
   lasersThisFrame=0;
+  burstsThisFrame=0;
   tickPerf(raw);
   if(!running){
     if(autoAdvance&&waveCountdown>0){
@@ -1936,7 +1962,6 @@ function loop(now){
     spawnTimer+=getSpawnInterval(spawnWave,spawnLeft);
   }
 
-  // 味方ユニット（徴兵兵・戦車）の進軍＆接触交戦
   for(let i=allies.length-1;i>=0;i--){
     const a=allies[i];
     let rem=a.speed*dt;
@@ -1960,7 +1985,6 @@ function loop(now){
     }
   }
 
-  // 敵の移動更新
   for(const e of [...enemies]){
     if(e.frozen>0){e.frozen=Math.max(0,e.frozen-dt);continue;}
     if(e.slow>0)e.slow=Math.max(0,e.slow-dt);
@@ -1980,11 +2004,11 @@ function loop(now){
     e.group.rotation.y=Math.atan2(dir.x,dir.z);
   }
 
-  // 全11種タワーの3Dアニメーション＆攻撃ロジック
+  // 全13種タワーの3Dアニメーション＆攻撃ロジック
   for(const t of towers){
     if(t.rig){
-      if(t.rig.recoil>0)t.rig.recoil=Math.max(0,t.rig.recoil-dt*4.5);
-      if(t.rig.barrel)t.rig.barrel.position.z=(t.kind==='sniper'?0.75:0.48)-t.rig.recoil*0.28;
+      if(t.rig.recoil>0)t.rig.recoil=Math.max(0,t.rig.recoil-dt*5.0);
+      if(t.rig.barrel)t.rig.barrel.position.z=0.55-t.rig.recoil*0.25;
       if(t.rig.spinner){t.rig.spinner.rotation.y+=dt*2.8;t.rig.spinner.rotation.z+=dt*1.2;}
       if(t.rig.orbit)t.rig.orbit.rotation.y+=dt*2.4;
       if(t.rig.pulse){
@@ -2020,14 +2044,21 @@ function loop(now){
       continue;
     }
 
-    if(t.kind==='pull'||t.kind==='gravity'){
+    if(t.kind==='pull'||t.kind==='gravity'||t.kind==='blancheBind'){
       const inRange=enemies.filter(e=>{const p=enemyPosition(e);return Math.hypot(p.x-t.x,p.z-t.z)<=rng});
       if(inRange.length>0){
         const {dmg,crit}=rollDamageWithCrit(towerDamage(t));
-        spawnVibeWave(t,rng,t.kind==='gravity'?0xb366ff:0xff7788);
+        const col=t.kind==='blancheBind'?0xff759f:t.kind==='gravity'?0xb366ff:0xff7788;
+        spawnVibeWave(t,rng,col);
         for(const e of inRange){
-          damageEnemy(e,dmg*0.75,t.kind,crit);
-          e.segmentDist=Math.max(0,e.segmentDist-(t.kind==='pull'?1.35:0.85));
+          if(t.kind==='blancheBind'){
+            e.slow=Math.max(e.slow,2.0);e.slowFactor=Math.min(e.slowFactor,0.32);
+            e.segmentDist=Math.max(0,e.segmentDist-1.65);
+            damageEnemy(e,dmg*0.85,'gravity',crit);
+          }else{
+            damageEnemy(e,dmg*0.75,t.kind,crit);
+            e.segmentDist=Math.max(0,e.segmentDist-(t.kind==='pull'?1.35:0.85));
+          }
         }
         t.cool=towerInterval(t);
       }
@@ -2044,33 +2075,34 @@ function loop(now){
     }
 
     if(targetEnemy){
+      const tp=enemyPosition(targetEnemy);
       if(t.rig){
         t.rig.recoil=1;
         if(t.rig.head){
-          const tp=enemyPosition(targetEnemy);
           t.rig.head.rotation.y=Math.atan2(tp.x-t.x,tp.z-t.z);
         }
       }
       const {dmg,crit}=rollDamageWithCrit(towerDamage(t));
       const kind=t.kind;
       if(kind==='sniper'){
-        const start=t.group.position.clone().add(new THREE.Vector3(0,2.05,0));
-        const end=enemyPosition(targetEnemy).add(new THREE.Vector3(0,.8,0));
-        spawnBeam(start,end,0x98ff98,0.06);
+        _tmpPosA.set(t.x,(t.y||0)+2.05,t.z);
+        _tmpPosB.set(tp.x,.8,tp.z);
+        spawnBeam(_tmpPosA,_tmpPosB,0x98ff98,0.06);
         damageEnemy(targetEnemy,dmg,'sniper',true);
       }else if(kind==='lightning'){
         let cur=targetEnemy;
         const hitSet=new Set([cur]);
-        let prevPos=t.group.position.clone().add(new THREE.Vector3(0,2.05,0));
+        _tmpPosA.set(t.x,(t.y||0)+2.05,t.z);
         for(let c=0;c<5&&cur;c++){
-          const curPos=enemyPosition(cur).add(new THREE.Vector3(0,.8,0));
-          spawnBeam(prevPos,curPos,0xfff066,0.08);
+          const cp=enemyPosition(cur);
+          _tmpPosB.set(cp.x,.8,cp.z);
+          spawnBeam(_tmpPosA,_tmpPosB,0xfff066,0.08);
           damageEnemy(cur,dmg*Math.pow(0.85,c),'lightning',crit);
-          prevPos=curPos;
+          _tmpPosA.copy(_tmpPosB);
           let nextE=null,nd=4.8;
           for(const cand of enemies){
             if(!hitSet.has(cand)){
-              const dist=curPos.distanceTo(enemyPosition(cand));
+              const dist=_tmpPosA.distanceTo(enemyPosition(cand));
               if(dist<nd){nd=dist;nextE=cand;}
             }
           }
@@ -2078,15 +2110,15 @@ function loop(now){
           cur=nextE;
         }
       }else if(kind==='blast'){
-        const radius=3.8+nodeLevel('blastRadius')*.12;const tp=enemyPosition(targetEnemy);
+        const radius=3.8+nodeLevel('blastRadius')*.12;
         for(const e of enemies){const p=enemyPosition(e);if(Math.hypot(p.x-tp.x,p.z-tp.z)<=radius)damageEnemy(e,dmg*.75,'blast',crit)}
         makeShot(t,targetEnemy,dmg,kind,crit);
       }else if(kind==='bullet'){
         if(isLaserUnlocked()){
-          const start=t.group.position.clone().add(new THREE.Vector3(0,1.82,0));
-          const end=enemyPosition(targetEnemy).add(new THREE.Vector3(0,.8,0));
-          spawnBeam(start,end,0xff66d9,0.09);
-          const a=new THREE.Vector2(t.x,t.z),b=new THREE.Vector2(end.x,end.z),ab=b.clone().sub(a),den=ab.lengthSq();
+          _tmpPosA.set(t.x,(t.y||0)+1.82,t.z);
+          _tmpPosB.set(tp.x,.8,tp.z);
+          spawnBeam(_tmpPosA,_tmpPosB,0xff66d9,0.09);
+          const a=new THREE.Vector2(t.x,t.z),b=new THREE.Vector2(tp.x,tp.z),ab=b.clone().sub(a),den=ab.lengthSq();
           for(const e of enemies){
             if(e===targetEnemy){damageEnemy(e,dmg,'laser',crit);continue;}
             const ep=enemyPosition(e),c=new THREE.Vector2(ep.x,ep.z),ac=c.clone().sub(a);
@@ -2101,10 +2133,10 @@ function loop(now){
       }else if(kind==='missile'||kind==='blancheAstral'){
         makeShot(t,targetEnemy,dmg,kind,crit);
       }else if(kind==='blancheArbiter'){
-        const start=t.group.position.clone().add(new THREE.Vector3(0,2.12,0));
-        const end=enemyPosition(targetEnemy).add(new THREE.Vector3(0,.8,0));
-        spawnBeam(start,end,0xf3e5ff,0.10);
-        const a=new THREE.Vector2(t.x,t.z),b=new THREE.Vector2(end.x,end.z),ab=b.clone().sub(a),den=ab.lengthSq();
+        _tmpPosA.set(t.x,(t.y||0)+2.12,t.z);
+        _tmpPosB.set(tp.x,.8,tp.z);
+        spawnBeam(_tmpPosA,_tmpPosB,0xf3e5ff,0.10);
+        const a=new THREE.Vector2(t.x,t.z),b=new THREE.Vector2(tp.x,tp.z),ab=b.clone().sub(a),den=ab.lengthSq();
         for(const e of enemies){
           const ep=enemyPosition(e),c=new THREE.Vector2(ep.x,ep.z),ac=c.clone().sub(a);
           const u=den?THREE.MathUtils.clamp(ac.dot(ab)/den,0,1.1):0;
@@ -2114,46 +2146,54 @@ function loop(now){
             damageEnemy(e,e===targetEnemy?dmg:dmg*0.72,'frost',crit);
           }
         }
-      }else if(kind==='blancheBind'){
-        const inRange=enemies.filter(e=>{const p=enemyPosition(e);return Math.hypot(p.x-t.x,p.z-t.z)<=rng});
-        if(inRange.length>0){
-          spawnVibeWave(t,rng,0xff759f);
-          for(const e of inRange){
-            e.slow=Math.max(e.slow,2.0);e.slowFactor=Math.min(e.slowFactor,0.32);
-            e.segmentDist=Math.max(0,e.segmentDist-1.65);
-            damageEnemy(e,dmg*0.85,'gravity',crit);
-          }
-        }
       }
       t.cool=towerInterval(t);
     }
   }
 
-  // 飛翔体更新
+  // 飛翔体更新（再利用ベクトルでアロケーション抑制）
   for(let i=shots.length-1;i>=0;i--){
     const s=shots[i];s.life-=dt;const k=Math.min(1,1-s.life/s.max);
     if(s.kind==='missile'||s.kind==='blancheAstral'){
-      if(s.target&&enemies.includes(s.target))s.end.copy(enemyPosition(s.target)).add(new THREE.Vector3(0,.8,0));
+      if(s.target&&enemies.includes(s.target)){
+        const ep=enemyPosition(s.target);
+        s.end.set(ep.x,.8,ep.z);
+      }
       s.mesh.position.lerpVectors(s.start,s.end,k);
-      s.mesh.position.y+=Math.sin(k*Math.PI)*4.8;
-      if(s.prevPos&&s.mesh.position.distanceToSquared(s.prevPos)>0.0001)s.mesh.lookAt(s.mesh.position.clone().add(s.mesh.position.clone().sub(s.prevPos)));
-      s.prevPos.copy(s.mesh.position);
+      s.mesh.position.y+=Math.sin(k*Math.PI)*(s.kind==='blancheAstral'?5.4:4.8);
+      if(s.prevPos&&s.mesh.position.distanceToSquared(s.prevPos)>0.0001){
+        _tmpLook.subVectors(s.mesh.position,s.prevPos).add(s.mesh.position);
+        s.mesh.lookAt(_tmpLook);
+      }
+      if(s.prevPos)s.prevPos.copy(s.mesh.position);
       if(s.life<=0){
-        const radius=4.6+nodeLevel('blastRadius')*.12;
-        burstAt(s.end,radius,0xff6b4a);
-        for(const e of enemies){const p=enemyPosition(e);if(Math.hypot(p.x-s.end.x,p.z-s.end.z)<=radius)damageEnemy(e,s.damage,'missile',s.crit)}
-        scene.remove(s.mesh);shots.splice(i,1);
+        const isAstral=s.kind==='blancheAstral';
+        const radius=(isAstral?5.4:4.6)+nodeLevel('blastRadius')*.12;
+        burstAt(s.end,radius,isAstral?0x9be7ff:0xff6b4a);
+        const rSq=radius*radius;
+        for(const e of enemies){
+          const p=enemyPosition(e);
+          const dx=p.x-s.end.x,dz=p.z-s.end.z;
+          if(dx*dx+dz*dz<=rSq){
+            damageEnemy(e,s.damage,isAstral?'laser':'missile',s.crit);
+            if(isAstral){e.slow=Math.max(e.slow,1.2);e.slowFactor=Math.min(e.slowFactor,0.55);}
+          }
+        }
+        scene.remove(s.mesh);
+        if(!s.sharedGeo)disposeObject3D(s.mesh,false);
+        shots.splice(i,1);
       }
     }else{
       s.mesh.position.lerpVectors(s.start,s.end,k);
       if(s.life<=0){
         if(s.kind==='blast')burstAt(s.end,3.8+nodeLevel('blastRadius')*.12,0xffbd55);
-        scene.remove(s.mesh);shots.splice(i,1);
+        scene.remove(s.mesh);
+        disposeObject3D(s.mesh,false);
+        shots.splice(i,1);
       }
     }
   }
 
-  // エフェクト更新
   for(let i=effects.length-1;i>=0;i--){
     const fx=effects[i];fx.life-=dt;const k=Math.max(0,fx.life/fx.max);
     if(fx.kind==='vibeWave'){
@@ -2167,7 +2207,12 @@ function loop(now){
     }else{
       fx.mesh.position.x+=fx.vx*dt;fx.mesh.position.y+=fx.vy*dt;fx.mesh.position.z+=fx.vz*dt;fx.vy-=8*dt;fx.mesh.material.opacity=k;
     }
-    if(fx.life<=0){scene.remove(fx.mesh);fx.mesh.geometry.dispose();effects.splice(i,1)}
+    if(fx.life<=0){
+      scene.remove(fx.mesh);
+      if(!fx.sharedGeo&&fx.mesh.geometry)fx.mesh.geometry.dispose();
+      if(fx.mesh.material)fx.mesh.material.dispose();
+      effects.splice(i,1);
+    }
   }
 
   for(const p of portals){p.ring.rotation.z+=dt*.85;p.core.rotation.y+=dt*1.15}
