@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.31</title>
+<title>Fantasy Tower Defense 3D v0.32</title>
 <style>
 :root{
   color-scheme:dark;
@@ -314,7 +314,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
     <div class="lobby-grid">
       <div class="lobby-hero">
         <div>
-          <div class="lobby-kicker">Cygnus Tactical Defense // v0.31</div>
+          <div class="lobby-kicker">Cygnus Tactical Defense // v0.32</div>
           <h1 class="lobby-title">FANTASY TOWER<br>DEFENSE 3D</h1>
           <p class="lobby-desc">5系統・全225ノードの壮大な研究ツリーと、11種の個性豊かな防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
         </div>
@@ -351,7 +351,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
 </div>
 
 <div id="top">
-  <div class="brand-badge">FANTASY TD<b>3D v0.31</b></div>
+  <div class="brand-badge">FANTASY TD<b>3D v0.32</b></div>
   <div class="hud-groups">
     <div class="hud-group" id="hudBattleGroup">
       <div class="hud-item"><span>WAVE</span><b id="wave">1</b></div>
@@ -453,7 +453,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 const $=id=>document.getElementById(id);
 
 // ==========================================
-// 1. 数値フォーマット＆コア計算式 (v0.31)
+// 1. 数値フォーマット＆コア計算式 (v0.32)
 // ==========================================
 const SCI_THRESHOLD = 1e7;
 const MAX_RP_CAP = 1e10;
@@ -968,7 +968,7 @@ function nodeLevel(id){return prestige[id]||0}
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1700)}
 function saveMeta(){
   try{
-    localStorage.setItem('fantasyTD_v031_meta',JSON.stringify({
+    localStorage.setItem('fantasyTD_v032_3d_meta',JSON.stringify({
       sp,prestige,stats,equippedDeck,
       achievements:ach.map(a=>({id:a.id,done:a.done,unlocked:a.unlocked}))
     }));
@@ -1162,13 +1162,76 @@ function refreshBulletTowersToLaser(){
       const newGroup=createTowerModel('bullet',t.x,t.z);
       newGroup.position.y=t.y;newGroup.userData.entity=t;newGroup.traverse(o=>o.userData.entity=t);
       t.group=newGroup;
+      t.rig=attachAnimRig(newGroup,'bullet');
     }
   }
 }
 
+function attachAnimRig(group, kind){
+  const rig = { head:null, barrel:null, spinner:null, pulse:null, orbit:null, bob:null, recoil:0, phase:Math.random()*Math.PI*2 };
+  // Build named animated sub-meshes on top of the 3D tower group
+  if(kind==='bullet' || kind==='sniper' || kind==='blast' || kind==='missile'){
+    const head = new THREE.Group();
+    head.position.set(0, kind==='sniper'?2.05:1.73, 0);
+    const barrel = new THREE.Mesh(
+      new THREE.CylinderGeometry(kind==='sniper'?0.08:0.12, kind==='sniper'?0.11:0.18, kind==='sniper'?1.6:0.95, 6),
+      kind==='sniper'?goldMat:roadEdge
+    );
+    barrel.rotation.x = Math.PI/2;
+    barrel.position.set(0, 0, kind==='sniper'?0.75:0.48);
+    head.add(barrel);
+    group.add(head);
+    rig.head = head;
+    rig.barrel = barrel;
+  }
+  if(kind==='vibe' || kind==='lightning' || kind==='gravity' || (kind==='bullet'&&isLaserUnlocked())){
+    const spinner = new THREE.Group();
+    spinner.position.set(0, 1.85, 0);
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(0.68, 0.05, 6, 16),
+      kind==='lightning'?yellowMat : kind==='gravity'?purpleMat : kind==='bullet'?redMat : blueMat
+    );
+    ring.rotation.x = Math.PI/2.3;
+    spinner.add(ring);
+    group.add(spinner);
+    rig.spinner = spinner;
+  }
+  if(kind==='frost' || kind==='vibe'){
+    const pulse = new THREE.Mesh(
+      new THREE.SphereGeometry(0.55, 10, 8),
+      new THREE.MeshBasicMaterial({color:kind==='frost'?0x88eeff:0x75c8ec, transparent:true, opacity:0.22, wireframe:true})
+    );
+    pulse.position.set(0, 1.75, 0);
+    group.add(pulse);
+    rig.pulse = pulse;
+  }
+  if(kind==='gravity' || kind==='pull'){
+    const orbit = new THREE.Group();
+    orbit.position.set(0, 1.9, 0);
+    for(let i=0;i<2;i++){
+      const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), i===0?purpleMat:goldMat);
+      sat.position.set(Math.cos(i*Math.PI)*0.85, 0, Math.sin(i*Math.PI)*0.85);
+      orbit.add(sat);
+    }
+    group.add(orbit);
+    rig.orbit = orbit;
+  }
+  if(kind==='barracks'){
+    const bob = new THREE.Group();
+    bob.position.set(0, 2.3, 0);
+    const pennant = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.36, 0.55), goldMat);
+    pennant.position.set(0, 0, 0.25);
+    bob.add(pennant);
+    group.add(bob);
+    rig.bob = bob;
+  }
+  return rig;
+}
+
 function makeTower(kind,x,z,cost=0,pad=null){
   const group=createTowerModel(kind,x,z);
-  const t={group,kind,x,z,y:pad?.y||0,padType:pad?.type||'grass',level:1,invested:cost,cool:0};
+  const rig=attachAnimRig(group,kind);
+  const t={group,rig,kind,x,z,y:pad?.y||0,padType:pad?.type||'grass',level:1,invested:cost,cool:0};
   group.position.y=t.y;group.userData.entity=t;group.traverse(o=>o.userData.entity=t);
   towers.push(t);stats.placed++;updateCounts();return t;
 }
@@ -1413,7 +1476,7 @@ $('lobbySave').onclick=()=>{
   if(ok){saveMeta();toast('セーブデータを保存したよ')}
   else{
     const wipe=confirm('セーブデータを初期化しますか？この操作は取り消せません');
-    if(wipe){localStorage.removeItem('fantasyTD_v031_meta');location.reload()}
+    if(wipe){localStorage.removeItem('fantasyTD_v032_3d_meta');location.reload()}
   }
 };
 $('resetCam').onclick=()=>{target.set(0,0,0);radius=49;theta=Math.PI/4;phi=1.02;updateCamera();toast('視点をリセット')};
@@ -1599,6 +1662,10 @@ function buyNode(id,buyAll=false){
   }
   if(!bought){toast('研究ポイントが足りないよ');return}
   if(id==='laserEvolution')refreshBulletTowersToLaser();
+  if((id==='blastRadius'||id==='戦術_gen_0'||id==='戦術_gen_3'||id==='戦術_gen_6') && nodeLevel(id)>=5 && nodeLevel('unlock_missile')===0){
+    prestige['unlock_missile']=1;
+    toast('🚀 爆撃研究の極致により、隠し進化「ミサイル塔」が解放された！');
+  }
   checkAchievements();saveMeta();renderPrestigeTree();updateUI();
   if(selectedEntity&&towers.includes(selectedEntity))setInfo(selectedEntity);
   toast(`${d.name}をLv.${nodeLevel(id)}に強化！（+${bought}Lv）`);
@@ -1623,7 +1690,7 @@ const ach=[
 ];
 function loadMeta(){
   try{
-    const raw=localStorage.getItem('fantasyTD_v031_meta');
+    const raw=localStorage.getItem('fantasyTD_v032_3d_meta');
     if(!raw)return;
     const d=JSON.parse(raw);
     if(Number.isFinite(d.sp))sp=Math.min(MAX_RP_CAP,Math.max(0,d.sp));
@@ -1779,7 +1846,7 @@ function finish(){
   running=false;paused=false;stats.runs++;stats.highestWave=Math.max(stats.highestWave,wave);stats.totalScore+=runScore;
   const before=sp;
   const rpMult=1+nodeLevel('spBonus')*.06+sumGenStat('rp');
-  const earned=Math.floor((runScore/10000)*rpMult);
+  const earned=Math.floor((runScore/45000)*rpMult);
   sp=Math.min(MAX_RP_CAP,sp+earned);
   checkAchievements();
   const total=sp-before;
@@ -1876,9 +1943,24 @@ function loop(now){
     e.group.rotation.y=Math.atan2(dir.x,dir.z);
   }
 
-  // 全11種タワーの攻撃ロジック
+  // 全11種タワーの3Dアニメーション＆攻撃ロジック
   for(const t of towers){
-    t.cool-=dt;if(t.cool>0)continue;
+    if(t.rig){
+      if(t.rig.recoil>0)t.rig.recoil=Math.max(0,t.rig.recoil-dt*4.5);
+      if(t.rig.barrel)t.rig.barrel.position.z=(t.kind==='sniper'?0.75:0.48)-t.rig.recoil*0.28;
+      if(t.rig.spinner){t.rig.spinner.rotation.y+=dt*2.8;t.rig.spinner.rotation.z+=dt*1.2;}
+      if(t.rig.orbit)t.rig.orbit.rotation.y+=dt*2.4;
+      if(t.rig.pulse){
+        const pScale=0.85+Math.sin(now*0.006+t.rig.phase)*0.22;
+        t.rig.pulse.scale.setScalar(pScale);
+      }
+      if(t.rig.bob){
+        t.rig.bob.position.y=2.3+Math.sin(now*0.007+t.rig.phase)*0.12;
+        t.rig.bob.rotation.y=Math.sin(now*0.004+t.rig.phase)*0.35;
+      }
+    }
+    t.cool-=dt;
+    if(t.cool>0)continue;
     const rng=towerRange(t);
 
     if(t.kind==='barracks'){
@@ -1925,6 +2007,13 @@ function loop(now){
     }
 
     if(targetEnemy){
+      if(t.rig){
+        t.rig.recoil=1;
+        if(t.rig.head){
+          const tp=enemyPosition(targetEnemy);
+          t.rig.head.rotation.y=Math.atan2(tp.x-t.x,tp.z-t.z);
+        }
+      }
       const {dmg,crit}=rollDamageWithCrit(towerDamage(t));
       const kind=t.kind;
       if(kind==='sniper'){
