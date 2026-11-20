@@ -1,0 +1,3381 @@
+{
+  "version": "v0.31",
+  "total_nodes": 225,
+  "nodes": [
+    {
+      "id": "com_001",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 1,
+      "tier": 1,
+      "name": "最初の引き金",
+      "description": "全タワーの基礎攻撃力をわずかに引き上げ、戦いの幕を開ける。",
+      "cost_rp": 1.0,
+      "parent_id": null,
+      "effect": {
+        "stat": "all_dmg_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_002",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 2,
+      "tier": 1,
+      "name": "鋭利な弾頭",
+      "description": "弾丸の貫通力と基礎攻撃力を高める。",
+      "cost_rp": 1.36,
+      "parent_id": "com_001",
+      "effect": {
+        "stat": "all_dmg_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_003",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 3,
+      "tier": 1,
+      "name": "速射の ритм",
+      "description": "攻撃速度の刻みを整え、手数を増やす。",
+      "cost_rp": 1.93,
+      "parent_id": "com_002",
+      "effect": {
+        "stat": "all_aspd_pct",
+        "value": 0.06
+      }
+    },
+    {
+      "id": "com_004",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 4,
+      "tier": 1,
+      "name": "会心の予感",
+      "description": "クリティカル率（初期150%基準の多段会心）をわずかに高める。",
+      "cost_rp": 2.76,
+      "parent_id": "com_003",
+      "effect": {
+        "stat": "crit_rate",
+        "value": 0.05
+      }
+    },
+    {
+      "id": "com_005",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 5,
+      "tier": 1,
+      "name": "スナイパー塔・解放",
+      "description": "高台専用・強敵優先の長距離狙撃タワーを解放する。",
+      "cost_rp": 3.99,
+      "parent_id": "com_004",
+      "effect": {
+        "stat": "unlock_tower_sniper",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_006",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 6,
+      "tier": 2,
+      "name": "狙撃手の観測眼",
+      "description": "高台視界を広げ、強敵索敵の優先度を精密化する。",
+      "cost_rp": 5.83,
+      "parent_id": "com_005",
+      "effect": {
+        "stat": "sniper_range_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "com_007",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 7,
+      "tier": 2,
+      "name": "高台貫通弾",
+      "description": "狙撃弾の貫通力を高め、基礎ダメージを強化する。",
+      "cost_rp": 8.55,
+      "parent_id": "com_006",
+      "effect": {
+        "stat": "sniper_dmg_pct",
+        "value": 0.2
+      }
+    },
+    {
+      "id": "com_008",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 8,
+      "tier": 2,
+      "name": "急所穿ちの呼吸",
+      "description": "狙撃時のクリティカル率と会心重なりを助ける。",
+      "cost_rp": 12.6,
+      "parent_id": "com_007",
+      "effect": {
+        "stat": "sniper_crit_pct",
+        "value": 0.06
+      }
+    },
+    {
+      "id": "com_009",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 9,
+      "tier": 2,
+      "name": "限界突破射撃",
+      "description": "連射間隔の硬直をわずかに削り、照準速度を高める。",
+      "cost_rp": 18.7,
+      "parent_id": "com_008",
+      "effect": {
+        "stat": "sniper_aspd_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_010",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 10,
+      "tier": 2,
+      "name": "星辰一閃の狙撃",
+      "description": "極限の狙撃倍率を付与し、遠方の巨躯を射抜く。",
+      "cost_rp": 27.8,
+      "parent_id": "com_009",
+      "effect": {
+        "stat": "sniper_dmg_pct",
+        "value": 0.45
+      }
+    },
+    {
+      "id": "com_011",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 11,
+      "tier": 2,
+      "name": "会心倍率の研磨",
+      "description": "クリティカルダメージ倍率の土台を強化する。",
+      "cost_rp": 41.5,
+      "parent_id": "com_010",
+      "effect": {
+        "stat": "crit_dmg_mult_add",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_012",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 12,
+      "tier": 3,
+      "name": "霜柱塔・解放",
+      "description": "鈍足と完全凍結（0.8秒スタン）を操る冷気タワーを解放する。",
+      "cost_rp": 62.2,
+      "parent_id": "com_011",
+      "effect": {
+        "stat": "unlock_tower_frost",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_013",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 13,
+      "tier": 3,
+      "name": "薄氷の吐息",
+      "description": "初期鈍足効果と冷気ダメージを底上げする。",
+      "cost_rp": 93.4,
+      "parent_id": "com_012",
+      "effect": {
+        "stat": "frost_slow_pct",
+        "value": 0.04
+      }
+    },
+    {
+      "id": "com_014",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 14,
+      "tier": 3,
+      "name": "重なる寒気",
+      "description": "重ね掛けごとの鈍足増加量をさらに引き上げる。",
+      "cost_rp": 141,
+      "parent_id": "com_013",
+      "effect": {
+        "stat": "frost_stack_slow_pct",
+        "value": 0.03
+      }
+    },
+    {
+      "id": "com_015",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 15,
+      "tier": 3,
+      "name": "氷結の刻印",
+      "description": "完全凍結までの到達効率を高める。",
+      "cost_rp": 212,
+      "parent_id": "com_014",
+      "effect": {
+        "stat": "frost_freeze_eff_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_016",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 16,
+      "tier": 3,
+      "name": "耐性破りの冷気",
+      "description": "完全凍結耐性（4秒）のクールダウンを短縮する。",
+      "cost_rp": 322,
+      "parent_id": "com_015",
+      "effect": {
+        "stat": "frost_immunity_cd_reduce_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_017",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 17,
+      "tier": 4,
+      "name": "絶対零度の檻",
+      "description": "霜柱の冷気出力と凍結持続を極限まで高める。",
+      "cost_rp": 488,
+      "parent_id": "com_016",
+      "effect": {
+        "stat": "frost_dmg_pct",
+        "value": 0.4
+      }
+    },
+    {
+      "id": "com_018",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 18,
+      "tier": 4,
+      "name": "牽引塔・解放",
+      "description": "6回攻撃ごとに敵をポータル方向へ引き戻す牽引タワーを解放する。",
+      "cost_rp": 742,
+      "parent_id": "com_017",
+      "effect": {
+        "stat": "unlock_tower_tractor",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_019",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 19,
+      "tier": 4,
+      "name": "磁力鎖の投擲",
+      "description": "牽引弾の射程と基本ダメージを強化する。",
+      "cost_rp": 1129,
+      "parent_id": "com_018",
+      "effect": {
+        "stat": "tractor_dmg_pct",
+        "value": 0.18
+      }
+    },
+    {
+      "id": "com_020",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 20,
+      "tier": 4,
+      "name": "引き戻しの渦",
+      "description": "ポータル方向へ引き戻す牽引速度を高める。",
+      "cost_rp": 1724,
+      "parent_id": "com_019",
+      "effect": {
+        "stat": "tractor_pull_spd_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_021",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 21,
+      "tier": 4,
+      "name": "群れごと手繰る糸",
+      "description": "6回攻撃ごとの牽引対象範囲を広げ、群れを束ねる。",
+      "cost_rp": 2635,
+      "parent_id": "com_020",
+      "effect": {
+        "stat": "tractor_aoe_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "com_022",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 22,
+      "tier": 4,
+      "name": "逆流の重力縄",
+      "description": "牽引の持続時間を伸ばし、戦線を押し戻す。",
+      "cost_rp": 4035,
+      "parent_id": "com_021",
+      "effect": {
+        "stat": "tractor_dur_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_023",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 23,
+      "tier": 5,
+      "name": "深淵への帰還",
+      "description": "強大な牽引力で敵陣を入り口へと引き戻す。",
+      "cost_rp": 6190,
+      "parent_id": "com_022",
+      "effect": {
+        "stat": "tractor_pull_spd_pct",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "com_024",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 24,
+      "tier": 5,
+      "name": "徴兵塔・解放",
+      "description": "ユニットを召喚する徴兵タワーを解放する（初期は近接のみ）。",
+      "cost_rp": 9509,
+      "parent_id": "com_023",
+      "effect": {
+        "stat": "unlock_tower_recruitment",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_025",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 25,
+      "tier": 5,
+      "name": "前衛志願兵の召集",
+      "description": "近接兵の召喚テンポを整え、前線の厚みを増す。",
+      "cost_rp": 14631,
+      "parent_id": "com_024",
+      "effect": {
+        "stat": "recruit_spd_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "com_026",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 26,
+      "tier": 5,
+      "name": "斥候・衛兵の編制",
+      "description": "新兵種『斥候・衛兵』を解放し、塔ごとに選択可能にする。",
+      "cost_rp": 22543,
+      "parent_id": "com_025",
+      "effect": {
+        "stat": "recruit_unlock_scout",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_027",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 27,
+      "tier": 5,
+      "name": "重装・遠距離兵種の解放",
+      "description": "新兵種『重装・遠距離』を解放し、戦術の幅を広げる。",
+      "cost_rp": 34782,
+      "parent_id": "com_026",
+      "effect": {
+        "stat": "recruit_unlock_heavy_ranged",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_028",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 28,
+      "tier": 6,
+      "name": "軍団指揮の号令",
+      "description": "召喚ユニットの攻撃力と耐久力を引き上げる。",
+      "cost_rp": 53739,
+      "parent_id": "com_027",
+      "effect": {
+        "stat": "recruit_unit_pwr_pct",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "com_029",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 29,
+      "tier": 6,
+      "name": "不滅の親衛隊",
+      "description": "精鋭兵種の召喚効率と戦力を極限まで高める。",
+      "cost_rp": 83134,
+      "parent_id": "com_028",
+      "effect": {
+        "stat": "recruit_unit_pwr_pct",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "com_030",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 30,
+      "tier": 6,
+      "name": "連環会心の息吹",
+      "description": "1回の攻撃でクリティカル100%超えの多段ヒットを伸ばす。",
+      "cost_rp": 128768,
+      "parent_id": "com_029",
+      "effect": {
+        "stat": "crit_rate",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "com_031",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 31,
+      "tier": 6,
+      "name": "レーザー塔・解放",
+      "description": "高連射・収束光線を放つレーザータワーを解放する。",
+      "cost_rp": 199694,
+      "parent_id": "com_030",
+      "effect": {
+        "stat": "unlock_tower_laser",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_032",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 32,
+      "tier": 6,
+      "name": "集光レンズの研磨",
+      "description": "収束光線の照射ダメージと集光効率を高める。",
+      "cost_rp": 310048,
+      "parent_id": "com_031",
+      "effect": {
+        "stat": "laser_dmg_pct",
+        "value": 0.22
+      }
+    },
+    {
+      "id": "com_033",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 33,
+      "tier": 6,
+      "name": "連続照射の安定化",
+      "description": "高連射時の出力維持と照射レートを強化する。",
+      "cost_rp": 481934,
+      "parent_id": "com_032",
+      "effect": {
+        "stat": "laser_aspd_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_034",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 34,
+      "tier": 7,
+      "name": "熱線増幅のプリズム",
+      "description": "継続照射中の熱量増幅倍率を引き上げる。",
+      "cost_rp": 749939,
+      "parent_id": "com_033",
+      "effect": {
+        "stat": "laser_heat_amp_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "com_035",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 35,
+      "tier": 7,
+      "name": "高出力ビームの貫通",
+      "description": "光線の貫通力と範囲減衰の少なさを強化する。",
+      "cost_rp": 1168236,
+      "parent_id": "com_034",
+      "effect": {
+        "stat": "laser_dmg_pct",
+        "value": 0.35
+      }
+    },
+    {
+      "id": "com_036",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 36,
+      "tier": 7,
+      "name": "白光の裁定",
+      "description": "純白の極光で戦線を焼き切る最終増幅。",
+      "cost_rp": 1821749,
+      "parent_id": "com_035",
+      "effect": {
+        "stat": "laser_dmg_pct",
+        "value": 0.6
+      }
+    },
+    {
+      "id": "com_037",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 37,
+      "tier": 7,
+      "name": "会心指数・初段",
+      "description": "多段クリティカル（1.5^(1.06^k)）の跳ね上がりを助ける。",
+      "cost_rp": 2843729,
+      "parent_id": "com_036",
+      "effect": {
+        "stat": "crit_rate",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_038",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 38,
+      "tier": 7,
+      "name": "豪腕の砲撃手",
+      "description": "全タワーのダメージをさらに引き上げる。",
+      "cost_rp": 4443429,
+      "parent_id": "com_037",
+      "effect": {
+        "stat": "all_dmg_pct",
+        "value": 0.18
+      }
+    },
+    {
+      "id": "com_039",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 39,
+      "tier": 8,
+      "name": "電撃塔・解放",
+      "description": "連鎖と自己バフを操る電撃タワーを解放する。",
+      "cost_rp": 6949727,
+      "parent_id": "com_038",
+      "effect": {
+        "stat": "unlock_tower_lightning",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_040",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 40,
+      "tier": 8,
+      "name": "弧光の跳躍",
+      "description": "連鎖跳躍のダメージと基本出力を強化する。",
+      "cost_rp": 10879946,
+      "parent_id": "com_039",
+      "effect": {
+        "stat": "lightning_dmg_pct",
+        "value": 0.22
+      }
+    },
+    {
+      "id": "com_041",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 41,
+      "tier": 8,
+      "name": "連鎖増幅の回路",
+      "description": "チェインごとの増幅率（基準+5%）を引き上げる。",
+      "cost_rp": 17048473,
+      "parent_id": "com_040",
+      "effect": {
+        "stat": "lightning_chain_amp_pct",
+        "value": 0.03
+      }
+    },
+    {
+      "id": "com_042",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 42,
+      "tier": 8,
+      "name": "蓄電の余剰",
+      "description": "非撃破時の自己バフ（最大5回・連鎖+1/1.4倍）を強化する。",
+      "cost_rp": 26738360,
+      "parent_id": "com_041",
+      "effect": {
+        "stat": "lightning_stack_cap",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_043",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 43,
+      "tier": 8,
+      "name": "十連撃破の解放",
+      "description": "10体撃破リセット時の報酬・次連鎖の跳ね上がりを強化。",
+      "cost_rp": 41972596,
+      "parent_id": "com_042",
+      "effect": {
+        "stat": "lightning_reset_surge_pct",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "com_044",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 44,
+      "tier": 8,
+      "name": "雷鳴の連鎖嵐",
+      "description": "高電圧の連鎖雷で群れ全体を薙ぎ払う。",
+      "cost_rp": 65943241,
+      "parent_id": "com_043",
+      "effect": {
+        "stat": "lightning_dmg_pct",
+        "value": 0.65
+      }
+    },
+    {
+      "id": "com_045",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 45,
+      "tier": 9,
+      "name": "百重会心の兆し",
+      "description": "クリティカル率をさらに押し上げ、多段会心を安定化。",
+      "cost_rp": 103690782,
+      "parent_id": "com_044",
+      "effect": {
+        "stat": "crit_rate",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "com_046",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 46,
+      "tier": 9,
+      "name": "烈火の連撃",
+      "description": "全タワーの攻撃速度をさらに高める。",
+      "cost_rp": 163180314,
+      "parent_id": "com_045",
+      "effect": {
+        "stat": "all_aspd_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_047",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 47,
+      "tier": 9,
+      "name": "超会心・共鳴",
+      "description": "クリティカルダメージ倍率の基準値を引き上げる。",
+      "cost_rp": 257007510,
+      "parent_id": "com_046",
+      "effect": {
+        "stat": "crit_dmg_mult_add",
+        "value": 0.18
+      }
+    },
+    {
+      "id": "com_048",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 48,
+      "tier": 9,
+      "name": "重力塔・解放",
+      "description": "広域小重力波と大重力波を放つ重力タワーを解放する。",
+      "cost_rp": 405104698,
+      "parent_id": "com_047",
+      "effect": {
+        "stat": "unlock_tower_gravity",
+        "value": 1
+      }
+    },
+    {
+      "id": "com_049",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 49,
+      "tier": 9,
+      "name": "特異点の胎動",
+      "description": "小重力波の周期（攻撃速度強化乗り）をさらに加速する。",
+      "cost_rp": 639036158,
+      "parent_id": "com_048",
+      "effect": {
+        "stat": "gravity_aspd_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "com_050",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 50,
+      "tier": 10,
+      "name": "歪曲波の周期化",
+      "description": "小重力波の現在HP割合ダメージ（基準1%）を底上げする。",
+      "cost_rp": 1008820302,
+      "parent_id": "com_049",
+      "effect": {
+        "stat": "gravity_minor_hp_pct",
+        "value": 0.005
+      }
+    },
+    {
+      "id": "com_051",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 51,
+      "tier": 10,
+      "name": "大重力波の圧縮",
+      "description": "10回ごとの大重力波の現在HP割合ダメージ（基準12%）を強化。",
+      "cost_rp": 1593772091,
+      "parent_id": "com_050",
+      "effect": {
+        "stat": "gravity_major_hp_pct",
+        "value": 0.04
+      }
+    },
+    {
+      "id": "com_052",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 52,
+      "tier": 10,
+      "name": "広域事象の地平",
+      "description": "重力波の作用範囲とスタン持続を押し広げる。",
+      "cost_rp": 2519745484,
+      "parent_id": "com_051",
+      "effect": {
+        "stat": "gravity_radius_pct",
+        "value": 0.18
+      }
+    },
+    {
+      "id": "com_053",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 53,
+      "tier": 10,
+      "name": "万物を呑む重力井戸",
+      "description": "超重力の特異点で暴走の巨躯すら押し潰す。",
+      "cost_rp": 3986570471,
+      "parent_id": "com_052",
+      "effect": {
+        "stat": "gravity_major_hp_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "com_054",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 54,
+      "tier": 10,
+      "name": "神域の会心率",
+      "description": "クリティカル率を大きく底上げし、多段会心を極める。",
+      "cost_rp": 6311738494,
+      "parent_id": "com_053",
+      "effect": {
+        "stat": "crit_rate",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "com_055",
+      "category": "combat",
+      "category_jp": "戦闘",
+      "index": 55,
+      "tier": 10,
+      "name": "終焉の殲滅砲",
+      "description": "全タワーのダメージを1e10 RP帯に向けて極限増幅する。",
+      "cost_rp": 10000000000,
+      "parent_id": "com_054",
+      "effect": {
+        "stat": "all_dmg_pct",
+        "value": 0.8
+      }
+    },
+    {
+      "id": "eco_001",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 1,
+      "tier": 1,
+      "name": "小さな財布の鍵",
+      "description": "敵撃破で得るゴールドをわずかに増やす。",
+      "cost_rp": 2.0,
+      "parent_id": null,
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "eco_002",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 2,
+      "tier": 1,
+      "name": "書庫の徴税印",
+      "description": "ウェーブクリア時のゴールド報酬を高める。",
+      "cost_rp": 2.91,
+      "parent_id": "eco_001",
+      "effect": {
+        "stat": "wave_gold_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "eco_003",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 3,
+      "tier": 1,
+      "name": "知識のしおり",
+      "description": "研究ポイント（RP）の獲得効率を少し引き上げる。",
+      "cost_rp": 4.42,
+      "parent_id": "eco_002",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "eco_004",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 4,
+      "tier": 1,
+      "name": "加速コストの緩和・壱",
+      "description": "タワーアップグレードの加速コスト増加をわずかに和らげる。",
+      "cost_rp": 6.83,
+      "parent_id": "eco_003",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.02
+      }
+    },
+    {
+      "id": "eco_005",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 5,
+      "tier": 2,
+      "name": "成長促進の息吹・壱",
+      "description": "成長促進の加速コスト増加をわずかに和らげる。",
+      "cost_rp": 10.7,
+      "parent_id": "eco_004",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.02
+      }
+    },
+    {
+      "id": "eco_006",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 6,
+      "tier": 2,
+      "name": "暴走スコアの種火",
+      "description": "暴走ウェーブのスコア上昇値に小さな追加倍率を与える。",
+      "cost_rp": 16.9,
+      "parent_id": "eco_005",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "eco_007",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 7,
+      "tier": 2,
+      "name": "黄金の循環",
+      "description": "ゴールド獲得量とウェーブ報酬をまとめて引き上げる。",
+      "cost_rp": 26.8,
+      "parent_id": "eco_006",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "eco_008",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 8,
+      "tier": 2,
+      "name": "深淵の探求者",
+      "description": "RP獲得効率を高め、次なる研究への歩みを早める。",
+      "cost_rp": 43.0,
+      "parent_id": "eco_007",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "eco_009",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 9,
+      "tier": 2,
+      "name": "暴走共鳴・初段",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに底上げする。",
+      "cost_rp": 69.1,
+      "parent_id": "eco_008",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "eco_010",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 10,
+      "tier": 3,
+      "name": "加速コストの緩和・弐",
+      "description": "タワーアップグレードの加速コストの伸びをさらに抑える。",
+      "cost_rp": 112,
+      "parent_id": "eco_009",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.03
+      }
+    },
+    {
+      "id": "eco_011",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 11,
+      "tier": 3,
+      "name": "小さな財布の鍵 II",
+      "description": "敵撃破で得るゴールドをわずかに増やす。",
+      "cost_rp": 182,
+      "parent_id": "eco_010",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.115
+      }
+    },
+    {
+      "id": "eco_012",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 12,
+      "tier": 3,
+      "name": "書庫の徴税印 II",
+      "description": "ウェーブクリア時のゴールド報酬を高める。",
+      "cost_rp": 296,
+      "parent_id": "eco_011",
+      "effect": {
+        "stat": "wave_gold_pct",
+        "value": 0.138
+      }
+    },
+    {
+      "id": "eco_013",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 13,
+      "tier": 3,
+      "name": "知識のしおり II",
+      "description": "研究ポイント（RP）の獲得効率を少し引き上げる。",
+      "cost_rp": 484,
+      "parent_id": "eco_012",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.115
+      }
+    },
+    {
+      "id": "eco_014",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 14,
+      "tier": 4,
+      "name": "加速コストの緩和・壱",
+      "description": "タワーアップグレードの加速コスト増加をわずかに和らげる。",
+      "cost_rp": 795,
+      "parent_id": "eco_013",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.023
+      }
+    },
+    {
+      "id": "eco_015",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 15,
+      "tier": 4,
+      "name": "成長促進の息吹・壱",
+      "description": "成長促進の加速コスト増加をわずかに和らげる。",
+      "cost_rp": 1309,
+      "parent_id": "eco_014",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.023
+      }
+    },
+    {
+      "id": "eco_016",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 16,
+      "tier": 4,
+      "name": "暴走スコアの種火 II",
+      "description": "暴走ウェーブのスコア上昇値に小さな追加倍率を与える。",
+      "cost_rp": 2161,
+      "parent_id": "eco_015",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "eco_017",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 17,
+      "tier": 4,
+      "name": "黄金の循環 II",
+      "description": "ゴールド獲得量とウェーブ報酬をまとめて引き上げる。",
+      "cost_rp": 3579,
+      "parent_id": "eco_016",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "eco_018",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 18,
+      "tier": 4,
+      "name": "深淵の探求者 II",
+      "description": "RP獲得効率を高め、次なる研究への歩みを早める。",
+      "cost_rp": 5941,
+      "parent_id": "eco_017",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "eco_019",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 19,
+      "tier": 5,
+      "name": "暴走共鳴・初段",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに底上げする。",
+      "cost_rp": 9885,
+      "parent_id": "eco_018",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.138
+      }
+    },
+    {
+      "id": "eco_020",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 20,
+      "tier": 5,
+      "name": "加速コストの緩和・弐",
+      "description": "タワーアップグレードの加速コストの伸びをさらに抑える。",
+      "cost_rp": 16485,
+      "parent_id": "eco_019",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.0345
+      }
+    },
+    {
+      "id": "eco_021",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 21,
+      "tier": 5,
+      "name": "小さな財布の鍵 III",
+      "description": "敵撃破で得るゴールドをわずかに増やす。",
+      "cost_rp": 27552,
+      "parent_id": "eco_020",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.13
+      }
+    },
+    {
+      "id": "eco_022",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 22,
+      "tier": 5,
+      "name": "書庫の徴税印 III",
+      "description": "ウェーブクリア時のゴールド報酬を高める。",
+      "cost_rp": 46144,
+      "parent_id": "eco_021",
+      "effect": {
+        "stat": "wave_gold_pct",
+        "value": 0.156
+      }
+    },
+    {
+      "id": "eco_023",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 23,
+      "tier": 6,
+      "name": "知識のしおり III",
+      "description": "研究ポイント（RP）の獲得効率を少し引き上げる。",
+      "cost_rp": 77432,
+      "parent_id": "eco_022",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.13
+      }
+    },
+    {
+      "id": "eco_024",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 24,
+      "tier": 6,
+      "name": "加速コストの緩和・壱",
+      "description": "タワーアップグレードの加速コスト増加をわずかに和らげる。",
+      "cost_rp": 130182,
+      "parent_id": "eco_023",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.026
+      }
+    },
+    {
+      "id": "eco_025",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 25,
+      "tier": 6,
+      "name": "成長促進の息吹・壱",
+      "description": "成長促進の加速コスト増加をわずかに和らげる。",
+      "cost_rp": 219262,
+      "parent_id": "eco_024",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.026
+      }
+    },
+    {
+      "id": "eco_026",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 26,
+      "tier": 6,
+      "name": "暴走スコアの種火 III",
+      "description": "暴走ウェーブのスコア上昇値に小さな追加倍率を与える。",
+      "cost_rp": 369943,
+      "parent_id": "eco_025",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "eco_027",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 27,
+      "tier": 6,
+      "name": "黄金の循環 III",
+      "description": "ゴールド獲得量とウェーブ報酬をまとめて引き上げる。",
+      "cost_rp": 625220,
+      "parent_id": "eco_026",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "eco_028",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 28,
+      "tier": 7,
+      "name": "深淵の探求者 III",
+      "description": "RP獲得効率を高め、次なる研究への歩みを早める。",
+      "cost_rp": 1058362,
+      "parent_id": "eco_027",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "eco_029",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 29,
+      "tier": 7,
+      "name": "暴走共鳴・初段",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに底上げする。",
+      "cost_rp": 1794377,
+      "parent_id": "eco_028",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.156
+      }
+    },
+    {
+      "id": "eco_030",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 30,
+      "tier": 7,
+      "name": "加速コストの緩和・弐",
+      "description": "タワーアップグレードの加速コストの伸びをさらに抑える。",
+      "cost_rp": 3046838,
+      "parent_id": "eco_029",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.039
+      }
+    },
+    {
+      "id": "eco_031",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 31,
+      "tier": 7,
+      "name": "小さな財布の鍵 IV",
+      "description": "敵撃破で得るゴールドをわずかに増やす。",
+      "cost_rp": 5181082,
+      "parent_id": "eco_030",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.145
+      }
+    },
+    {
+      "id": "eco_032",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 32,
+      "tier": 8,
+      "name": "書庫の徴税印 IV",
+      "description": "ウェーブクリア時のゴールド報酬を高める。",
+      "cost_rp": 8822816,
+      "parent_id": "eco_031",
+      "effect": {
+        "stat": "wave_gold_pct",
+        "value": 0.174
+      }
+    },
+    {
+      "id": "eco_033",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 33,
+      "tier": 8,
+      "name": "知識のしおり IV",
+      "description": "研究ポイント（RP）の獲得効率を少し引き上げる。",
+      "cost_rp": 15044977,
+      "parent_id": "eco_032",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.145
+      }
+    },
+    {
+      "id": "eco_034",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 34,
+      "tier": 8,
+      "name": "加速コストの緩和・壱",
+      "description": "タワーアップグレードの加速コスト増加をわずかに和らげる。",
+      "cost_rp": 25689526,
+      "parent_id": "eco_033",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.029
+      }
+    },
+    {
+      "id": "eco_035",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 35,
+      "tier": 8,
+      "name": "成長促進の息吹・壱",
+      "description": "成長促進の加速コスト増加をわずかに和らげる。",
+      "cost_rp": 43922264,
+      "parent_id": "eco_034",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.029
+      }
+    },
+    {
+      "id": "eco_036",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 36,
+      "tier": 8,
+      "name": "暴走スコアの種火 IV",
+      "description": "暴走ウェーブのスコア上昇値に小さな追加倍率を与える。",
+      "cost_rp": 75190356,
+      "parent_id": "eco_035",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "eco_037",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 37,
+      "tier": 9,
+      "name": "黄金の循環 IV",
+      "description": "ゴールド獲得量とウェーブ報酬をまとめて引き上げる。",
+      "cost_rp": 128876552,
+      "parent_id": "eco_036",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "eco_038",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 38,
+      "tier": 9,
+      "name": "深淵の探求者 IV",
+      "description": "RP獲得効率を高め、次なる研究への歩みを早める。",
+      "cost_rp": 221159879,
+      "parent_id": "eco_037",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "eco_039",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 39,
+      "tier": 9,
+      "name": "暴走共鳴・初段",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに底上げする。",
+      "cost_rp": 379967527,
+      "parent_id": "eco_038",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.174
+      }
+    },
+    {
+      "id": "eco_040",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 40,
+      "tier": 9,
+      "name": "加速コストの緩和・弐",
+      "description": "タワーアップグレードの加速コストの伸びをさらに抑える。",
+      "cost_rp": 653554815,
+      "parent_id": "eco_039",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.0435
+      }
+    },
+    {
+      "id": "eco_041",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 41,
+      "tier": 10,
+      "name": "小さな財布の鍵 V",
+      "description": "敵撃破で得るゴールドをわずかに増やす。",
+      "cost_rp": 1125385335,
+      "parent_id": "eco_040",
+      "effect": {
+        "stat": "gold_gain_pct",
+        "value": 0.16
+      }
+    },
+    {
+      "id": "eco_042",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 42,
+      "tier": 10,
+      "name": "書庫の徴税印 V",
+      "description": "ウェーブクリア時のゴールド報酬を高める。",
+      "cost_rp": 1939961195,
+      "parent_id": "eco_041",
+      "effect": {
+        "stat": "wave_gold_pct",
+        "value": 0.192
+      }
+    },
+    {
+      "id": "eco_043",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 43,
+      "tier": 10,
+      "name": "知識のしおり V",
+      "description": "研究ポイント（RP）の獲得効率を少し引き上げる。",
+      "cost_rp": 3347701880,
+      "parent_id": "eco_042",
+      "effect": {
+        "stat": "rp_gain_pct",
+        "value": 0.16
+      }
+    },
+    {
+      "id": "eco_044",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 44,
+      "tier": 10,
+      "name": "加速コストの緩和・壱",
+      "description": "タワーアップグレードの加速コスト増加をわずかに和らげる。",
+      "cost_rp": 5782988398,
+      "parent_id": "eco_043",
+      "effect": {
+        "stat": "upg_cost_accel_mitigate",
+        "value": 0.032
+      }
+    },
+    {
+      "id": "eco_045",
+      "category": "economy",
+      "category_jp": "経済",
+      "index": 45,
+      "tier": 10,
+      "name": "成長促進の息吹・壱",
+      "description": "成長促進の加速コスト増加をわずかに和らげる。",
+      "cost_rp": 10000000000,
+      "parent_id": "eco_044",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.032
+      }
+    },
+    {
+      "id": "def_001",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 1,
+      "tier": 1,
+      "name": "結界の灯火",
+      "description": "拠点・結界の耐久力をわずかに高める。",
+      "cost_rp": 3.0,
+      "parent_id": null,
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "def_002",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 2,
+      "tier": 1,
+      "name": "冷気持続の知恵",
+      "description": "状態異常（スロウ・スタン）の効果時間をわずかに延ばす。",
+      "cost_rp": 4.34,
+      "parent_id": "def_001",
+      "effect": {
+        "stat": "cc_duration_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "def_003",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 3,
+      "tier": 1,
+      "name": "牽引力の追風",
+      "description": "引き戻し効果と減速効果の効き目を高める。",
+      "cost_rp": 6.53,
+      "parent_id": "def_002",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "def_004",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 4,
+      "tier": 1,
+      "name": "堅牢なる防壁",
+      "description": "結界の耐久力と回復・保護力を高める。",
+      "cost_rp": 10.0,
+      "parent_id": "def_003",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "def_005",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 5,
+      "tier": 2,
+      "name": "割合削りの視座",
+      "description": "現在HP割合ダメージの効力をわずかに引き上げる。",
+      "cost_rp": 15.5,
+      "parent_id": "def_004",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.005
+      }
+    },
+    {
+      "id": "def_006",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 6,
+      "tier": 2,
+      "name": "凍結耐性の抑制",
+      "description": "敵の状態異常耐性をわずかに和らげる。",
+      "cost_rp": 24.3,
+      "parent_id": "def_005",
+      "effect": {
+        "stat": "enemy_cc_resist_reduce_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "def_007",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 7,
+      "tier": 2,
+      "name": "嵐を凌ぐ守護",
+      "description": "拠点・結界の耐久力を大きく底上げする。",
+      "cost_rp": 38.4,
+      "parent_id": "def_006",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.22
+      }
+    },
+    {
+      "id": "def_008",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 8,
+      "tier": 2,
+      "name": "重力の防波堤",
+      "description": "敵の進軍速度と状態異常耐性をさらに抑える。",
+      "cost_rp": 60.9,
+      "parent_id": "def_007",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.12
+      }
+    },
+    {
+      "id": "def_009",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 9,
+      "tier": 2,
+      "name": "深淵耐性の突破",
+      "description": "強敵・暴走敵の割合削りへの抵抗を和らげる。",
+      "cost_rp": 97.2,
+      "parent_id": "def_008",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.01
+      }
+    },
+    {
+      "id": "def_010",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 10,
+      "tier": 3,
+      "name": "永劫の結界",
+      "description": "拠点と結界を堅牢に守り抜き、長大な戦いを支える。",
+      "cost_rp": 156,
+      "parent_id": "def_009",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.35
+      }
+    },
+    {
+      "id": "def_011",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 11,
+      "tier": 3,
+      "name": "結界の灯火 II",
+      "description": "拠点・結界の耐久力をわずかに高める。",
+      "cost_rp": 251,
+      "parent_id": "def_010",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.138
+      }
+    },
+    {
+      "id": "def_012",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 12,
+      "tier": 3,
+      "name": "冷気持続の知恵 II",
+      "description": "状態異常（スロウ・スタン）の効果時間をわずかに延ばす。",
+      "cost_rp": 405,
+      "parent_id": "def_011",
+      "effect": {
+        "stat": "cc_duration_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "def_013",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 13,
+      "tier": 3,
+      "name": "牽引力の追風 II",
+      "description": "引き戻し効果と減速効果の効き目を高める。",
+      "cost_rp": 657,
+      "parent_id": "def_012",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "def_014",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 14,
+      "tier": 4,
+      "name": "堅牢なる防壁 II",
+      "description": "結界の耐久力と回復・保護力を高める。",
+      "cost_rp": 1070,
+      "parent_id": "def_013",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "def_015",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 15,
+      "tier": 4,
+      "name": "割合削りの視座 II",
+      "description": "現在HP割合ダメージの効力をわずかに引き上げる。",
+      "cost_rp": 1745,
+      "parent_id": "def_014",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.0057
+      }
+    },
+    {
+      "id": "def_016",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 16,
+      "tier": 4,
+      "name": "凍結耐性の抑制 II",
+      "description": "敵の状態異常耐性をわずかに和らげる。",
+      "cost_rp": 2856,
+      "parent_id": "def_015",
+      "effect": {
+        "stat": "enemy_cc_resist_reduce_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "def_017",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 17,
+      "tier": 4,
+      "name": "嵐を凌ぐ守護 II",
+      "description": "拠点・結界の耐久力を大きく底上げする。",
+      "cost_rp": 4686,
+      "parent_id": "def_016",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.253
+      }
+    },
+    {
+      "id": "def_018",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 18,
+      "tier": 4,
+      "name": "重力の防波堤 II",
+      "description": "敵の進軍速度と状態異常耐性をさらに抑える。",
+      "cost_rp": 7707,
+      "parent_id": "def_017",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.138
+      }
+    },
+    {
+      "id": "def_019",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 19,
+      "tier": 5,
+      "name": "深淵耐性の突破 II",
+      "description": "強敵・暴走敵の割合削りへの抵抗を和らげる。",
+      "cost_rp": 12706,
+      "parent_id": "def_018",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.0115
+      }
+    },
+    {
+      "id": "def_020",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 20,
+      "tier": 5,
+      "name": "永劫の結界 II",
+      "description": "拠点と結界を堅牢に守り抜き、長大な戦いを支える。",
+      "cost_rp": 20994,
+      "parent_id": "def_019",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.4025
+      }
+    },
+    {
+      "id": "def_021",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 21,
+      "tier": 5,
+      "name": "結界の灯火 III",
+      "description": "拠点・結界の耐久力をわずかに高める。",
+      "cost_rp": 34762,
+      "parent_id": "def_020",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.156
+      }
+    },
+    {
+      "id": "def_022",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 22,
+      "tier": 5,
+      "name": "冷気持続の知恵 III",
+      "description": "状態異常（スロウ・スタン）の効果時間をわずかに延ばす。",
+      "cost_rp": 57675,
+      "parent_id": "def_021",
+      "effect": {
+        "stat": "cc_duration_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "def_023",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 23,
+      "tier": 6,
+      "name": "牽引力の追風 III",
+      "description": "引き戻し効果と減速効果の効き目を高める。",
+      "cost_rp": 95878,
+      "parent_id": "def_022",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "def_024",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 24,
+      "tier": 6,
+      "name": "堅牢なる防壁 III",
+      "description": "結界の耐久力と回復・保護力を高める。",
+      "cost_rp": 159679,
+      "parent_id": "def_023",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "def_025",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 25,
+      "tier": 6,
+      "name": "割合削りの視座 III",
+      "description": "現在HP割合ダメージの効力をわずかに引き上げる。",
+      "cost_rp": 266411,
+      "parent_id": "def_024",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.0065
+      }
+    },
+    {
+      "id": "def_026",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 26,
+      "tier": 6,
+      "name": "凍結耐性の抑制 III",
+      "description": "敵の状態異常耐性をわずかに和らげる。",
+      "cost_rp": 445244,
+      "parent_id": "def_025",
+      "effect": {
+        "stat": "enemy_cc_resist_reduce_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "def_027",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 27,
+      "tier": 6,
+      "name": "嵐を凌ぐ守護 III",
+      "description": "拠点・結界の耐久力を大きく底上げする。",
+      "cost_rp": 745348,
+      "parent_id": "def_026",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.286
+      }
+    },
+    {
+      "id": "def_028",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 28,
+      "tier": 7,
+      "name": "重力の防波堤 III",
+      "description": "敵の進軍速度と状態異常耐性をさらに抑える。",
+      "cost_rp": 1249711,
+      "parent_id": "def_027",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.156
+      }
+    },
+    {
+      "id": "def_029",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 29,
+      "tier": 7,
+      "name": "深淵耐性の突破 III",
+      "description": "強敵・暴走敵の割合削りへの抵抗を和らげる。",
+      "cost_rp": 2098584,
+      "parent_id": "def_028",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.013
+      }
+    },
+    {
+      "id": "def_030",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 30,
+      "tier": 7,
+      "name": "永劫の結界 III",
+      "description": "拠点と結界を堅牢に守り抜き、長大な戦いを支える。",
+      "cost_rp": 3529291,
+      "parent_id": "def_029",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.455
+      }
+    },
+    {
+      "id": "def_031",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 31,
+      "tier": 7,
+      "name": "結界の灯火 IV",
+      "description": "拠点・結界の耐久力をわずかに高める。",
+      "cost_rp": 5943911,
+      "parent_id": "def_030",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.174
+      }
+    },
+    {
+      "id": "def_032",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 32,
+      "tier": 8,
+      "name": "冷気持続の知恵 IV",
+      "description": "状態異常（スロウ・スタン）の効果時間をわずかに延ばす。",
+      "cost_rp": 10024478,
+      "parent_id": "def_031",
+      "effect": {
+        "stat": "cc_duration_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "def_033",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 33,
+      "tier": 8,
+      "name": "牽引力の追風 IV",
+      "description": "引き戻し効果と減速効果の効き目を高める。",
+      "cost_rp": 16929256,
+      "parent_id": "def_032",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "def_034",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 34,
+      "tier": 8,
+      "name": "堅牢なる防壁 IV",
+      "description": "結界の耐久力と回復・保護力を高める。",
+      "cost_rp": 28627518,
+      "parent_id": "def_033",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "def_035",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 35,
+      "tier": 8,
+      "name": "割合削りの視座 IV",
+      "description": "現在HP割合ダメージの効力をわずかに引き上げる。",
+      "cost_rp": 48471153,
+      "parent_id": "def_034",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.0072
+      }
+    },
+    {
+      "id": "def_036",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 36,
+      "tier": 8,
+      "name": "凍結耐性の抑制 IV",
+      "description": "敵の状態異常耐性をわずかに和らげる。",
+      "cost_rp": 82171617,
+      "parent_id": "def_035",
+      "effect": {
+        "stat": "enemy_cc_resist_reduce_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "def_037",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 37,
+      "tier": 9,
+      "name": "嵐を凌ぐ守護 IV",
+      "description": "拠点・結界の耐久力を大きく底上げする。",
+      "cost_rp": 139471336,
+      "parent_id": "def_036",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.319
+      }
+    },
+    {
+      "id": "def_038",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 38,
+      "tier": 9,
+      "name": "重力の防波堤 IV",
+      "description": "敵の進軍速度と状態異常耐性をさらに抑える。",
+      "cost_rp": 237005979,
+      "parent_id": "def_037",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.174
+      }
+    },
+    {
+      "id": "def_039",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 39,
+      "tier": 9,
+      "name": "深淵耐性の突破 IV",
+      "description": "強敵・暴走敵の割合削りへの抵抗を和らげる。",
+      "cost_rp": 403210776,
+      "parent_id": "def_038",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.0145
+      }
+    },
+    {
+      "id": "def_040",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 40,
+      "tier": 9,
+      "name": "永劫の結界 IV",
+      "description": "拠点と結界を堅牢に守り抜き、長大な戦いを支える。",
+      "cost_rp": 686738447,
+      "parent_id": "def_039",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.5075
+      }
+    },
+    {
+      "id": "def_041",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 41,
+      "tier": 10,
+      "name": "結界の灯火 V",
+      "description": "拠点・結界の耐久力をわずかに高める。",
+      "cost_rp": 1170915376,
+      "parent_id": "def_040",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.192
+      }
+    },
+    {
+      "id": "def_042",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 42,
+      "tier": 10,
+      "name": "冷気持続の知恵 V",
+      "description": "状態異常（スロウ・スタン）の効果時間をわずかに延ばす。",
+      "cost_rp": 1998589652,
+      "parent_id": "def_041",
+      "effect": {
+        "stat": "cc_duration_pct",
+        "value": 0.128
+      }
+    },
+    {
+      "id": "def_043",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 43,
+      "tier": 10,
+      "name": "牽引力の追風 V",
+      "description": "引き戻し効果と減速効果の効き目を高める。",
+      "cost_rp": 3414878961,
+      "parent_id": "def_042",
+      "effect": {
+        "stat": "cc_potency_pct",
+        "value": 0.128
+      }
+    },
+    {
+      "id": "def_044",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 44,
+      "tier": 10,
+      "name": "堅牢なる防壁 V",
+      "description": "結界の耐久力と回復・保護力を高める。",
+      "cost_rp": 5840776714,
+      "parent_id": "def_043",
+      "effect": {
+        "stat": "base_hp_pct",
+        "value": 0.24
+      }
+    },
+    {
+      "id": "def_045",
+      "category": "defense",
+      "category_jp": "防衛",
+      "index": 45,
+      "tier": 10,
+      "name": "割合削りの視座 V",
+      "description": "現在HP割合ダメージの効力をわずかに引き上げる。",
+      "cost_rp": 10000000000,
+      "parent_id": "def_044",
+      "effect": {
+        "stat": "hp_pct_dmg_bonus",
+        "value": 0.008
+      }
+    },
+    {
+      "id": "con_001",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 1,
+      "tier": 1,
+      "name": "基礎設計図",
+      "description": "タワー建設コストをわずかに引き下げる。",
+      "cost_rp": 4.0,
+      "parent_id": null,
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.06
+      }
+    },
+    {
+      "id": "con_002",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 2,
+      "tier": 1,
+      "name": "配置枠の拡張・壱",
+      "description": "タワーの最大配置上限を1枠増やす。",
+      "cost_rp": 6.05,
+      "parent_id": "con_001",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_003",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 3,
+      "tier": 1,
+      "name": "成長促進の効率・壱",
+      "description": "成長促進による育成効果をわずかに高める。",
+      "cost_rp": 9.6,
+      "parent_id": "con_002",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "con_004",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 4,
+      "tier": 1,
+      "name": "資材運搬の工夫",
+      "description": "建設・アップグレードの初期コスト負担を軽減する。",
+      "cost_rp": 15.5,
+      "parent_id": "con_003",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "con_005",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 5,
+      "tier": 2,
+      "name": "成長促進コストの緩和",
+      "description": "成長促進の加速倍率の伸びをわずかに抑える。",
+      "cost_rp": 25.4,
+      "parent_id": "con_004",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.02
+      }
+    },
+    {
+      "id": "con_006",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 6,
+      "tier": 2,
+      "name": "配置枠の拡張・弐",
+      "description": "タワーの最大配置上限をさらに1枠増やす。",
+      "cost_rp": 42.1,
+      "parent_id": "con_005",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_007",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 7,
+      "tier": 2,
+      "name": "爆発塔の共鳴",
+      "description": "爆発塔の爆発範囲と火力を高め、隠し変化への道を開く。",
+      "cost_rp": 70.3,
+      "parent_id": "con_006",
+      "effect": {
+        "stat": "explosive_synergy_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "con_008",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 8,
+      "tier": 2,
+      "name": "ミサイル機構の予兆",
+      "description": "爆発塔からミサイル塔への進化条件・性能を後押しする。",
+      "cost_rp": 118,
+      "parent_id": "con_007",
+      "effect": {
+        "stat": "missile_evolution_boost",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "con_009",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 9,
+      "tier": 3,
+      "name": "超設計の精華",
+      "description": "配置上限の拡張と建設効率をまとめて高める。",
+      "cost_rp": 200,
+      "parent_id": "con_008",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_010",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 10,
+      "tier": 3,
+      "name": "究極の建築学",
+      "description": "すべての建設・育成効率を1e10 RP帯へ引き上げる。",
+      "cost_rp": 339,
+      "parent_id": "con_009",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "con_011",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 11,
+      "tier": 3,
+      "name": "基礎設計図 II",
+      "description": "タワー建設コストをわずかに引き下げる。",
+      "cost_rp": 580,
+      "parent_id": "con_010",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.069
+      }
+    },
+    {
+      "id": "con_012",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 12,
+      "tier": 3,
+      "name": "配置枠の拡張・壱",
+      "description": "タワーの最大配置上限を1枠増やす。",
+      "cost_rp": 994,
+      "parent_id": "con_011",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_013",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 13,
+      "tier": 4,
+      "name": "成長促進の効率・壱",
+      "description": "成長促進による育成効果をわずかに高める。",
+      "cost_rp": 1712,
+      "parent_id": "con_012",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.115
+      }
+    },
+    {
+      "id": "con_014",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 14,
+      "tier": 4,
+      "name": "資材運搬の工夫 II",
+      "description": "建設・アップグレードの初期コスト負担を軽減する。",
+      "cost_rp": 2959,
+      "parent_id": "con_013",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "con_015",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 15,
+      "tier": 4,
+      "name": "成長促進コストの緩和 II",
+      "description": "成長促進の加速倍率の伸びをわずかに抑える。",
+      "cost_rp": 5131,
+      "parent_id": "con_014",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.023
+      }
+    },
+    {
+      "id": "con_016",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 16,
+      "tier": 4,
+      "name": "配置枠の拡張・弐",
+      "description": "タワーの最大配置上限をさらに1枠増やす。",
+      "cost_rp": 8926,
+      "parent_id": "con_015",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_017",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 17,
+      "tier": 5,
+      "name": "爆発塔の共鳴 II",
+      "description": "爆発塔の爆発範囲と火力を高め、隠し変化への道を開く。",
+      "cost_rp": 15573,
+      "parent_id": "con_016",
+      "effect": {
+        "stat": "explosive_synergy_pct",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "con_018",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 18,
+      "tier": 5,
+      "name": "ミサイル機構の予兆 II",
+      "description": "爆発塔からミサイル塔への進化条件・性能を後押しする。",
+      "cost_rp": 27247,
+      "parent_id": "con_017",
+      "effect": {
+        "stat": "missile_evolution_boost",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "con_019",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 19,
+      "tier": 5,
+      "name": "超設計の精華 II",
+      "description": "配置上限の拡張と建設効率をまとめて高める。",
+      "cost_rp": 47797,
+      "parent_id": "con_018",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_020",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 20,
+      "tier": 5,
+      "name": "究極の建築学 II",
+      "description": "すべての建設・育成効率を1e10 RP帯へ引き上げる。",
+      "cost_rp": 84058,
+      "parent_id": "con_019",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.2875
+      }
+    },
+    {
+      "id": "con_021",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 21,
+      "tier": 6,
+      "name": "基礎設計図 III",
+      "description": "タワー建設コストをわずかに引き下げる。",
+      "cost_rp": 148179,
+      "parent_id": "con_020",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.078
+      }
+    },
+    {
+      "id": "con_022",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 22,
+      "tier": 6,
+      "name": "配置枠の拡張・壱",
+      "description": "タワーの最大配置上限を1枠増やす。",
+      "cost_rp": 261809,
+      "parent_id": "con_021",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_023",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 23,
+      "tier": 6,
+      "name": "成長促進の効率・壱",
+      "description": "成長促進による育成効果をわずかに高める。",
+      "cost_rp": 463582,
+      "parent_id": "con_022",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.13
+      }
+    },
+    {
+      "id": "con_024",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 24,
+      "tier": 6,
+      "name": "資材運搬の工夫 III",
+      "description": "建設・アップグレードの初期コスト負担を軽減する。",
+      "cost_rp": 822568,
+      "parent_id": "con_023",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "con_025",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 25,
+      "tier": 7,
+      "name": "成長促進コストの緩和 III",
+      "description": "成長促進の加速倍率の伸びをわずかに抑える。",
+      "cost_rp": 1462464,
+      "parent_id": "con_024",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.026
+      }
+    },
+    {
+      "id": "con_026",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 26,
+      "tier": 7,
+      "name": "配置枠の拡張・弐",
+      "description": "タワーの最大配置上限をさらに1枠増やす。",
+      "cost_rp": 2605154,
+      "parent_id": "con_025",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_027",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 27,
+      "tier": 7,
+      "name": "爆発塔の共鳴 III",
+      "description": "爆発塔の爆発範囲と火力を高め、隠し変化への道を開く。",
+      "cost_rp": 4649277,
+      "parent_id": "con_026",
+      "effect": {
+        "stat": "explosive_synergy_pct",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "con_028",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 28,
+      "tier": 7,
+      "name": "ミサイル機構の予兆 III",
+      "description": "爆発塔からミサイル塔への進化条件・性能を後押しする。",
+      "cost_rp": 8312140,
+      "parent_id": "con_027",
+      "effect": {
+        "stat": "missile_evolution_boost",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "con_029",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 29,
+      "tier": 8,
+      "name": "超設計の精華 III",
+      "description": "配置上限の拡張と建設効率をまとめて高める。",
+      "cost_rp": 14886382,
+      "parent_id": "con_028",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_030",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 30,
+      "tier": 8,
+      "name": "究極の建築学 III",
+      "description": "すべての建設・育成効率を1e10 RP帯へ引き上げる。",
+      "cost_rp": 26704825,
+      "parent_id": "con_029",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.325
+      }
+    },
+    {
+      "id": "con_031",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 31,
+      "tier": 8,
+      "name": "基礎設計図 IV",
+      "description": "タワー建設コストをわずかに引き下げる。",
+      "cost_rp": 47983458,
+      "parent_id": "con_030",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.087
+      }
+    },
+    {
+      "id": "con_032",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 32,
+      "tier": 8,
+      "name": "配置枠の拡張・壱",
+      "description": "タワーの最大配置上限を1枠増やす。",
+      "cost_rp": 86352129,
+      "parent_id": "con_031",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_033",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 33,
+      "tier": 9,
+      "name": "成長促進の効率・壱",
+      "description": "成長促進による育成効果をわずかに高める。",
+      "cost_rp": 155637432,
+      "parent_id": "con_032",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.145
+      }
+    },
+    {
+      "id": "con_034",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 34,
+      "tier": 9,
+      "name": "資材運搬の工夫 IV",
+      "description": "建設・アップグレードの初期コスト負担を軽減する。",
+      "cost_rp": 280928346,
+      "parent_id": "con_033",
+      "effect": {
+        "stat": "build_cost_discount_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "con_035",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 35,
+      "tier": 9,
+      "name": "成長促進コストの緩和 IV",
+      "description": "成長促進の加速倍率の伸びをわずかに抑える。",
+      "cost_rp": 507808175,
+      "parent_id": "con_034",
+      "effect": {
+        "stat": "growth_cost_accel_mitigate",
+        "value": 0.029
+      }
+    },
+    {
+      "id": "con_036",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 36,
+      "tier": 9,
+      "name": "配置枠の拡張・弐",
+      "description": "タワーの最大配置上限をさらに1枠増やす。",
+      "cost_rp": 919199037,
+      "parent_id": "con_035",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_037",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 37,
+      "tier": 10,
+      "name": "爆発塔の共鳴 IV",
+      "description": "爆発塔の爆発範囲と火力を高め、隠し変化への道を開く。",
+      "cost_rp": 1666131349,
+      "parent_id": "con_036",
+      "effect": {
+        "stat": "explosive_synergy_pct",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "con_038",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 38,
+      "tier": 10,
+      "name": "ミサイル機構の予兆 IV",
+      "description": "爆発塔からミサイル塔への進化条件・性能を後押しする。",
+      "cost_rp": 3024012760,
+      "parent_id": "con_037",
+      "effect": {
+        "stat": "missile_evolution_boost",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "con_039",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 39,
+      "tier": 10,
+      "name": "超設計の精華 IV",
+      "description": "配置上限の拡張と建設効率をまとめて高める。",
+      "cost_rp": 5495641602,
+      "parent_id": "con_038",
+      "effect": {
+        "stat": "tower_cap_add",
+        "value": 1
+      }
+    },
+    {
+      "id": "con_040",
+      "category": "construction",
+      "category_jp": "建設",
+      "index": 40,
+      "tier": 10,
+      "name": "究極の建築学 IV",
+      "description": "すべての建設・育成効率を1e10 RP帯へ引き上げる。",
+      "cost_rp": 10000000000,
+      "parent_id": "con_039",
+      "effect": {
+        "stat": "growth_power_pct",
+        "value": 0.3625
+      }
+    },
+    {
+      "id": "tac_001",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 1,
+      "tier": 1,
+      "name": "戦場の呼吸",
+      "description": "次ウェーブ前倒し時のボーナス効率を高める。",
+      "cost_rp": 5.0,
+      "parent_id": null,
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "tac_002",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 2,
+      "tier": 1,
+      "name": "倍速の順応",
+      "description": "ゲーム速度（x1〜x5）での操作・進行テンポを整える。",
+      "cost_rp": 7.53,
+      "parent_id": "tac_001",
+      "effect": {
+        "stat": "speed_synergy_pct",
+        "value": 0.06
+      }
+    },
+    {
+      "id": "tac_003",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 3,
+      "tier": 1,
+      "name": "連鎖の呼吸",
+      "description": "連続攻撃やチェイン時の手数効率を高める。",
+      "cost_rp": 11.9,
+      "parent_id": "tac_002",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "tac_004",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 4,
+      "tier": 1,
+      "name": "暴走への覚悟・壱",
+      "description": "暴走ウェーブ突入時のスコア上昇倍率を高める。",
+      "cost_rp": 19.1,
+      "parent_id": "tac_003",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.1
+      }
+    },
+    {
+      "id": "tac_005",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 5,
+      "tier": 2,
+      "name": "高連射の最適化",
+      "description": "高攻撃速度（10/s〜20/s）時のダメージ効率を補助する。",
+      "cost_rp": 31.2,
+      "parent_id": "tac_004",
+      "effect": {
+        "stat": "high_aspd_eff_pct",
+        "value": 0.08
+      }
+    },
+    {
+      "id": "tac_006",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 6,
+      "tier": 2,
+      "name": "戦術指揮の妙",
+      "description": "ウェーブ進行とスコア獲得の噛み合いを高める。",
+      "cost_rp": 51.4,
+      "parent_id": "tac_005",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.14
+      }
+    },
+    {
+      "id": "tac_007",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 7,
+      "tier": 2,
+      "name": "暴走への覚悟・弐",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに引き上げる。",
+      "cost_rp": 85.3,
+      "parent_id": "tac_006",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.15
+      }
+    },
+    {
+      "id": "tac_008",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 8,
+      "tier": 2,
+      "name": "限界戦術の極意",
+      "description": "高難度ウェーブでの連鎖・手数効率を極限まで高める。",
+      "cost_rp": 143,
+      "parent_id": "tac_007",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.14
+      }
+    },
+    {
+      "id": "tac_009",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 9,
+      "tier": 3,
+      "name": "暴走極限の跳躍",
+      "description": "暴走ウェーブのスコア上昇倍率を大きく底上げする。",
+      "cost_rp": 240,
+      "parent_id": "tac_008",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "tac_010",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 10,
+      "tier": 3,
+      "name": "神算鬼謀の境地",
+      "description": "戦術全体の倍率と暴走スコア効率を1e10 RP帯へ導く。",
+      "cost_rp": 405,
+      "parent_id": "tac_009",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.4
+      }
+    },
+    {
+      "id": "tac_011",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 11,
+      "tier": 3,
+      "name": "戦場の呼吸 II",
+      "description": "次ウェーブ前倒し時のボーナス効率を高める。",
+      "cost_rp": 688,
+      "parent_id": "tac_010",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.115
+      }
+    },
+    {
+      "id": "tac_012",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 12,
+      "tier": 3,
+      "name": "倍速の順応 II",
+      "description": "ゲーム速度（x1〜x5）での操作・進行テンポを整える。",
+      "cost_rp": 1174,
+      "parent_id": "tac_011",
+      "effect": {
+        "stat": "speed_synergy_pct",
+        "value": 0.069
+      }
+    },
+    {
+      "id": "tac_013",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 13,
+      "tier": 4,
+      "name": "連鎖の呼吸 II",
+      "description": "連続攻撃やチェイン時の手数効率を高める。",
+      "cost_rp": 2011,
+      "parent_id": "tac_012",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "tac_014",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 14,
+      "tier": 4,
+      "name": "暴走への覚悟・壱",
+      "description": "暴走ウェーブ突入時のスコア上昇倍率を高める。",
+      "cost_rp": 3455,
+      "parent_id": "tac_013",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.115
+      }
+    },
+    {
+      "id": "tac_015",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 15,
+      "tier": 4,
+      "name": "高連射の最適化 II",
+      "description": "高攻撃速度（10/s〜20/s）時のダメージ効率を補助する。",
+      "cost_rp": 5957,
+      "parent_id": "tac_014",
+      "effect": {
+        "stat": "high_aspd_eff_pct",
+        "value": 0.092
+      }
+    },
+    {
+      "id": "tac_016",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 16,
+      "tier": 4,
+      "name": "戦術指揮の妙 II",
+      "description": "ウェーブ進行とスコア獲得の噛み合いを高める。",
+      "cost_rp": 10304,
+      "parent_id": "tac_015",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.161
+      }
+    },
+    {
+      "id": "tac_017",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 17,
+      "tier": 5,
+      "name": "暴走への覚悟・弐",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに引き上げる。",
+      "cost_rp": 17876,
+      "parent_id": "tac_016",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.1725
+      }
+    },
+    {
+      "id": "tac_018",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 18,
+      "tier": 5,
+      "name": "限界戦術の極意 II",
+      "description": "高難度ウェーブでの連鎖・手数効率を極限まで高める。",
+      "cost_rp": 31095,
+      "parent_id": "tac_017",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.161
+      }
+    },
+    {
+      "id": "tac_019",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 19,
+      "tier": 5,
+      "name": "暴走極限の跳躍 II",
+      "description": "暴走ウェーブのスコア上昇倍率を大きく底上げする。",
+      "cost_rp": 54234,
+      "parent_id": "tac_018",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.2875
+      }
+    },
+    {
+      "id": "tac_020",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 20,
+      "tier": 5,
+      "name": "神算鬼謀の境地 II",
+      "description": "戦術全体の倍率と暴走スコア効率を1e10 RP帯へ導く。",
+      "cost_rp": 94823,
+      "parent_id": "tac_019",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.46
+      }
+    },
+    {
+      "id": "tac_021",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 21,
+      "tier": 6,
+      "name": "戦場の呼吸 III",
+      "description": "次ウェーブ前倒し時のボーナス効率を高める。",
+      "cost_rp": 166183,
+      "parent_id": "tac_020",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.13
+      }
+    },
+    {
+      "id": "tac_022",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 22,
+      "tier": 6,
+      "name": "倍速の順応 III",
+      "description": "ゲーム速度（x1〜x5）での操作・進行テンポを整える。",
+      "cost_rp": 291900,
+      "parent_id": "tac_021",
+      "effect": {
+        "stat": "speed_synergy_pct",
+        "value": 0.078
+      }
+    },
+    {
+      "id": "tac_023",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 23,
+      "tier": 6,
+      "name": "連鎖の呼吸 III",
+      "description": "連続攻撃やチェイン時の手数効率を高める。",
+      "cost_rp": 513827,
+      "parent_id": "tac_022",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "tac_024",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 24,
+      "tier": 6,
+      "name": "暴走への覚悟・壱",
+      "description": "暴走ウェーブ突入時のスコア上昇倍率を高める。",
+      "cost_rp": 906346,
+      "parent_id": "tac_023",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.13
+      }
+    },
+    {
+      "id": "tac_025",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 25,
+      "tier": 7,
+      "name": "高連射の最適化 III",
+      "description": "高攻撃速度（10/s〜20/s）時のダメージ効率を補助する。",
+      "cost_rp": 1601881,
+      "parent_id": "tac_024",
+      "effect": {
+        "stat": "high_aspd_eff_pct",
+        "value": 0.104
+      }
+    },
+    {
+      "id": "tac_026",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 26,
+      "tier": 7,
+      "name": "戦術指揮の妙 III",
+      "description": "ウェーブ進行とスコア獲得の噛み合いを高める。",
+      "cost_rp": 2836565,
+      "parent_id": "tac_025",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.182
+      }
+    },
+    {
+      "id": "tac_027",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 27,
+      "tier": 7,
+      "name": "暴走への覚悟・弐",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに引き上げる。",
+      "cost_rp": 5032118,
+      "parent_id": "tac_026",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.195
+      }
+    },
+    {
+      "id": "tac_028",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 28,
+      "tier": 7,
+      "name": "限界戦術の極意 III",
+      "description": "高難度ウェーブでの連鎖・手数効率を極限まで高める。",
+      "cost_rp": 8942856,
+      "parent_id": "tac_027",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.182
+      }
+    },
+    {
+      "id": "tac_029",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 29,
+      "tier": 8,
+      "name": "暴走極限の跳躍 III",
+      "description": "暴走ウェーブのスコア上昇倍率を大きく底上げする。",
+      "cost_rp": 15919994,
+      "parent_id": "tac_028",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.325
+      }
+    },
+    {
+      "id": "tac_030",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 30,
+      "tier": 8,
+      "name": "神算鬼謀の境地 III",
+      "description": "戦術全体の倍率と暴走スコア効率を1e10 RP帯へ導く。",
+      "cost_rp": 28387445,
+      "parent_id": "tac_029",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.52
+      }
+    },
+    {
+      "id": "tac_031",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 31,
+      "tier": 8,
+      "name": "戦場の呼吸 IV",
+      "description": "次ウェーブ前倒し時のボーナス効率を高める。",
+      "cost_rp": 50699508,
+      "parent_id": "tac_030",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.145
+      }
+    },
+    {
+      "id": "tac_032",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 32,
+      "tier": 8,
+      "name": "倍速の順応 IV",
+      "description": "ゲーム速度（x1〜x5）での操作・進行テンポを整える。",
+      "cost_rp": 90688844,
+      "parent_id": "tac_031",
+      "effect": {
+        "stat": "speed_synergy_pct",
+        "value": 0.087
+      }
+    },
+    {
+      "id": "tac_033",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 33,
+      "tier": 9,
+      "name": "連鎖の呼吸 IV",
+      "description": "連続攻撃やチェイン時の手数効率を高める。",
+      "cost_rp": 162463827,
+      "parent_id": "tac_032",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "tac_034",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 34,
+      "tier": 9,
+      "name": "暴走への覚悟・壱",
+      "description": "暴走ウェーブ突入時のスコア上昇倍率を高める。",
+      "cost_rp": 291469684,
+      "parent_id": "tac_033",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.145
+      }
+    },
+    {
+      "id": "tac_035",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 35,
+      "tier": 9,
+      "name": "高連射の最適化 IV",
+      "description": "高攻撃速度（10/s〜20/s）時のダメージ効率を補助する。",
+      "cost_rp": 523656260,
+      "parent_id": "tac_034",
+      "effect": {
+        "stat": "high_aspd_eff_pct",
+        "value": 0.116
+      }
+    },
+    {
+      "id": "tac_036",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 36,
+      "tier": 9,
+      "name": "戦術指揮の妙 IV",
+      "description": "ウェーブ進行とスコア獲得の噛み合いを高める。",
+      "cost_rp": 942103704,
+      "parent_id": "tac_035",
+      "effect": {
+        "stat": "early_wave_bonus_pct",
+        "value": 0.203
+      }
+    },
+    {
+      "id": "tac_037",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 37,
+      "tier": 10,
+      "name": "暴走への覚悟・弐",
+      "description": "暴走ウェーブのスコア上昇倍率をさらに引き上げる。",
+      "cost_rp": 1697207109,
+      "parent_id": "tac_036",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.2175
+      }
+    },
+    {
+      "id": "tac_038",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 38,
+      "tier": 10,
+      "name": "限界戦術の極意 IV",
+      "description": "高難度ウェーブでの連鎖・手数効率を極限まで高める。",
+      "cost_rp": 3061538715,
+      "parent_id": "tac_037",
+      "effect": {
+        "stat": "chain_efficiency_pct",
+        "value": 0.203
+      }
+    },
+    {
+      "id": "tac_039",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 39,
+      "tier": 10,
+      "name": "暴走極限の跳躍 IV",
+      "description": "暴走ウェーブのスコア上昇倍率を大きく底上げする。",
+      "cost_rp": 5529670964,
+      "parent_id": "tac_038",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.3625
+      }
+    },
+    {
+      "id": "tac_040",
+      "category": "tactics",
+      "category_jp": "戦術",
+      "index": 40,
+      "tier": 10,
+      "name": "神算鬼謀の境地 IV",
+      "description": "戦術全体の倍率と暴走スコア効率を1e10 RP帯へ導く。",
+      "cost_rp": 10000000000,
+      "parent_id": "tac_039",
+      "effect": {
+        "stat": "rampage_score_mult_pct",
+        "value": 0.58
+      }
+    }
+  ]
+}
