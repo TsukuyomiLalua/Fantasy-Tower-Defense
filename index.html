@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.33 (Deep-Wave Lite)</title>
+<title>Fantasy Tower Defense 3D v0.34 (Deep-Wave Lite)</title>
 <style>
 :root{
   color-scheme:dark;
@@ -308,7 +308,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
     <div class="lobby-grid">
       <div class="lobby-hero">
         <div>
-          <div class="lobby-kicker">Cygnus Tactical Defense // v0.33 Lite</div>
+          <div class="lobby-kicker">Cygnus Tactical Defense // v0.34 Lite</div>
           <h1 class="lobby-title">FANTASY TOWER<br>DEFENSE 3D</h1>
           <p class="lobby-desc">5系統・全240ノードの研究ツリーと、13種の防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
         </div>
@@ -345,7 +345,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
 </div>
 
 <div id="top">
-  <div class="brand-badge">FANTASY TD<b>3D v0.33</b></div>
+  <div class="brand-badge">FANTASY TD<b>3D v0.34</b></div>
   <div class="hud-groups">
     <div class="hud-group" id="hudBattleGroup">
       <div class="hud-item"><span>WAVE</span><b id="wave">1</b></div>
@@ -837,7 +837,7 @@ function towerDisplayName(kind){
   return TOWER_CATALOG[kind]?.name||kind;
 }
 function getMaxTowers(){
-  return 15 + nodeLevel('towerCapUp')*2 + nodeLevel('tac_cap')*2;
+  return 15 + nodeLevel('towerCapUp')*3 + nodeLevel('tac_cap')*2 + Math.floor(sumGenStat('cap'));
 }
 
 // ==========================================
@@ -859,40 +859,40 @@ function registerNode(def){
   if(!(def.id in prestige))prestige[def.id]=0;
 }
 
-registerNode({id:'power',name:'攻撃訓練',branch:'戦闘',lane:'基礎火力',tier:0,reqs:[],desc:'全タワーの攻撃力 +5% / Lv',max:25,base:12});
-registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 +3% / Lv（上限20/sまで有効）',max:25,base:15});
-registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +4% ＆ 攻撃速度 +2.5% / Lv',max:25,base:18});
-registerNode({id:'growth',name:'成長促進',branch:'戦闘',lane:'成長系統',tier:1,reqs:['power'],desc:'タワーのレベルアップ毎に別枠で 1.001倍を乗算（加速コスト）',max:0,base:10});
-registerNode({id:'critical',name:'会心の一撃',branch:'戦闘',lane:'会心系統',tier:2,reqs:['haste','battleHarmony'],desc:'会心率 +18% / Lv。100%超で多段累乗 1.5^(1.06^k) 発生！',max:30,base:20});
+registerNode({id:'power',name:'攻撃訓練',branch:'戦闘',lane:'基礎火力',tier:0,reqs:[],desc:'全タワーの攻撃力 +7.5% / Lv',max:25,base:12});
+registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 +4.5% / Lv（上限20/sまで有効）',max:25,base:15});
+registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +6% ＆ 攻撃速度 +3.75% / Lv',max:25,base:18});
+registerNode({id:'growth',name:'成長促進',branch:'戦闘',lane:'成長系統',tier:1,reqs:['power'],desc:'タワーのレベルアップ毎に別枠で 1.0015倍を乗算（加速コスト）',max:0,base:10});
+registerNode({id:'critical',name:'会心の一撃',branch:'戦闘',lane:'会心系統',tier:2,reqs:['haste','battleHarmony'],desc:'会心率 +27% / Lv。100%超で多段累乗 1.5^(1.06^k) 発生！',max:30,base:20});
 registerNode({id:'unlock_sniper',name:'精密狙撃理論',branch:'戦闘',lane:'新塔解放',tier:2,reqs:['power'],transform:true,desc:'【新タワー解放】超長射程「スナイパー塔」が使用可能になる',max:1,base:1500});
 registerNode({id:'unlock_lightning',name:'高圧雷撃回路',branch:'戦闘',lane:'新塔解放',tier:3,reqs:['haste'],transform:true,desc:'【新タワー解放】最大5体連鎖「電撃塔」が使用可能になる',max:1,base:1600});
 registerNode({id:'laserEvolution',name:'光線覚醒',branch:'戦闘',lane:'進化覚醒',tier:4,reqs:['battleHarmony','growth'],transform:true,desc:'【攻撃変化】弾丸塔が「レーザー塔」へ進化！貫通光線照射＋威力上昇',max:1,base:1700});
 
-registerNode({id:'loot',name:'戦利品の知恵',branch:'経済',lane:'資金獲得',tier:0,reqs:[],desc:'敵撃破ゴールド +12% / Lv',max:25,base:12});
+registerNode({id:'loot',name:'戦利品の知恵',branch:'経済',lane:'資金獲得',tier:0,reqs:[],desc:'敵撃破ゴールド +18% / Lv',max:25,base:12});
 registerNode({id:'startGold',name:'潤沢な資金',branch:'経済',lane:'資金獲得',tier:1,reqs:['loot'],desc:'出撃時の初期所持ゴールド +35G / Lv',max:25,base:12});
-registerNode({id:'scoreBonus',name:'戦果の記録',branch:'経済',lane:'スコア',tier:1,reqs:['loot'],desc:'獲得スコア +8% / Lv',max:30,base:15});
-registerNode({id:'spBonus',name:'魂の収穫',branch:'経済',lane:'RP収穫',tier:2,reqs:['startGold','scoreBonus'],desc:'リザルトのスコア由来RP +6% / Lv',max:30,base:25});
+registerNode({id:'scoreBonus',name:'戦果の記録',branch:'経済',lane:'スコア',tier:1,reqs:['loot'],desc:'獲得スコア +12% / Lv',max:30,base:15});
+registerNode({id:'spBonus',name:'魂の収穫',branch:'経済',lane:'RP収穫',tier:2,reqs:['startGold','scoreBonus'],desc:'リザルトのスコア由来RP +9% / Lv',max:30,base:25});
 
-registerNode({id:'vitality',name:'拠点増強',branch:'防衛',lane:'拠点防衛',tier:0,reqs:[],desc:'出撃時の拠点最大耐久 +3 / Lv',max:25,base:12});
+registerNode({id:'vitality',name:'拠点増強',branch:'防衛',lane:'拠点防衛',tier:0,reqs:[],desc:'出撃時の拠点最大耐久 +4.5 / Lv',max:25,base:12});
 registerNode({id:'ward',name:'守護結界',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'敵の侵入を肩代わりする結界 +1 / Lv',max:20,base:15});
 registerNode({id:'repair',name:'自動修復',branch:'防衛',lane:'拠点防衛',tier:1,reqs:['vitality'],desc:'ウェーブ突破時に拠点耐久を回復する頻度と量が上昇',max:15,base:18});
-registerNode({id:'clutch',name:'背水の陣',branch:'防衛',lane:'拠点防衛',tier:2,reqs:['ward','repair'],desc:'拠点耐久が5以下の時、敵の移動速度 -5% / Lv',max:15,base:20});
+registerNode({id:'clutch',name:'背水の陣',branch:'防衛',lane:'拠点防衛',tier:2,reqs:['ward','repair'],desc:'拠点耐久が5以下の時、敵の移動速度 -7.5% / Lv',max:15,base:20});
 registerNode({id:'unlock_barracks',name:'王都防衛兵団',branch:'防衛',lane:'新塔解放',tier:2,reqs:['vitality'],transform:true,desc:'【新タワー解放】防衛兵を送り出す「徴兵塔」が使用可能になる',max:1,base:1500});
 registerNode({id:'baseTrigger',name:'基地防衛トリガー',branch:'防衛',lane:'切り札',tier:4,reqs:['clutch'],transform:true,desc:'【特殊発動】拠点被弾時、全敵に衝撃波ダメージ＆ノックバック発動！',max:5,base:1850});
 
-registerNode({id:'buildDiscount',name:'建築技術',branch:'建設',lane:'コスト効率',tier:0,reqs:[],desc:'タワー設置費用 -2.5% / Lv（最大50%割引）',max:20,base:12});
+registerNode({id:'buildDiscount',name:'建築技術',branch:'建設',lane:'コスト効率',tier:0,reqs:[],desc:'タワー設置費用 -3.75% / Lv（最大50%割引）',max:20,base:12});
 registerNode({id:'upgradeDiscount',name:'効率強化',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー強化の加速倍率増加を緩和 / Lv',max:20,base:15});
-registerNode({id:'refund',name:'熟練解体',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー売却時の返金率 +2% / Lv（最大95%）',max:15,base:15});
-registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +0.18 / Lv',max:25,base:18});
+registerNode({id:'refund',name:'熟練解体',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー売却時の返金率 +3% / Lv（最大95%）',max:15,base:15});
+registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +0.27 / Lv',max:25,base:18});
 registerNode({id:'unlock_frost',name:'永久凍土結晶',branch:'建設',lane:'新塔解放',tier:2,reqs:['buildDiscount'],transform:true,desc:'【新タワー解放】冷気で敵を凍らせる「霜柱塔」が使用可能になる',max:1,base:1500});
 registerNode({id:'unlock_gravity',name:'特異点制御論',branch:'建設',lane:'新塔解放',tier:4,reqs:['range'],transform:true,desc:'【新タワー解放】重力渦で敵を束ねる「重力塔」が使用可能になる',max:1,base:1800});
 
-registerNode({id:'blastRadius',name:'爆圧拡張',branch:'戦術',lane:'範囲戦術',tier:0,reqs:[],desc:'爆発・ミサイル・重力・霜柱の効果範囲 +0.12 / Lv',max:25,base:14});
-registerNode({id:'slowDuration',name:'振動共鳴',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'振動・霜柱の減速効果時間 +0.2秒 / Lv',max:20,base:15});
-registerNode({id:'slowPower',name:'減速波',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'減速状態の敵の移動速度をさらに低下 / Lv',max:20,base:18});
-registerNode({id:'overdriveVibe',name:'共振増幅',branch:'戦術',lane:'範囲戦術',tier:2,reqs:['slowDuration','slowPower'],desc:'振動塔・電撃塔・重力塔の特殊ダメージ +10% / Lv',max:20,base:22});
-registerNode({id:'rushBonus',name:'奇襲報酬',branch:'戦術',lane:'戦術支援',tier:2,reqs:['slowDuration','slowPower'],desc:'ウェーブ前倒し開始ボーナスゴールド +15% / Lv',max:20,base:15});
-registerNode({id:'towerCapUp',name:'防衛網拡張',branch:'戦術',lane:'戦術支援',tier:2,reqs:['blastRadius'],desc:'戦場のタワー最大設置上限 +2基 / Lv（初期15基）',max:15,base:45});
+registerNode({id:'blastRadius',name:'爆圧拡張',branch:'戦術',lane:'範囲戦術',tier:0,reqs:[],desc:'爆発・ミサイル・重力・霜柱の効果範囲 +0.18 / Lv',max:25,base:14});
+registerNode({id:'slowDuration',name:'振動共鳴',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'振動・霜柱の減速効果時間 +0.3秒 / Lv',max:20,base:15});
+registerNode({id:'slowPower',name:'減速波',branch:'戦術',lane:'制御戦術',tier:1,reqs:['blastRadius'],desc:'減速状態の敵の移動速度をさらに15%低下相当 / Lv',max:20,base:18});
+registerNode({id:'overdriveVibe',name:'共振増幅',branch:'戦術',lane:'範囲戦術',tier:2,reqs:['slowDuration','slowPower'],desc:'振動塔・電撃塔・重力塔の特殊ダメージ +15% / Lv',max:20,base:22});
+registerNode({id:'rushBonus',name:'奇襲報酬',branch:'戦術',lane:'戦術支援',tier:2,reqs:['slowDuration','slowPower'],desc:'ウェーブ前倒し開始ボーナスゴールド +22.5% / Lv',max:20,base:15});
+registerNode({id:'towerCapUp',name:'防衛網拡張',branch:'戦術',lane:'戦術支援',tier:2,reqs:['blastRadius'],desc:'戦場のタワー最大設置上限 +3基 / Lv（初期15基）',max:15,base:45});
 registerNode({id:'unlock_pull',name:'磁力空間歪曲',branch:'戦術',lane:'新塔解放',tier:2,reqs:['slowPower'],transform:true,desc:'【新タワー解放】敵を引き戻す「牽引塔」が使用可能になる',max:1,base:1500});
 registerNode({id:'unlock_skills',name:'戦術指令権限',branch:'戦術',lane:'切り札',tier:3,reqs:['rushBonus'],transform:true,desc:'【アクティブ解放】軌道砲撃・絶対零度・戦車出撃スキルが使用可能に！',max:1,base:1650});
 registerNode({id:'unlock_missile',name:'超弾道兵器開発',branch:'戦術',lane:'隠し進化',tier:5,reqs:['overdriveVibe','towerCapUp'],transform:true,desc:'【隠し進化解放】決戦兵器「ミサイル塔」が編成可能になる！',max:1,base:2000});
@@ -902,29 +902,29 @@ registerNode({id:'unlock_blanche_astral',name:'書庫の星辰',branch:'建設',
 
 const GENERATED_TEMPLATES = {
   '戦闘': [
-    {lane:'一本道：極限火力', prefix:'極限火砲', stat:'dmg', val:0.06, unit:'攻撃力 +6%'},
-    {lane:'一本道：神速連射', prefix:'神速機構', stat:'spd', val:0.02, unit:'攻撃速度 +2%'},
-    {lane:'一本道：会心深淵', prefix:'会心極意', stat:'crit', val:0.12, unit:'会心率 +12%'}
+    {lane:'一本道：極限火力', prefix:'極限火砲', stat:'dmg', val:0.09, unit:'攻撃力 +9%'},
+    {lane:'一本道：神速連射', prefix:'神速機構', stat:'spd', val:0.03, unit:'攻撃速度 +3%'},
+    {lane:'一本道：会心深淵', prefix:'会心極意', stat:'crit', val:0.18, unit:'会心率 +18%'}
   ],
   '経済': [
-    {lane:'一本道：黄金錬成', prefix:'黄金錬成', stat:'gold', val:0.15, unit:'撃破ゴールド +15%'},
-    {lane:'一本道：栄光の叙事詩', prefix:'叙事詩編纂', stat:'score', val:0.12, unit:'獲得スコア +12%'},
-    {lane:'一本道：真理の結晶', prefix:'真理探究', stat:'rp', val:0.08, unit:'獲得RP +8%'}
+    {lane:'一本道：黄金錬成', prefix:'黄金錬成', stat:'gold', val:0.225, unit:'撃破ゴールド +22.5%'},
+    {lane:'一本道：栄光の叙事詩', prefix:'叙事詩編纂', stat:'score', val:0.18, unit:'獲得スコア +18%'},
+    {lane:'一本道：真理の結晶', prefix:'真理探究', stat:'rp', val:0.12, unit:'獲得RP +12%'}
   ],
   '防衛': [
-    {lane:'一本道：不落の城壁', prefix:'城壁改修', stat:'hp', val:4, unit:'拠点耐久 +4'},
-    {lane:'一本道：聖域の加護', prefix:'聖域展開', stat:'ward', val:1, unit:'守護結界 +1'},
-    {lane:'一本道：王都兵団強化', prefix:'精鋭訓練', stat:'unit', val:0.12, unit:'徴兵・戦車威力 +12%'}
+    {lane:'一本道：不落の城壁', prefix:'城壁改修', stat:'hp', val:6, unit:'拠点耐久 +6'},
+    {lane:'一本道：聖域の加護', prefix:'聖域展開', stat:'ward', val:1.5, unit:'守護結界 +1.5'},
+    {lane:'一本道：王都兵団強化', prefix:'精鋭訓練', stat:'unit', val:0.18, unit:'徴兵・戦車威力 +18%'}
   ],
   '建設': [
-    {lane:'一本道：超広域観測', prefix:'観測塔網', stat:'rng', val:0.15, unit:'全射程 +0.15'},
-    {lane:'一本道：極寒の理', prefix:'氷結増幅', stat:'frost', val:0.10, unit:'霜柱・減速威力 +10%'},
-    {lane:'一本道：重力崩壊', prefix:'重力増幅', stat:'grav', val:0.10, unit:'重力・範囲威力 +10%'}
+    {lane:'一本道：超広域観測', prefix:'観測塔網', stat:'rng', val:0.225, unit:'全射程 +0.225'},
+    {lane:'一本道：極寒の理', prefix:'氷結増幅', stat:'frost', val:0.15, unit:'霜柱・減速威力 +15%'},
+    {lane:'一本道：重力崩壊', prefix:'重力増幅', stat:'grav', val:0.15, unit:'重力・範囲威力 +15%'}
   ],
   '戦術': [
-    {lane:'一本道：大量配備計画', prefix:'陣地拡張', stat:'cap', val:1, unit:'設置上限 +1基'},
-    {lane:'一本道：爆裂連鎖', prefix:'爆圧連鎖', stat:'blast', val:0.12, unit:'爆発・ミサイル威力 +12%'},
-    {lane:'一本道：指令短縮', prefix:'高速指令', stat:'cd', val:0.04, unit:'スキルCT -4%'}
+    {lane:'一本道：大量配備計画', prefix:'陣地拡張', stat:'cap', val:1.5, unit:'設置上限 +1.5基相当（累積値を適用）'},
+    {lane:'一本道：爆裂連鎖', prefix:'爆圧連鎖', stat:'blast', val:0.18, unit:'爆発・ミサイル威力 +18%'},
+    {lane:'一本道：指令短縮', prefix:'高速指令', stat:'cd', val:0.06, unit:'スキルCT -6%'}
   ]
 };
 
@@ -1012,40 +1012,40 @@ function saveMeta(){
 
 function calcBuildCost(kind){
   const base=TOWER_CATALOG[kind]?.cost||30;
-  const disc=Math.min(0.50, nodeLevel('buildDiscount')*.025);
+  const disc=Math.min(0.50, nodeLevel('buildDiscount')*.0375);
   return Math.max(1,Math.floor(base*(1-disc)));
 }
 function calcUpgradeCost(t){
   const mitigate=nodeLevel('upgradeDiscount')*0.0005;
   return calcAccelCost(25,t.level,1.15,mitigate);
 }
-function refundRate(){return Math.min(.95,.70+nodeLevel('refund')*.02)}
+function refundRate(){return Math.min(.95,.70+nodeLevel('refund')*.03)}
 
 function towerRange(t){
   const def=TOWER_CATALOG[t.kind];
-  const bonus=nodeLevel('range')*.18 + sumGenStat('rng') + (t.kind==='bullet'&&isLaserUnlocked()?2.2:0);
+  const bonus=nodeLevel('range')*.27 + sumGenStat('rng') + (t.kind==='bullet'&&isLaserUnlocked()?2.2:0);
   return (def.range+bonus)*(t.padType==='open'?1.12:1);
 }
 
 function towerDamage(t,level=t.level){
   const def=TOWER_CATALOG[t.kind];
-  const growthMult=Math.pow(Math.pow(1.001,nodeLevel('growth')),Math.max(0,level-1));
-  const powerMult=1 + nodeLevel('power')*.05 + nodeLevel('battleHarmony')*.04 + sumGenStat('dmg');
+  const growthMult=Math.pow(Math.pow(1.0015,nodeLevel('growth')),Math.max(0,level-1));
+  const powerMult=1 + nodeLevel('power')*.075 + nodeLevel('battleHarmony')*.06 + sumGenStat('dmg');
   let typeMult=1;
   if(t.kind==='bullet'&&isLaserUnlocked())typeMult*=1.45;
   if(['blast','missile'].includes(t.kind))typeMult*=(1+sumGenStat('blast'));
-  if(['vibe','lightning','gravity'].includes(t.kind))typeMult*=(1+nodeLevel('overdriveVibe')*.10+sumGenStat('grav'));
+  if(['vibe','lightning','gravity'].includes(t.kind))typeMult*=(1+nodeLevel('overdriveVibe')*.15+sumGenStat('grav'));
   if(t.kind==='frost')typeMult*=(1+sumGenStat('frost'));
   if(t.kind==='barracks')typeMult*=(1+sumGenStat('unit'));
-  if(t.kind==='blancheArbiter')typeMult*=(1+nodeLevel('power')*.03+sumGenStat('dmg')*.5);
-  if(t.kind==='blancheBind')typeMult*=(1+nodeLevel('overdriveVibe')*.08+sumGenStat('grav')*.5);
+  if(t.kind==='blancheArbiter')typeMult*=(1+nodeLevel('power')*.045+sumGenStat('dmg')*.5);
+  if(t.kind==='blancheBind')typeMult*=(1+nodeLevel('overdriveVibe')*.12+sumGenStat('grav')*.5);
   if(t.kind==='blancheAstral')typeMult*=(1+sumGenStat('blast')*.7+sumGenStat('rng')*.3);
   return def.dmg*(1+.35*(level-1))*growthMult*powerMult*typeMult;
 }
 
 function towerInterval(t){
   const def=TOWER_CATALOG[t.kind];
-  const haste=nodeLevel('haste')*.03 + nodeLevel('battleHarmony')*.025 + sumGenStat('spd');
+  const haste=nodeLevel('haste')*.045 + nodeLevel('battleHarmony')*.0375 + sumGenStat('spd');
   const rawInterval=def.interval/(1+haste);
   return Math.max(0.05,rawInterval);
 }
@@ -1394,7 +1394,7 @@ function makeEnemy(laneIndex,w=wave){
   if(w>=10&&w%10===0&&!bossWavesSpawned.has(w)){bossWavesSpawned.add(w);type='boss';hp*=9;speed*=.72}
   else if(w>=2&&r<.3){type='fast';hp*=.6;speed*=1.45}
   else if(w>=3&&r>.75){type='tank';hp*=2.3;speed*=.6}
-  if(lives<=5)speed*=Math.max(.65,1-nodeLevel('clutch')*.05);
+  if(lives<=5)speed*=Math.max(.65,1-nodeLevel('clutch')*.075);
   const pts=routePoints[0].map(p=>new THREE.Vector3(p[0],0,p[1]));
   const group=enemyModel(type,rampage);
   const e={group,pts,segment:0,segmentDist:0,speed,hp,maxHp:hp,slow:0,slowFactor:.55,frozen:0,type,wave:w,rampageLv:rampage,laneIndex:Math.random()*6.28};
@@ -1483,7 +1483,7 @@ function updateSkillButtons(){
 $('skillBarrage').onclick=()=>{
   if(skillCooldowns.barrage>0||!enemies.length)return;
   skillCooldowns.barrage=getSkillMaxCD();
-  const baseDmg=(120+wave*35)*(1+nodeLevel('power')*.05+sumGenStat('dmg'));
+  const baseDmg=(120+wave*35)*(1+nodeLevel('power')*.075+sumGenStat('dmg'));
   for(const e of [...enemies]){
     const p=enemyPosition(e);
     burstAt(p,3.2,0xffaa44);
@@ -1495,7 +1495,7 @@ $('skillFreeze').onclick=()=>{
   if(skillCooldowns.freeze>0||!enemies.length)return;
   skillCooldowns.freeze=getSkillMaxCD();
   for(const e of enemies){
-    e.frozen=4.5+nodeLevel('slowDuration')*.2;
+    e.frozen=4.5+nodeLevel('slowDuration')*.3;
     const p=enemyPosition(e);
     burstAt(p,2.0,0x88eeff);
   }
@@ -1692,7 +1692,7 @@ function nodeCost(d){
     const mitigate=nodeLevel('upgradeDiscount')*0.0005;
     return calcAccelCost(10,nodeLevel(d.id),1.15,mitigate);
   }
-  const growthExp = d.max === 1 ? 1.0 : 1.42;
+  const growthExp = d.max === 1 ? 1.0 : 1.50;
   return Math.min(MAX_RP_CAP, Math.round(d.base * Math.pow(growthExp, nodeLevel(d.id))));
 }
 function nodePrereq(d){
@@ -1849,11 +1849,11 @@ function damageEnemy(e,dmg,kind,crit=false){
   }
   if(e.hp<=0)return;
   if(kind==='vibe'){
-    e.slow=1.35+nodeLevel('slowDuration')*.2;
-    e.slowFactor=Math.max(.22,.52-nodeLevel('slowPower')*.03);
+    e.slow=1.35+nodeLevel('slowDuration')*.3;
+    e.slowFactor=Math.max(.22,.52-nodeLevel('slowPower')*.045);
   }else if(kind==='frost'){
-    e.slow=2.2+nodeLevel('slowDuration')*.25;
-    e.slowFactor=Math.max(.15,.38-nodeLevel('slowPower')*.03);
+    e.slow=2.2+nodeLevel('slowDuration')*.375;
+    e.slowFactor=Math.max(.15,.38-nodeLevel('slowPower')*.045);
     if(Math.random()<0.18)e.frozen=Math.max(e.frozen,0.85);
   }
 }
@@ -1971,11 +1971,11 @@ function killEnemy(e){
   deathBurst(e);scene.remove(e.group);disposeObject3D(e.group,false);enemies.splice(i,1);
   if(selectedEntity===e)closeInfo();
   kills++;runKills++;stats.totalKills++;
-  const goldMult=1+nodeLevel('loot')*.12+sumGenStat('gold');
+  const goldMult=1+nodeLevel('loot')*.18+sumGenStat('gold');
   const g=Math.max(1,Math.round(5*goldMult*difficultyMods.reward));
   gold+=g;stats.totalGold+=g;
   const rampageMult=calcRampageScoreMult(e.maxHp,e.rampageLv||0);
-  const scoreMult=1+nodeLevel('scoreBonus')*.08+sumGenStat('score');
+  const scoreMult=1+nodeLevel('scoreBonus')*.12+sumGenStat('score');
   const pts=(100+e.wave*5)*scoreMult*difficultyMods.reward*rampageMult;
   score+=pts;runScore+=pts;
 }
@@ -2001,7 +2001,7 @@ function leakEnemy(e){
 function finish(){
   running=false;paused=false;stats.runs++;stats.highestWave=Math.max(stats.highestWave,wave);stats.totalScore+=runScore;
   const before=sp;
-  const rpMult=1+nodeLevel('spBonus')*.06+sumGenStat('rp');
+  const rpMult=1+nodeLevel('spBonus')*.09+sumGenStat('rp');
   const earned=Math.floor((runScore/45000)*rpMult);
   sp=Math.min(MAX_RP_CAP,sp+earned);
   checkAchievements();
@@ -2027,9 +2027,9 @@ $('again').onclick=()=>{
   towers.length=0;enemies.length=0;shots.length=0;allies.length=0;effects.length=0;damagePopups.length=0;
   spawnQueue=[];wavesInProgress=[];spawnLeft=0;wave=1;
   gold=150+nodeLevel('startGold')*35;
-  maxLives=20+nodeLevel('vitality')*3+sumGenStat('hp');
+  maxLives=20+nodeLevel('vitality')*4.5+sumGenStat('hp');
   lives=maxLives;
-  shield=nodeLevel('ward')+sumGenStat('ward');
+  shield=nodeLevel('ward')*1.5+sumGenStat('ward');
   kills=0;score=0;runScore=0;runKills=0;running=false;paused=false;waveCountdown=0;selectedEntity=null;closeInfo();
   updateUI();toast('新しい防衛戦を始めよう！');
 };
@@ -2045,9 +2045,9 @@ function resetBattlefieldToLobby(){
   towers.length=0;enemies.length=0;shots.length=0;allies.length=0;effects.length=0;damagePopups.length=0;
   spawnQueue=[];wavesInProgress=[];spawnLeft=0;wave=1;
   gold=150+nodeLevel('startGold')*35;
-  maxLives=20+nodeLevel('vitality')*3+sumGenStat('hp');
+  maxLives=20+nodeLevel('vitality')*4.5+sumGenStat('hp');
   lives=maxLives;
-  shield=nodeLevel('ward')+sumGenStat('ward');
+  shield=nodeLevel('ward')*1.5+sumGenStat('ward');
   kills=0;score=0;runScore=0;runKills=0;running=false;paused=false;waveCountdown=0;selectedEntity=null;closeInfo();
   placing=false;$('build').classList.remove('active');$('towerPanel').classList.remove('show');grid.visible=false;
   if(preview)preview.visible=false;
@@ -2232,7 +2232,7 @@ function loop(now){
           cur=nextE;
         }
       }else if(kind==='blast'){
-        const radius=3.8+nodeLevel('blastRadius')*.12;
+        const radius=3.8+nodeLevel('blastRadius')*.18;
         for(const e of enemies){const p=enemyPosition(e);if(Math.hypot(p.x-tp.x,p.z-tp.z)<=radius)damageEnemy(e,dmg*.75,'blast',crit)}
         makeShot(t,targetEnemy,dmg,kind,crit);
       }else if(kind==='bullet'){
@@ -2289,7 +2289,7 @@ function loop(now){
       if(s.prevPos)s.prevPos.copy(s.mesh.position);
       if(s.life<=0){
         const isAstral=s.kind==='blancheAstral';
-        const radius=(isAstral?5.4:4.6)+nodeLevel('blastRadius')*.12;
+        const radius=(isAstral?5.4:4.6)+nodeLevel('blastRadius')*.18;
         burstAt(s.end,radius,isAstral?0x9be7ff:0xff6b4a);
         const rSq=radius*radius;
         for(const e of enemies){
@@ -2307,7 +2307,7 @@ function loop(now){
     }else{
       s.mesh.position.lerpVectors(s.start,s.end,k);
       if(s.life<=0){
-        if(s.kind==='blast')burstAt(s.end,3.8+nodeLevel('blastRadius')*.12,0xffbd55);
+        if(s.kind==='blast')burstAt(s.end,3.8+nodeLevel('blastRadius')*.18,0xffbd55);
         scene.remove(s.mesh);
         disposeObject3D(s.mesh,!!s.sharedGeo);
         shots.splice(i,1);
@@ -2342,7 +2342,7 @@ function loop(now){
   if(spawnLeft===0&&enemies.length===0&&spawnQueue.length===0&&running){
     running=false;
     const completed=wavesInProgress.splice(0);
-    const repair=nodeLevel('repair'),repairEvery=Math.max(1,6-Math.floor(repair/2));
+    const repair=nodeLevel('repair'),repairEvery=Math.max(1,6-Math.floor(repair*0.75));
     stats.totalWaves+=completed.length;
     if(completed.length)stats.highestWave=Math.max(stats.highestWave,...completed);
     checkAchievements();
@@ -2364,10 +2364,10 @@ function loop(now){
 
 function loadInitial(){
   loadMeta();
-  maxLives=20+nodeLevel('vitality')*3+sumGenStat('hp');
+  maxLives=20+nodeLevel('vitality')*4.5+sumGenStat('hp');
   lives=maxLives;
   gold=150+nodeLevel('startGold')*35;
-  shield=nodeLevel('ward')+sumGenStat('ward');
+  shield=nodeLevel('ward')*1.5+sumGenStat('ward');
   applyPerfTier(0);renderTowerPanel();updateUI();renderAchievements();renderPrestigeTree();
 }
 loadInitial();
