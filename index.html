@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.35 (Meandering Valley)</title>
+<title>Fantasy Tower Defense 3D v0.36 (Pct Range & Mult Haste)</title>
 <style>
 :root{
   color-scheme:dark;
@@ -308,7 +308,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
     <div class="lobby-grid">
       <div class="lobby-hero">
         <div>
-          <div class="lobby-kicker">Cygnus Tactical Defense // v0.35 Valley</div>
+          <div class="lobby-kicker">Cygnus Tactical Defense // v0.36 Scaling</div>
           <h1 class="lobby-title">FANTASY TOWER<br>DEFENSE 3D</h1>
           <p class="lobby-desc">5系統・全240ノードの研究ツリーと、13種の防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
         </div>
@@ -345,7 +345,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
 </div>
 
 <div id="top">
-  <div class="brand-badge">FANTASY TD<b>3D v0.35</b></div>
+  <div class="brand-badge">FANTASY TD<b>3D v0.36</b></div>
   <div class="hud-groups">
     <div class="hud-group" id="hudBattleGroup">
       <div class="hud-item"><span>WAVE</span><b id="wave">1</b></div>
@@ -1006,8 +1006,8 @@ function registerNode(def){
 }
 
 registerNode({id:'power',name:'攻撃訓練',branch:'戦闘',lane:'基礎火力',tier:0,reqs:[],desc:'全タワーの攻撃力 +7.5% / Lv',max:25,base:12});
-registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 +4.5% / Lv（上限20/sまで有効）',max:25,base:15});
-registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +6% ＆ 攻撃速度 +3.75% / Lv',max:25,base:18});
+registerNode({id:'haste',name:'高速照準',branch:'戦闘',lane:'連射系統',tier:1,reqs:['power'],desc:'全タワーの攻撃速度 ×1.045 / Lv（乗算式・上限20/sまで有効）',max:25,base:15});
+registerNode({id:'battleHarmony',name:'戦意高揚',branch:'戦闘',lane:'基礎火力',tier:1,reqs:['power'],desc:'攻撃力 +6% ＆ 攻撃速度 ×1.0375 / Lv（乗算式）',max:25,base:18});
 registerNode({id:'growth',name:'成長促進',branch:'戦闘',lane:'成長系統',tier:1,reqs:['power'],desc:'タワーのレベルアップ毎に別枠で 1.0015倍を乗算（加速コスト）',max:0,base:10});
 registerNode({id:'critical',name:'会心の一撃',branch:'戦闘',lane:'会心系統',tier:2,reqs:['haste','battleHarmony'],desc:'会心率 +27% / Lv。100%超で多段累乗 1.5^(1.06^k) 発生！',max:30,base:20});
 registerNode({id:'unlock_sniper',name:'精密狙撃理論',branch:'戦闘',lane:'新塔解放',tier:2,reqs:['power'],transform:true,desc:'【新タワー解放】超長射程「スナイパー塔」が使用可能になる',max:1,base:1500});
@@ -1029,7 +1029,7 @@ registerNode({id:'baseTrigger',name:'基地防衛トリガー',branch:'防衛',l
 registerNode({id:'buildDiscount',name:'建築技術',branch:'建設',lane:'コスト効率',tier:0,reqs:[],desc:'タワー設置費用 -3.75% / Lv（最大50%割引）',max:20,base:12});
 registerNode({id:'upgradeDiscount',name:'効率強化',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー強化の加速倍率増加を緩和 / Lv',max:20,base:15});
 registerNode({id:'refund',name:'熟練解体',branch:'建設',lane:'コスト効率',tier:1,reqs:['buildDiscount'],desc:'タワー売却時の返金率 +3% / Lv（最大95%）',max:15,base:15});
-registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +0.27 / Lv',max:25,base:18});
+registerNode({id:'range',name:'射程研究',branch:'建設',lane:'射程拡張',tier:2,reqs:['upgradeDiscount','refund'],desc:'全タワーの射程 +2.7% / Lv（割合強化）',max:25,base:18});
 registerNode({id:'unlock_frost',name:'永久凍土結晶',branch:'建設',lane:'新塔解放',tier:2,reqs:['buildDiscount'],transform:true,desc:'【新タワー解放】冷気で敵を凍らせる「霜柱塔」が使用可能になる',max:1,base:1500});
 registerNode({id:'unlock_gravity',name:'特異点制御論',branch:'建設',lane:'新塔解放',tier:4,reqs:['range'],transform:true,desc:'【新タワー解放】重力渦で敵を束ねる「重力塔」が使用可能になる',max:1,base:1800});
 
@@ -1049,7 +1049,7 @@ registerNode({id:'unlock_blanche_astral',name:'書庫の星辰',branch:'建設',
 const GENERATED_TEMPLATES = {
   '戦闘': [
     {lane:'一本道：極限火力', prefix:'極限火砲', stat:'dmg', val:0.09, unit:'攻撃力 +9%'},
-    {lane:'一本道：神速連射', prefix:'神速機構', stat:'spd', val:0.03, unit:'攻撃速度 +3%'},
+    {lane:'一本道：神速連射', prefix:'神速機構', stat:'spd', val:0.03, unit:'攻撃速度 ×1.03'},
     {lane:'一本道：会心深淵', prefix:'会心極意', stat:'crit', val:0.18, unit:'会心率 +18%'}
   ],
   '経済': [
@@ -1063,7 +1063,7 @@ const GENERATED_TEMPLATES = {
     {lane:'一本道：王都兵団強化', prefix:'精鋭訓練', stat:'unit', val:0.18, unit:'徴兵・戦車威力 +18%'}
   ],
   '建設': [
-    {lane:'一本道：超広域観測', prefix:'観測塔網', stat:'rng', val:0.225, unit:'全射程 +0.225'},
+    {lane:'一本道：超広域観測', prefix:'観測塔網', stat:'rng', val:0.0225, unit:'全射程 +2.25%'},
     {lane:'一本道：極寒の理', prefix:'氷結増幅', stat:'frost', val:0.15, unit:'霜柱・減速威力 +15%'},
     {lane:'一本道：重力崩壊', prefix:'重力増幅', stat:'grav', val:0.15, unit:'重力・範囲威力 +15%'}
   ],
@@ -1169,8 +1169,9 @@ function refundRate(){return Math.min(.95,.70+nodeLevel('refund')*.03)}
 
 function towerRange(t){
   const def=TOWER_CATALOG[t.kind];
-  const bonus=nodeLevel('range')*.27 + sumGenStat('rng') + (t.kind==='bullet'&&isLaserUnlocked()?2.2:0);
-  return (def.range+bonus)*(t.padType==='open'?1.12:1);
+  const rangePct = nodeLevel('range')*0.027 + sumGenStat('rng');
+  const baseWithPct = def.range * (1 + rangePct) + (t.kind==='bullet'&&isLaserUnlocked()?2.2:0);
+  return baseWithPct * (t.padType==='open'?1.12:1);
 }
 
 function towerDamage(t,level=t.level){
@@ -1191,9 +1192,12 @@ function towerDamage(t,level=t.level){
 
 function towerInterval(t){
   const def=TOWER_CATALOG[t.kind];
-  const haste=nodeLevel('haste')*.045 + nodeLevel('battleHarmony')*.0375 + sumGenStat('spd');
-  const rawInterval=def.interval/(1+haste);
-  return Math.max(0.05,rawInterval);
+  const hasteMult =
+    Math.pow(1.045, nodeLevel('haste')) *
+    Math.pow(1.0375, nodeLevel('battleHarmony')) *
+    Math.pow(1.03, sumGenStat('spd') / 0.03);
+  const rawInterval = def.interval / Math.max(0.01, hasteMult);
+  return Math.max(0.05, rawInterval);
 }
 
 function getSpawnInterval(w=wave,waiting=spawnLeft){
