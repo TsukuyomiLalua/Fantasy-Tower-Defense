@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Fantasy Tower Defense 3D v0.34 (Deep-Wave Lite)</title>
+<title>Fantasy Tower Defense 3D v0.35 (Meandering Valley)</title>
 <style>
 :root{
   color-scheme:dark;
@@ -308,7 +308,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
     <div class="lobby-grid">
       <div class="lobby-hero">
         <div>
-          <div class="lobby-kicker">Cygnus Tactical Defense // v0.34 Lite</div>
+          <div class="lobby-kicker">Cygnus Tactical Defense // v0.35 Valley</div>
           <h1 class="lobby-title">FANTASY TOWER<br>DEFENSE 3D</h1>
           <p class="lobby-desc">5系統・全240ノードの研究ツリーと、13種の防衛塔。4スロットの編成を組み上げ、緑の渓谷を守り抜こう。</p>
         </div>
@@ -345,7 +345,7 @@ button:disabled{opacity:.38;cursor:not-allowed}
 </div>
 
 <div id="top">
-  <div class="brand-badge">FANTASY TD<b>3D v0.34</b></div>
+  <div class="brand-badge">FANTASY TD<b>3D v0.35</b></div>
   <div class="hud-groups">
     <div class="hud-group" id="hudBattleGroup">
       <div class="hud-item"><span>WAVE</span><b id="wave">1</b></div>
@@ -691,13 +691,17 @@ for(let i=0;i<78;i++){
   p.rotation.x=-Math.PI/2;p.position.set(x,-.105,z);p.scale.set(.5+Math.random()*1.2,.35+Math.random()*.8,1);scene.add(p);
 }
 
-const lanes=[[[-43,-24],[-34,-24],[-27,-19],[-22,-10],[-14,-7],[-5,-7],[3,0],[11,8],[20,9],[28,4],[34,0],[41,0]]];
+const lanes=[[
+  [-44,-26],[-33,-26],[-26,-22],[-25,-12],[-34,-6],[-36,4],[-28,11],[-18,8],
+  [-16,-4],[-18,-17],[-10,-24],[0,-21],[3,-10],[-4,1],[-4,13],[5,20],
+  [16,18],[19,7],[13,-4],[17,-15],[27,-16],[31,-6],[25,5],[29,14],[37,10],[41,0]
+]];
 const routePoints=lanes;
 const roadCurve=new THREE.CatmullRomCurve3(lanes[0].map(p=>new THREE.Vector3(p[0],0,p[1])));
-const roadSamples=roadCurve.getPoints(120);
+const roadSamples=roadCurve.getPoints(320);
 
 function makeRoad(points,width){
-  const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(p[0],.015,p[1]))),divisions=Math.max(50,points.length*16),verts=[],indices=[];
+  const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(p[0],.015,p[1]))),divisions=Math.max(160,points.length*14),verts=[],indices=[];
   for(let i=0;i<=divisions;i++){
     const t=i/divisions,p=curve.getPoint(t),tan=curve.getTangent(t),side=new THREE.Vector3(-tan.z,0,tan.x).normalize();
     for(const s of [-1,1]){const v=p.clone().addScaledVector(side,s*width/2);verts.push(v.x,v.y,v.z)}
@@ -741,55 +745,197 @@ const heart=new THREE.Mesh(new THREE.OctahedronGeometry(1.25,1),new THREE.MeshSt
 heart.position.set(0,4.1,0);baseGroup.add(heart);scene.add(baseGroup);
 
 const obstacles=[];
-const treeTrunkGeo=new THREE.CylinderGeometry(.18,.28,1.45,5),treeCone1Geo=new THREE.ConeGeometry(1.05,2.25,6),treeCone2Geo=new THREE.ConeGeometry(.72,1.65,6),rockGeo=new THREE.DodecahedronGeometry(.8,0);
+const animatedWaterMeshes=[];
+const animatedLanternFlames=[];
+
+// 1) 渓谷を横切る清流（小川）と岸辺の砂利・石橋
+(function buildValleyStream(){
+  const riverPts = [
+    new THREE.Vector3(-48, -0.06, 22),
+    new THREE.Vector3(-24, -0.06, 26),
+    new THREE.Vector3(-6, -0.06, 29),
+    new THREE.Vector3(12, -0.06, 27),
+    new THREE.Vector3(24, -0.06, 21),
+    new THREE.Vector3(34, -0.06, 25),
+    new THREE.Vector3(48, -0.06, 28)
+  ];
+  const rCurve = new THREE.CatmullRomCurve3(riverPts);
+  const divs = 90, w = 4.2, verts = [], indices = [];
+  for(let i=0;i<=divs;i++){
+    const t=i/divs, p=rCurve.getPoint(t), tan=rCurve.getTangent(t);
+    const side=new THREE.Vector3(-tan.z,0,tan.x).normalize();
+    for(const s of [-1,1]){
+      const v=p.clone().addScaledVector(side,s*w/2);
+      verts.push(v.x,v.y,v.z);
+    }
+    if(i<divs){const a=i*2;indices.push(a,a+1,a+2,a+1,a+3,a+2);}
+  }
+  const rGeo=new THREE.BufferGeometry();
+  rGeo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+  rGeo.setIndex(indices);
+  rGeo.computeVertexNormals();
+  const waterMat=new THREE.MeshStandardMaterial({
+    color:0x3fa7d6,emissive:0x134e6f,emissiveIntensity:0.45,
+    roughness:0.22,metalness:0.15,transparent:true,opacity:0.88
+  });
+  const waterMesh=new THREE.Mesh(rGeo,waterMat);
+  scene.add(waterMesh);
+  animatedWaterMeshes.push(waterMesh);
+
+  // 川辺の丸石アクセント
+  const pebbleGeo=new THREE.DodecahedronGeometry(0.45,0);
+  for(let i=0;i<=divs;i+=2){
+    const t=i/divs, p=rCurve.getPoint(t), tan=rCurve.getTangent(t);
+    const side=new THREE.Vector3(-tan.z,0,tan.x).normalize();
+    for(const s of [-1,1]){
+      if(Math.random()>0.35){
+        const peb=new THREE.Mesh(pebbleGeo,stoneMat);
+        const offset=s*(w/2 + 0.35 + Math.random()*0.45);
+        peb.position.set(p.x+side.x*offset, 0.08, p.z+side.z*offset);
+        peb.scale.set(0.8+Math.random()*0.9, 0.45+Math.random()*0.3, 0.8+Math.random()*0.8);
+        peb.rotation.y=Math.random()*Math.PI;
+        scene.add(peb);
+      }
+    }
+  }
+})();
+
+// 2) 外周の渓谷クリフ（段丘・岩壁）で箱庭感を演出
+const cliffMat = mat(0x5d645b);
+const cliffTopMat = mat(0x4e7544);
+function makeCliff(x,z,rx,rz,h){
+  obstacles.push({x,z,r:Math.max(rx,rz)*0.95});
+  const g=new THREE.Group();
+  g.position.set(x,0,z);
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(rx*0.82,rx,h,7),cliffMat);
+  body.position.y=h/2 - 0.1;
+  body.scale.set(1,1,rz/rx);
+  body.rotation.y=Math.random()*Math.PI;
+  g.add(body);
+  const cap=new THREE.Mesh(new THREE.CylinderGeometry(rx*0.84,rx*0.85,0.32,7),cliffTopMat);
+  cap.position.y=h - 0.02;
+  cap.scale.set(1,1,rz/rx);
+  cap.rotation.y=body.rotation.y;
+  g.add(cap);
+  scene.add(g);
+}
+makeCliff(-45,-33,6.5,5.0,4.2);
+makeCliff(-18,-34,7.5,4.2,3.8);
+makeCliff(12,-34,8.0,4.5,4.5);
+makeCliff(42,-32,7.0,5.5,5.0);
+makeCliff(-46,16,5.5,7.0,3.6);
+makeCliff(45,-16,5.0,6.5,4.0);
+makeCliff(45,22,6.0,5.5,3.8);
+
+// 3) 樹木のバリエーション（針葉樹＋広葉樹）＆花畑パッチ
+const treeTrunkGeo=new THREE.CylinderGeometry(.18,.28,1.45,5);
+const treeCone1Geo=new THREE.ConeGeometry(1.05,2.25,6);
+const treeCone2Geo=new THREE.ConeGeometry(.72,1.65,6);
+const broadCrownGeo=new THREE.DodecahedronGeometry(1.05,1);
+const rockGeo=new THREE.DodecahedronGeometry(.8,0);
+const leaf3=mat(0x6fa34f);
+
 function tree(x,z,s=1){
-  obstacles.push({x,z,r:1.25*s});
+  obstacles.push({x,z,r:1.2*s});
   const g=new THREE.Group();g.position.set(x,0,z);g.scale.setScalar(s);
   const tr=new THREE.Mesh(treeTrunkGeo,woodMat);tr.position.y=.7;g.add(tr);
-  const c=new THREE.Mesh(treeCone1Geo,Math.random()>.5?leafMat:leaf2);c.position.y=2.05;g.add(c);
-  const c2=new THREE.Mesh(treeCone2Geo,leaf2);c2.position.y=2.85;g.add(c2);scene.add(g);
+  if(Math.random()>0.38){
+    const c=new THREE.Mesh(treeCone1Geo,Math.random()>.5?leafMat:leaf2);c.position.y=2.05;g.add(c);
+    const c2=new THREE.Mesh(treeCone2Geo,leaf2);c2.position.y=2.85;g.add(c2);
+  }else{
+    const b1=new THREE.Mesh(broadCrownGeo,Math.random()>.5?leaf2:leaf3);b1.position.y=2.15;b1.scale.set(1.15,0.9,1.1);g.add(b1);
+    const b2=new THREE.Mesh(broadCrownGeo,leafMat);b2.position.set(0.35,2.55,0.2);b2.scale.set(0.75,0.7,0.75);g.add(b2);
+  }
+  scene.add(g);
 }
 function rock(x,z,s=1){
-  obstacles.push({x,z,r:1.0*s});
+  obstacles.push({x,z,r:0.95*s});
   const m=new THREE.Mesh(rockGeo,stoneMat);
   m.position.set(x,.35*s,z);m.scale.set(s*1.2,s*.75,s);m.rotation.set(Math.random(),Math.random(),Math.random());scene.add(m);
 }
-const padExclusion=[[-29,-31],[18,-29],[31,20],[-34,8],[-13,23],[27,-14],[5,28],[0,-29]];
-for(let i=0;i<48;i++){
-  const x=(Math.random()-.5)*90,z=(Math.random()-.5)*66;
-  const near=routePoints.some(path=>path.some((p,j)=>{const q=path[j+1];return q&&Math.hypot(x-(p[0]+q[0])/2,z-(p[1]+q[1])/2)<4.7}));
-  const nearPad=padExclusion.some(p=>Math.hypot(x-p[0],z-p[1])<5);
-  if(!near&&!nearPad){if(Math.random()>.25)tree(x,z,.65+Math.random()*.65);else rock(x,z,.6+Math.random()*.7)}
-}
-function ruin(x,z){
-  obstacles.push({x,z,r:3.4});
-  const g=new THREE.Group();g.position.set(x,0,z);
-  const base=new THREE.Mesh(new THREE.BoxGeometry(3.4,.45,2.1),roadEdge);base.position.y=.23;g.add(base);
-  for(const dx of [-1.25,1.25]){const col=new THREE.Mesh(new THREE.CylinderGeometry(.28,.34,3.2,6),stoneMat);col.position.set(dx,1.95,0);g.add(col)}
-  const cap=new THREE.Mesh(new THREE.BoxGeometry(3.4,.38,2.1),stoneMat);cap.position.y=3.65;g.add(cap);scene.add(g);
-}
-ruin(-22,-29);ruin(17,29);ruin(32,-27);
 
+// 4) 入り組んだ蛇行ループの合間に配置された10箇所の戦略建築台座
 const buildPads=[
-  {id:'high-west',x:-29,z:-31,y:3.2,type:'open',label:'開けた高台'},
-  {id:'high-east',x:18,z:-29,y:3.2,type:'open',label:'開けた高台'},
-  {id:'high-south',x:31,z:20,y:2.6,type:'open',label:'開けた高台'},
-  {id:'ground-west',x:-34,z:8,y:.35,type:'ground',label:'通常地面'},
-  {id:'ground-mid',x:-13,z:23,y:.35,type:'ground',label:'通常地面'},
-  {id:'ground-east',x:27,z:-14,y:.35,type:'ground',label:'通常地面'},
-  {id:'ground-south',x:5,z:28,y:.35,type:'ground',label:'通常地面'},
-  {id:'magic',x:0,z:-29,y:.35,type:'magic',label:'魔力地点'}
+  {id:'high-west',   x:-29, z:-18, y:2.8, type:'open',   label:'西の折返し高台'},
+  {id:'high-center', x:-10, z:-13, y:3.0, type:'open',   label:'中央渓谷の要衝高台'},
+  {id:'high-east',   x: 24, z: -6, y:2.8, type:'open',   label:'東のS字監視高台'},
+  {id:'ground-nw',   x:-26, z:  2, y:.35, type:'ground', label:'西ループ内側'},
+  {id:'ground-sw',   x:-11, z:  7, y:.35, type:'ground', label:'中央南の防衛拠点'},
+  {id:'ground-mid',  x:  6, z:  8, y:.35, type:'ground', label:'大湾曲の内側'},
+  {id:'ground-ne',   x: 10, z:-23, y:.35, type:'ground', label:'北東の狭間'},
+  {id:'ground-se',   x: 33, z:  4, y:.35, type:'ground', label:'最終防衛ライン'},
+  {id:'magic-west',  x:-21, z:-28, y:.45, type:'magic',  label:'古代の魔力陣・西'},
+  {id:'magic-east',  x: 22, z: 23, y:.45, type:'magic',  label:'水辺の魔力陣・東'}
 ];
+const padExclusion=buildPads.map(p=>[p.x,p.z]);
+
+// 道のカーブ全体に対して十分な距離を保ちつつ自然物を配置
+function isNearRoad(x,z,minDist=4.2){
+  return roadSamples.some(pt=>Math.hypot(pt.x-x,pt.z-z)<minDist);
+}
+for(let i=0;i<85;i++){
+  const x=(Math.random()-.5)*88,z=(Math.random()-.5)*64;
+  if(z>18 && z<31)continue; // 川の上は避ける
+  const nearPad=padExclusion.some(p=>Math.hypot(x-p[0],z-p[1])<4.6);
+  const nearBase=Math.hypot(x-43,z-0)<7.5 || Math.hypot(x+43,z+26)<5.5;
+  if(!isNearRoad(x,z,4.3)&&!nearPad&&!nearBase){
+    if(Math.random()>.24)tree(x,z,.62+Math.random()*.68);
+    else rock(x,z,.55+Math.random()*.65);
+  }
+}
+
+// 5) 古代遺跡・石灯籠・花畑の装飾オブジェクト
+function ruin(x,z,rot=0){
+  obstacles.push({x,z,r:2.8});
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;
+  const base=new THREE.Mesh(new THREE.BoxGeometry(3.2,.42,1.9),roadEdge);base.position.y=.21;g.add(base);
+  for(const dx of [-1.15,1.15]){
+    const col=new THREE.Mesh(new THREE.CylinderGeometry(.25,.31,3.0,6),stoneMat);
+    col.position.set(dx,1.85,0);g.add(col);
+  }
+  const cap=new THREE.Mesh(new THREE.BoxGeometry(3.2,.35,1.9),stoneMat);cap.position.y=3.45;g.add(cap);
+  scene.add(g);
+}
+ruin(-39, 13, 0.4);
+ruin( 2, -29, -0.2);
+ruin( 36, -22, 0.6);
+
+function makeLantern(x,z){
+  const g=new THREE.Group();g.position.set(x,0,z);
+  const post=new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.22,1.65,6),stoneMat);post.position.y=0.82;g.add(post);
+  const cap=new THREE.Mesh(new THREE.ConeGeometry(0.42,0.45,6),roadEdge);cap.position.y=1.92;g.add(cap);
+  const flame=new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.2,0),
+    new THREE.MeshBasicMaterial({color:0xffcf6b})
+  );
+  flame.position.y=1.65;g.add(flame);
+  scene.add(g);
+  animatedLanternFlames.push(flame);
+}
+[[-31,-22],[-13,-20],[2,-5],[15,13],[26,-11],[36,5]].forEach(([lx,lz])=>makeLantern(lx,lz));
+
+// 花畑の彩り
+const flowerColors=[0xfff078,0xff9eb8,0x9be7ff,0xffffff];
+const flowerGeo=new THREE.CircleGeometry(0.22,5);
+for(let i=0;i<55;i++){
+  const fx=(Math.random()-.5)*82,fz=(Math.random()-.5)*58;
+  if(isNearRoad(fx,fz,3.4))continue;
+  const fMat=new THREE.MeshBasicMaterial({color:flowerColors[i%flowerColors.length]});
+  const fl=new THREE.Mesh(flowerGeo,fMat);
+  fl.rotation.x=-Math.PI/2;fl.position.set(fx,-0.09,fz);
+  scene.add(fl);
+}
+
 const padMeshes=[];
 for(const pad of buildPads){
   const elevated=pad.type==='open';
-  const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.0,3.35,elevated?pad.y:0.35,8),elevated?stoneMat:roadEdge);
+  const platform=new THREE.Mesh(new THREE.CylinderGeometry(2.85,3.25,elevated?pad.y:0.35,8),elevated?stoneMat:roadEdge);
   platform.position.set(pad.x,elevated?pad.y/2:0.16,pad.z);scene.add(platform);
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(2.35,.12,6,12),pad.type==='magic'?blueMat:pad.type==='open'?goldMat:leaf2);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(2.25,.12,6,14),pad.type==='magic'?blueMat:pad.type==='open'?goldMat:leaf2);
   ring.rotation.x=Math.PI/2;ring.position.set(pad.x,pad.y+.08,pad.z);scene.add(ring);padMeshes.push({pad,platform,ring});
 }
-function padAt(x,z){return buildPads.find(p=>Math.hypot(p.x-x,p.z-z)<=2.7)||null}
-const sightBlockers=[{x:-22,z:-29,r:2.3},{x:17,z:29,r:2.3},{x:32,z:-27,r:2.3}];
+function padAt(x,z){return buildPads.find(p=>Math.hypot(p.x-x,p.z-z)<=2.65)||null}
+const sightBlockers=[{x:-39,z:13,r:2.1},{x:2,z:-29,r:2.1},{x:36,z:-22,r:2.1}];
 function hasLineOfSight(t,e){
   if(['missile','vibe','gravity','frost','pull','barracks','lightning','blancheArbiter','blancheBind','blancheAstral'].includes(t.kind)||isLaserUnlocked())return true;
   const a=new THREE.Vector2(t.x,t.z),b=new THREE.Vector2(e.x,e.z);
@@ -2336,6 +2482,12 @@ function loop(now){
   }
 
   for(const p of portals){p.ring.rotation.z+=dt*.85;p.core.rotation.y+=dt*1.15}
+  for(const w of animatedWaterMeshes){w.material.emissiveIntensity=0.38+Math.sin(now*0.003)*0.12;}
+  for(let i=0;i<animatedLanternFlames.length;i++){
+    const fl=animatedLanternFlames[i];
+    fl.rotation.y+=dt*2.2;
+    fl.scale.setScalar(0.9+Math.sin(now*0.009+i)*0.16);
+  }
   heart.rotation.y+=dt*.55;
   for(const e of [...enemies])if(e.hp<=0)killEnemy(e);
   if(lives<=0){finish();return}
